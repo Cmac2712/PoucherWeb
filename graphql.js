@@ -1,5 +1,5 @@
-const { ApolloServer, gql } = require("apollo-server-lambda");
-const { v4: uuidv4, } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+const { ApolloServer, gql } = require('apollo-server-lambda');
 
 const typeDefs = gql`
   type Bookmark {
@@ -45,8 +45,7 @@ var bookmarks = [
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-
-    bookmarks: async () => bookmarks,
+    bookmarks: () => bookmarks,
   }
   ,
   Mutation: {
@@ -66,20 +65,11 @@ const resolvers = {
   } 
 };
 
-// https://stackoverflow.com/a/71629935
-const getHandler = (event, context) => {
-  const server = new ApolloServer({
-      typeDefs,
-      resolvers,
-      cache: "bounded"
-  });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  csrfPrevention: true,
+  cache: 'bounded',
+});
 
-  const graphqlHandler = server.createHandler();
-
-  if (!event.requestContext) {
-      event.requestContext = context;
-  }
-  return graphqlHandler(event, context);
-}
-
-exports.handler = getHandler;
+exports.graphqlHandler = server.createHandler();
