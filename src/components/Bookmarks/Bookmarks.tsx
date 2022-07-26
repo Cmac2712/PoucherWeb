@@ -25,7 +25,14 @@ export const Bookmarks = () => {
 
     const [nothing, setNothing] = useState(false)
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>Loading...
+
+              <button
+                onClick={() => {setNothing(true)}}
+              >
+                reload
+              </button>
+    </p>;
 
     if (error) return <p>Error :(</p>;
 
@@ -40,11 +47,6 @@ export const Bookmarks = () => {
                 </li>
             ))}
             <li>
-              <button
-                onClick={() => {setNothing(true)}}
-              >
-                reload
-              </button>
             </li>
         </ul>
     );
