@@ -11,8 +11,11 @@ import {
 import './index.css'
 
 const client = new ApolloClient({ 
-  uri: 'http://localhost:4000/api/graphql',
-  cache: new InMemoryCache()
+  uri: "https://izpcehh3ef.execute-api.eu-west-2.amazonaws.com/dev/",
+  cache: new InMemoryCache(),
+  fetchOptions: {
+    mode: 'no-cors',
+  }
 });
 
 ReactDOM
