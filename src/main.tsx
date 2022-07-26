@@ -11,7 +11,7 @@ import {
 import './index.css'
 
 const client = new ApolloClient({ 
-  uri: "https://izpcehh3ef.execute-api.eu-west-2.amazonaws.com/dev/",
+  uri: import.meta.env.DATABASE_URL,
   cache: new InMemoryCache(),
   fetchOptions: {
     mode: 'no-cors',
