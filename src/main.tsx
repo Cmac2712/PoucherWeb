@@ -11,7 +11,7 @@ import {
 import './index.css'
 
 const client = new ApolloClient({ 
-  uri: import.meta.env.SERVER_ENDPOINT,
+  uri: import.meta.env.VITE_SERVER_ENDPOINT,
   cache: new InMemoryCache(),
   fetchOptions: {
     mode: 'no-cors',
