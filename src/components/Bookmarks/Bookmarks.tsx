@@ -37,17 +37,18 @@ export const Bookmarks = () => {
     if (error) return <p>Error :(</p>;
 
     return (
-        <ul>
+        <ul className="container mx-auto max-w-3xl mb-4">
             {data?.bookmarks?.map(bookmark => (
-                <li key={bookmark.id}>
+                <li 
+                  className="pb-2"
+                  key={bookmark.id}
+                >
                   {bookmark.title} - {bookmark.url}
                   <DeleteBookmark
                     id={bookmark.id}
                   />
                 </li>
             ))}
-            <li>
-            </li>
         </ul>
     );
 }
