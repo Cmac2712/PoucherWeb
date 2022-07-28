@@ -15,6 +15,7 @@ model Bookmark {
   url       String?
   published Boolean  @default(false)
   authorId  Int
+  videoUrl  String?
   author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 

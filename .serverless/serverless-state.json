@@ -89,6 +89,12 @@
               "LogGroupName": "/aws/lambda/apollo-lambda-dev-graphql"
             }
           },
+          "VideoLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/apollo-lambda-dev-video"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -203,6 +209,12 @@
                               "GraphqlLogGroup",
                               "Arn"
                             ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "VideoLogGroup",
+                              "Arn"
+                            ]
                           }
                         ]
                       }
@@ -219,7 +231,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1658863478450-2022-07-26T19:24:38.450Z/apollo-lambda.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1659040885062-2022-07-28T20:41:25.062Z/apollo-lambda.zip"
               },
               "Handler": "s_graphql.handler",
               "Runtime": "nodejs16.x",
@@ -237,14 +249,49 @@
               "GraphqlLogGroup"
             ]
           },
-          "GraphqlLambdaVersionW7YjWUaTQb0I4Tw07aLtnyKPLmU9irBlbAVtHe4k": {
+          "VideoLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/apollo-lambda/dev/1659040885062-2022-07-28T20:41:25.062Z/apollo-lambda.zip"
+              },
+              "Handler": "s_video.handler",
+              "Runtime": "nodejs16.x",
+              "FunctionName": "apollo-lambda-dev-video",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "VideoLogGroup"
+            ]
+          },
+          "GraphqlLambdaVersionic6oiXW2cRKAMvePSKNJqUZm5D61bJQbPAqvdPT8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GraphqlLambdaFunction"
               },
-              "CodeSha256": "pHRdBng6w8LnxB24HsbxgJMUPSLIzHWihCnHAhdOm9U="
+              "CodeSha256": "NSxXb0j7SDPTQYJBFFm2A3DU46iYKGXGJWEF0lTgUFs="
+            }
+          },
+          "VideoLambdaVersionhUoDDCo5WVEmHmrNYySoaGwh7jmlkP3HKELgwu3Gfc": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "VideoLambdaFunction"
+              },
+              "CodeSha256": "NSxXb0j7SDPTQYJBFFm2A3DU46iYKGXGJWEF0lTgUFs="
             }
           },
           "ApiGatewayRestApi": {
@@ -257,6 +304,21 @@
                 ]
               },
               "Policy": ""
+            }
+          },
+          "ApiGatewayResourceVideo": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "video",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
             }
           },
           "ApiGatewayMethodOptions": {
@@ -301,6 +363,51 @@
                   "ApiGatewayRestApi",
                   "RootResourceId"
                 ]
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodVideoOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceVideo"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -405,7 +512,53 @@
               "GraphqlLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1658863465566": {
+          "ApiGatewayMethodVideoGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceVideo"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "VideoLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "VideoLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1659040869961": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -415,8 +568,10 @@
             },
             "DependsOn": [
               "ApiGatewayMethodOptions",
+              "ApiGatewayMethodVideoOptions",
               "ApiGatewayMethodPost",
-              "ApiGatewayMethodGet"
+              "ApiGatewayMethodGet",
+              "ApiGatewayMethodVideoGet"
             ]
           },
           "GraphqlLambdaPermissionApiGateway": {
@@ -425,6 +580,43 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "GraphqlLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "VideoLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "VideoLambdaFunction",
                   "Arn"
                 ]
               },
@@ -565,7 +757,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1658863478450-2022-07-26T19:24:38.450Z/custom-resources.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1659040885062-2022-07-28T20:41:25.062Z/custom-resources.zip"
               },
               "FunctionName": "apollo-lambda-dev-custom-resource-apigw-cw-role",
               "Handler": "api-gateway-cloud-watch-role/handler.handler",
@@ -590,6 +782,16 @@
               "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
               "LogGroupName": {
                 "Ref": "GraphqlLogGroup"
+              }
+            }
+          },
+          "CWLSubFilterVideoLogGroupEuWest2": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:eu-west-2:802587217904:destination:26dfeea1-6159-4669-8b1f-9db97b8a8b65#tm779xT5b5ByybJj14#apollo-lambda#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "VideoLogGroup"
               }
             }
           },
@@ -627,10 +829,19 @@
           "GraphqlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GraphqlLambdaVersionW7YjWUaTQb0I4Tw07aLtnyKPLmU9irBlbAVtHe4k"
+              "Ref": "GraphqlLambdaVersionic6oiXW2cRKAMvePSKNJqUZm5D61bJQbPAqvdPT8"
             },
             "Export": {
               "Name": "sls-apollo-lambda-dev-GraphqlLambdaFunctionQualifiedArn"
+            }
+          },
+          "VideoLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "VideoLambdaVersionhUoDDCo5WVEmHmrNYySoaGwh7jmlkP3HKELgwu3Gfc"
+            },
+            "Export": {
+              "Name": "sls-apollo-lambda-dev-VideoLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -750,6 +961,9 @@
       },
       "vpc": {}
     },
+    "plugins": [
+      "serverless-offline"
+    ],
     "pluginsData": {},
     "functions": {
       "graphql": {
@@ -810,7 +1024,43 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "GraphqlLambdaVersionW7YjWUaTQb0I4Tw07aLtnyKPLmU9irBlbAVtHe4k"
+        "versionLogicalId": "GraphqlLambdaVersionic6oiXW2cRKAMvePSKNJqUZm5D61bJQbPAqvdPT8"
+      },
+      "video": {
+        "handler": "s_video.handler",
+        "events": [
+          {
+            "http": {
+              "path": "video",
+              "method": "get",
+              "cors": {
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent",
+                  "X-Amzn-Trace-Id"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "apollo-lambda-dev-video",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs16.x",
+        "vpc": {},
+        "versionLogicalId": "VideoLambdaVersionhUoDDCo5WVEmHmrNYySoaGwh7jmlkP3HKELgwu3Gfc"
       }
     },
     "configValidationMode": "warn",
@@ -825,6 +1075,9 @@
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
       },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
       "package": {
         "patterns": [
           "!node_modules/.prisma/client/libquery_engine-*",
@@ -838,7 +1091,7 @@
           "serverless_sdk/**"
         ],
         "artifact": "/Users/craig/Sites/bookmarks/.serverless/apollo-lambda.zip",
-        "artifactDirectoryName": "serverless/apollo-lambda/dev/1658863478450-2022-07-26T19:24:38.450Z"
+        "artifactDirectoryName": "serverless/apollo-lambda/dev/1659040885062-2022-07-28T20:41:25.062Z"
       }
     },
     "app": "apollo-lambda",
@@ -851,7 +1104,7 @@
     "artifact": "/Users/craig/Sites/bookmarks/.serverless/apollo-lambda.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/apollo-lambda/dev/1658863478450-2022-07-26T19:24:38.450Z",
+    "artifactDirectoryName": "serverless/apollo-lambda/dev/1659040885062-2022-07-28T20:41:25.062Z",
     "artifact": "apollo-lambda.zip"
   }
 }

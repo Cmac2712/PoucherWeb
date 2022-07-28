@@ -7,11 +7,13 @@ const typeDefs = gql`
     id: ID!
     title: String
     url: String
+    videoUrl: String
   }
 
   input BookmarkInput {
     title: String
     url: String
+    videoUrl: String
   }
 
   type Query {

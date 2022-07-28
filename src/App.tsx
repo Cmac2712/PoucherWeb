@@ -1,4 +1,4 @@
-import logo from './logo.svg'
+import { useEffect } from 'react'
 import './app.css'
 import { Bookmarks } from './components/Bookmarks'
 import { CreateBookmark } from './components/CreateBookmark'

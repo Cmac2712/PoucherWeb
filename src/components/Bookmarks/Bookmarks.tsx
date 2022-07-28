@@ -8,6 +8,7 @@ const GET_BOOKMARKS = gql`
       id
       title
       url
+      videoUrl
     }
   }
 `
@@ -16,6 +17,7 @@ export interface Bookmark {
     id: number
     title: string
     url: string
+    videoUrl: string
 }
 
 export const Bookmarks = () => {
@@ -25,30 +27,37 @@ export const Bookmarks = () => {
 
     const [nothing, setNothing] = useState(false)
 
-    if (loading) return <p>Loading...
-
-              <button
-                onClick={() => {setNothing(true)}}
-              >
-                reload
-              </button>
-    </p>;
+    if (loading) return (
+      <div className="container mx-auto max-w-3xl mb-4">
+        <p>Loading...</p>
+      </div>
+    )
 
     if (error) return <p>Error :(</p>;
 
     return (
         <ul className="container mx-auto max-w-3xl mb-4">
-            {data?.bookmarks?.map(bookmark => (
-                <li 
-                  className="pb-2"
-                  key={bookmark.id}
-                >
-                  {bookmark.title} - {bookmark.url}
-                  <DeleteBookmark
-                    id={bookmark.id}
-                  />
-                </li>
-            ))}
+            {data?.bookmarks?.map(({ id, videoUrl }) => {
+
+              if (!videoUrl) return
+
+              return (
+                  <li 
+                    className="pb-2"
+                    key={id}
+                  >
+                    <video controls width="250">
+                        <source src={videoUrl} type="video/mp4"/>
+                        Sorry, your browser doesn't support embedded videos.
+                    </video>
+                    <DeleteBookmark
+                      id={id}
+                    />
+                  </li>
+              )
+            }
+
+            )}
         </ul>
     );
 }

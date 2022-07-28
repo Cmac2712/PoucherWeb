@@ -19,6 +19,15 @@ functions:
         path: /
         method: get
         cors: true
+  video: 
+    handler: video.videoHandler
+    events:
+    - http:
+        path: /video
+        method: get
+        cors: true
+plugins:
+  - serverless-offline
 package:
   patterns:
     - '!node_modules/.prisma/client/libquery_engine-*'

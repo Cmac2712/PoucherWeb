@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 
@@ -8,6 +9,7 @@ const CREATE_BOOKMARK_MUTATION = gql`
         createBookmark(bookmark: $bookmark) {
                 title
                 url
+                videoUrl
             }
 	}
 `;
@@ -15,6 +17,15 @@ const CREATE_BOOKMARK_MUTATION = gql`
 interface BookmarkInput {
     title: string
     url: string
+}
+
+export const getVideo = async (url:string) => {
+
+    const endpoint = import.meta.env.MODE === 'production' ? import.meta.env.VITE_SERVER_ENDPOINT : 'http://localhost:3001/dev/'
+    const repsonse = await axios.get(`${endpoint}video?name=${encodeURIComponent(url)}`)
+
+    return repsonse.data.body.download[1].url
+
 }
 
 export const CreateBookmark = () => {
@@ -39,7 +50,10 @@ export const CreateBookmark = () => {
                     e.preventDefault()
                     createBookmark({
                         variables: {
-                            bookmark: formData
+                            bookmark: {
+                                ...formData,
+                                videoUrl: await getVideo(formData.url)
+                            } 
                         }
                     })
                     setFormData({ title: "", url: "" })
