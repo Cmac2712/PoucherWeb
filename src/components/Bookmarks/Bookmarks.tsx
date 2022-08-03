@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useQuery, useMutation, gql } from "@apollo/client"
 import { DeleteBookmark } from "../DeleteBookmark"
+import { Video } from "../Video"
 
 const GET_BOOKMARKS = gql`
   query GetBookmarks {
@@ -37,19 +38,31 @@ export const Bookmarks = () => {
 
     return (
         <ul className="container mx-auto max-w-3xl mb-4">
-            {data?.bookmarks?.map(({ id, videoUrl }) => {
+            {data?.bookmarks?.map(({ id, videoUrl, url, title }) => {
 
-              if (!videoUrl) return
+              if (videoUrl) return (
+                  <li 
+                    className="pb-2"
+                    key={id}
+                  >
+                    <Video url={videoUrl} />
+                  </li>
+              )
 
               return (
                   <li 
                     className="pb-2"
                     key={id}
                   >
-                    <video controls width="250">
-                        <source src={videoUrl} type="video/mp4"/>
-                        Sorry, your browser doesn't support embedded videos.
-                    </video>
+
+                    <h3 className="text-2xl">{ title }</h3>
+                    <a 
+                      href={url}
+                      target="_blank"
+                    >
+                      {url}
+                    </a>
+
                     <DeleteBookmark
                       id={id}
                     />
