@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 
 import { Bookmark, GET_BOOKMARKS } from '../Bookmarks';
@@ -19,12 +19,23 @@ interface BookmarkInput {
     url: string
 }
 
+export const getScreenshot = async (url:string) => {
+    
+        const endpoint =  import.meta.env.VITE_SERVER_ENDPOINT
+        const data = {}
+        const response = await axios.post(`${endpoint}screenshot?url=${encodeURIComponent(url)}`, {
+            url: encodeURIComponent(url)
+        })
+    
+        return response.data
+}
+
 export const getVideo = async (url:string) => {
 
     const endpoint = import.meta.env.MODE === 'production' ? import.meta.env.VITE_SERVER_ENDPOINT : 'http://localhost:3001/dev/'
-    const repsonse = await axios.get(`${endpoint}video?name=${encodeURIComponent(url)}`)
+    const response = await axios.get(`${endpoint}video?name=${encodeURIComponent(url)}`)
 
-    return repsonse.data.body.download[1].url
+    return response.data.body.download[1].url
 
 }
 
@@ -52,7 +63,8 @@ export const CreateBookmark = () => {
                         variables: {
                             bookmark: {
                                 ...formData,
-                                videoUrl: await getVideo(formData.url)
+                                videoUrl: await getScreenshot(formData.url)
+                                //videoUrl: await getVideo(formData.url)
                             } 
                         }
                     })

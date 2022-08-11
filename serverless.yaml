@@ -26,6 +26,13 @@ functions:
         path: /video
         method: get
         cors: true
+  screenshot: 
+    handler: screenshot.screenshotHandler
+    events:
+    - http:
+        path: /screenshot
+        method: post
+        cors: true
 plugins:
   - serverless-offline
 package:

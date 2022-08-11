@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useQuery, useMutation, gql } from "@apollo/client"
 import { DeleteBookmark } from "../DeleteBookmark"
 import { Video } from "../Video"
+import axios from "axios"
 
 const GET_BOOKMARKS = gql`
   query GetBookmarks {
@@ -45,7 +46,20 @@ export const Bookmarks = () => {
                     className="pb-2"
                     key={id}
                   >
-                    <Video url={videoUrl} />
+                    <a 
+                      href={url}
+                      target="_blank"
+                    >
+                      <img 
+                        width={500}
+                        src={`https://d16sq6175am0h2.cloudfront.net/${videoUrl}`} 
+                        alt="" 
+                      />
+                    </a>
+
+                    <DeleteBookmark
+                      id={id}
+                    />
                   </li>
               )
 

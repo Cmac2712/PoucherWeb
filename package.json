@@ -7,15 +7,19 @@
     "start": "vite",
     "prisma:pull": "prisma db pull",
     "prisma:generate": "prisma generate",
-    "deploy": "serverless deploy"
+    "deploy": "serverless deploy",
+    "dev:server": "serverless offline --httpPort 3001"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@aws-sdk/client-s3": "^3.142.0",
     "@prisma/client": "^4.0.0",
+    "@sparticuz/chrome-aws-lambda": "^15.5.0",
     "apollo-server-lambda": "^3.10.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "graphql": "^16.5.0",
+    "puppeteer-core": "^16.0.0",
     "react": "^18.0.0",
     "react-apollo": "^3.1.5",
     "react-dom": "^18.0.0",
@@ -31,6 +35,7 @@
     "concurrently": "^7.2.2",
     "expres": "^0.0.5",
     "postcss": "^8.4.14",
+    "puppeteer": "^16.0.0",
     "serverless": "^3.21.0",
     "serverless-offline": "^9.1.0",
     "serverless-webpack": "^5.7.1",

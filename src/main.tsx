@@ -12,10 +12,7 @@ import './index.css'
 
 const client = new ApolloClient({ 
   uri: import.meta.env.VITE_SERVER_ENDPOINT,
-  cache: new InMemoryCache(),
-  fetchOptions: {
-    mode: 'no-cors',
-  }
+  cache: new InMemoryCache()
 });
 
 ReactDOM
