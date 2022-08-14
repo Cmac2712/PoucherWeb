@@ -71,21 +71,24 @@ export const CreateBookmark = () => {
                     setFormData({ title: "", url: "" })
                 }}
             >
-                <input
-                    className="border-2 border-gray-400 p-2 h-10"
-                    value={formData.url}
-                    onChange={e => setFormData({ ...formData, url: e.target.value })}
-                    type="text"
-                    name="url"
-                    placeholder="Url"
-                />
+                <div className="flex">
+                    <input
+                        className="border-0 bg-gray-600 mr-2 p-2 h-10 min-w-0 rounded"
+                        value={formData.url}
+                        onChange={e => setFormData({ ...formData, url: e.target.value })}
+                        type="text"
+                        name="url"
+                        placeholder="https://&hellip;"
+                    />
 
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 h-10"
-                    type="submit"
-                >
-                    Add
-                </button>
+                    <button
+                        className="bg-green-500 border-gray-900 hover:bg-green-500 text-white font-bold py-2 px-4 h-10 rounded"
+                        type="submit"
+                    >
+                        Add
+                    </button>
+                </div>
+
             </form>
         </div>
     )

@@ -58,7 +58,9 @@ exports.screenshotHandler = async (event, context, callback) => {
 
         let page = await browser.newPage();
 
-        await page.goto( decodeURIComponent(req?.url));
+        await page.goto( decodeURIComponent(req?.url), {
+            waitUntil: 'networkidle2'
+        });
 
         screenshotBuffer = await page.screenshot();
 

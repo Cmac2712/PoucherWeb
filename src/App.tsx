@@ -1,18 +1,14 @@
 import { useEffect } from 'react'
 import './app.css'
 import { Bookmarks } from './components/Bookmarks'
-import { CreateBookmark } from './components/CreateBookmark'
+import { Sidebar } from './components/Sidebar'
 
 function App() {
 
   return (
-    <div className='bg-gray-50 p-4 h-screen'>
-      <h1 className={`text-2xl text-center font-bold text-zinc-700 mb-4`}>
-        App
-      </h1>  
-
+    <div className='bg-gray-50'>
+      <Sidebar />
       <Bookmarks />
-      <CreateBookmark />
     </div>
   )
 }

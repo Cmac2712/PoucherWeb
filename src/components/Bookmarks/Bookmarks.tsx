@@ -38,28 +38,36 @@ export const Bookmarks = () => {
     if (error) return <p>Error :(</p>;
 
     return (
-        <ul className="container mx-auto max-w-3xl mb-4">
+        <ul className="container mx-auto max-w-3xl mb-4 px-3 py-6 flex flex-wrap">
             {data?.bookmarks?.map(({ id, videoUrl, url, title }) => {
 
               if (videoUrl) return (
                   <li 
-                    className="pb-2"
+                    className="pb-2 mb-3 basis-full flex"
                     key={id}
                   >
-                    <a 
-                      href={url}
-                      target="_blank"
-                    >
-                      <img 
-                        width={500}
-                        src={`https://d16sq6175am0h2.cloudfront.net/${videoUrl}`} 
-                        alt="" 
-                      />
-                    </a>
 
-                    <DeleteBookmark
-                      id={id}
+                    <img 
+                      className="mr-4"
+                      width={150}
+                      src={`https://d16sq6175am0h2.cloudfront.net/${videoUrl}`} 
+                      alt="" 
                     />
+
+                    <h2>
+                      <a 
+                        href={url}
+                        target="_blank"
+                      >
+                        { url }
+                      </a>
+                    </h2>
+
+                    <div className="ms-auto">
+                      <DeleteBookmark
+                        id={id}
+                      />
+                    </div>
                   </li>
               )
 

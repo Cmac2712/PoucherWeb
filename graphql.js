@@ -8,6 +8,7 @@ const typeDefs = gql`
     title: String
     url: String
     videoUrl: String
+    createdAt: String
   }
 
   input BookmarkInput {
