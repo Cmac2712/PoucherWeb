@@ -8,6 +8,7 @@ const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
         createBookmark(bookmark: $bookmark) {
                 title
+                description
                 url
                 videoUrl
             }
@@ -17,21 +18,28 @@ const CREATE_BOOKMARK_MUTATION = gql`
 interface BookmarkInput {
     title: string
     url: string
+    description?: string
+}
+
+export const getBookmarkInfo = async (url: string) => {
+    const endpoint =  import.meta.env.VITE_SERVER_ENDPOINT
+    const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
+        url: encodeURIComponent(url)
+    })
+
+    return response.data.page;
 }
 
 export const getScreenshot = async (url:string) => {
-    
         const endpoint =  import.meta.env.VITE_SERVER_ENDPOINT
-        const data = {}
         const response = await axios.post(`${endpoint}screenshot?url=${encodeURIComponent(url)}`, {
             url: encodeURIComponent(url)
         })
     
-        return response.data
+        return response.data.thumbnailKey
 }
 
 export const getVideo = async (url:string) => {
-
     const endpoint = import.meta.env.MODE === 'production' ? import.meta.env.VITE_SERVER_ENDPOINT : 'http://localhost:3001/dev/'
     const response = await axios.get(`${endpoint}video?name=${encodeURIComponent(url)}`)
 
@@ -59,12 +67,14 @@ export const CreateBookmark = () => {
             <form
                 onSubmit={async (e) => {
                     e.preventDefault()
+
+                    const info = await getBookmarkInfo(formData.url)
+
                     createBookmark({
                         variables: {
                             bookmark: {
-                                ...formData,
-                                videoUrl: await getScreenshot(formData.url)
-                                //videoUrl: await getVideo(formData.url)
+                                ...info,
+                                url: formData.url
                             } 
                         }
                     })

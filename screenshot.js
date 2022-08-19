@@ -34,7 +34,6 @@ exports.screenshotHandler = async (event, context, callback) => {
     let thumbnailKey = null;
     let browser = null;
 
-
     const req = JSON.parse(event.body);
 
     let width = parseInt(req?.width);
@@ -87,6 +86,9 @@ exports.screenshotHandler = async (event, context, callback) => {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },
-        body: thumbnailKey
+        body: JSON.stringify({
+            thumbnailKey,
+            pageTitle: 'howdy'
+        }) 
     };
 };

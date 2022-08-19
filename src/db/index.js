@@ -19,7 +19,11 @@ exports.deleteBookmark = async function(id) {
 }
 
 exports.allBookmarks = async function() {
-  const allBookmarks = await prisma.bookmark.findMany()
+  const allBookmarks = await prisma.bookmark.findMany({
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
 
   return allBookmarks;
 } 

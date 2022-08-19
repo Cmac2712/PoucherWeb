@@ -89,6 +89,12 @@
         "LogGroupName": "/aws/lambda/apollo-lambda-dev-screenshot"
       }
     },
+    "GetBookmarkInfoLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/apollo-lambda-dev-getBookmarkInfo"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -215,6 +221,12 @@
                         "ScreenshotLogGroup",
                         "Arn"
                       ]
+                    },
+                    {
+                      "Fn::GetAtt": [
+                        "GetBookmarkInfoLogGroup",
+                        "Arn"
+                      ]
                     }
                   ]
                 }
@@ -231,7 +243,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/dev/1660478117697-2022-08-14T11:55:17.697Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/dev/1660937949184-2022-08-19T19:39:09.184Z/apollo-lambda.zip"
         },
         "Handler": "s_graphql.handler",
         "Runtime": "nodejs16.x",
@@ -256,7 +268,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/dev/1660478117697-2022-08-14T11:55:17.697Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/dev/1660937949184-2022-08-19T19:39:09.184Z/apollo-lambda.zip"
         },
         "Handler": "s_video.handler",
         "Runtime": "nodejs16.x",
@@ -281,7 +293,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/dev/1660478117697-2022-08-14T11:55:17.697Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/dev/1660937949184-2022-08-19T19:39:09.184Z/apollo-lambda.zip"
         },
         "Handler": "s_screenshot.handler",
         "Runtime": "nodejs16.x",
@@ -299,34 +311,69 @@
         "ScreenshotLogGroup"
       ]
     },
-    "GraphqlLambdaVersionHs2c5522qLlWbBJOOjU7uixDYjPkMhjey3nr86eTc": {
+    "GetBookmarkInfoLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/apollo-lambda/dev/1660937949184-2022-08-19T19:39:09.184Z/apollo-lambda.zip"
+        },
+        "Handler": "s_getBookmarkInfo.handler",
+        "Runtime": "nodejs16.x",
+        "FunctionName": "apollo-lambda-dev-getBookmarkInfo",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetBookmarkInfoLogGroup"
+      ]
+    },
+    "GraphqlLambdaVersionLGrXy0SqgKL9e0O86lRx3xpQWy438dgtDLx8aWFT58": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GraphqlLambdaFunction"
         },
-        "CodeSha256": "ohlRUdJRyiUSV/rnGZIntBmnDeoBv8zf6ImF8KtX6nk="
+        "CodeSha256": "OkDCq9LLqLLz3Wvfi2mLJwEgv+Mc2WDlv+0/eV5z1VU="
       }
     },
-    "VideoLambdaVersionj1CbW48DcsYA0ClqhfQiTACYLUfBFI11s8HgQCnppFs": {
+    "VideoLambdaVersionezloNxgmaOrPD6swdzZO8ELppHqz86hAXN47zBg7I": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "VideoLambdaFunction"
         },
-        "CodeSha256": "ohlRUdJRyiUSV/rnGZIntBmnDeoBv8zf6ImF8KtX6nk="
+        "CodeSha256": "OkDCq9LLqLLz3Wvfi2mLJwEgv+Mc2WDlv+0/eV5z1VU="
       }
     },
-    "ScreenshotLambdaVersionv25chjPEn850mqkmz25A44tqB2DH9AAKcthcV5uvivU": {
+    "ScreenshotLambdaVersionHrMh9kgQXWG8GXrJMtBr2gC2kG1gvDBDbEOv5ncn14": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ScreenshotLambdaFunction"
         },
-        "CodeSha256": "ohlRUdJRyiUSV/rnGZIntBmnDeoBv8zf6ImF8KtX6nk="
+        "CodeSha256": "OkDCq9LLqLLz3Wvfi2mLJwEgv+Mc2WDlv+0/eV5z1VU="
+      }
+    },
+    "GetBookmarkInfoLambdaVersionN32maGuMHN6tyFYyQ8sGosjTQASSuZnXOOFC5r4nE": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetBookmarkInfoLambdaFunction"
+        },
+        "CodeSha256": "OkDCq9LLqLLz3Wvfi2mLJwEgv+Mc2WDlv+0/eV5z1VU="
       }
     },
     "ApiGatewayRestApi": {
@@ -366,6 +413,21 @@
           ]
         },
         "PathPart": "screenshot",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceGetbookmarkinfo": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "getBookmarkInfo",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -503,6 +565,51 @@
         },
         "ResourceId": {
           "Ref": "ApiGatewayResourceScreenshot"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodGetbookmarkinfoOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceGetbookmarkinfo"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -699,7 +806,53 @@
         "ScreenshotLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1660478096676": {
+    "ApiGatewayMethodGetbookmarkinfoPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceGetbookmarkinfo"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetBookmarkInfoLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "GetBookmarkInfoLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayDeployment1660937921934": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -711,10 +864,12 @@
         "ApiGatewayMethodOptions",
         "ApiGatewayMethodVideoOptions",
         "ApiGatewayMethodScreenshotOptions",
+        "ApiGatewayMethodGetbookmarkinfoOptions",
         "ApiGatewayMethodPost",
         "ApiGatewayMethodGet",
         "ApiGatewayMethodVideoGet",
-        "ApiGatewayMethodScreenshotPost"
+        "ApiGatewayMethodScreenshotPost",
+        "ApiGatewayMethodGetbookmarkinfoPost"
       ]
     },
     "GraphqlLambdaPermissionApiGateway": {
@@ -797,6 +952,43 @@
         "FunctionName": {
           "Fn::GetAtt": [
             "ScreenshotLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetBookmarkInfoLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetBookmarkInfoLambdaFunction",
             "Arn"
           ]
         },
@@ -937,7 +1129,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/dev/1660478117697-2022-08-14T11:55:17.697Z/custom-resources.zip"
+          "S3Key": "serverless/apollo-lambda/dev/1660937949184-2022-08-19T19:39:09.184Z/custom-resources.zip"
         },
         "FunctionName": "apollo-lambda-dev-custom-resource-apigw-cw-role",
         "Handler": "api-gateway-cloud-watch-role/handler.handler",
@@ -985,6 +1177,16 @@
         }
       }
     },
+    "CWLSubFilterGetBookmarkInfoLogGroupEuWest2": {
+      "Type": "AWS::Logs::SubscriptionFilter",
+      "Properties": {
+        "DestinationArn": "arn:aws:logs:eu-west-2:802587217904:destination:26dfeea1-6159-4669-8b1f-9db97b8a8b65#tm779xT5b5ByybJj14#apollo-lambda#dev",
+        "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+        "LogGroupName": {
+          "Ref": "GetBookmarkInfoLogGroup"
+        }
+      }
+    },
     "CWLSubFilterApiGatewayLogGroupEuWest2": {
       "Type": "AWS::Logs::SubscriptionFilter",
       "Properties": {
@@ -1019,7 +1221,7 @@
     "GraphqlLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GraphqlLambdaVersionHs2c5522qLlWbBJOOjU7uixDYjPkMhjey3nr86eTc"
+        "Ref": "GraphqlLambdaVersionLGrXy0SqgKL9e0O86lRx3xpQWy438dgtDLx8aWFT58"
       },
       "Export": {
         "Name": "sls-apollo-lambda-dev-GraphqlLambdaFunctionQualifiedArn"
@@ -1028,7 +1230,7 @@
     "VideoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "VideoLambdaVersionj1CbW48DcsYA0ClqhfQiTACYLUfBFI11s8HgQCnppFs"
+        "Ref": "VideoLambdaVersionezloNxgmaOrPD6swdzZO8ELppHqz86hAXN47zBg7I"
       },
       "Export": {
         "Name": "sls-apollo-lambda-dev-VideoLambdaFunctionQualifiedArn"
@@ -1037,10 +1239,19 @@
     "ScreenshotLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ScreenshotLambdaVersionv25chjPEn850mqkmz25A44tqB2DH9AAKcthcV5uvivU"
+        "Ref": "ScreenshotLambdaVersionHrMh9kgQXWG8GXrJMtBr2gC2kG1gvDBDbEOv5ncn14"
       },
       "Export": {
         "Name": "sls-apollo-lambda-dev-ScreenshotLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetBookmarkInfoLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetBookmarkInfoLambdaVersionN32maGuMHN6tyFYyQ8sGosjTQASSuZnXOOFC5r4nE"
+      },
+      "Export": {
+        "Name": "sls-apollo-lambda-dev-GetBookmarkInfoLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {

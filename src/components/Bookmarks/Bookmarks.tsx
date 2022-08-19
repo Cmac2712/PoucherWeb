@@ -9,8 +9,10 @@ const GET_BOOKMARKS = gql`
     bookmarks {
       id
       title
+      description
       url
       videoUrl
+      createdAt
     }
   }
 `
@@ -18,8 +20,10 @@ const GET_BOOKMARKS = gql`
 export interface Bookmark {
     id: number
     title: string
+    description: string
     url: string
     videoUrl: string
+    createdAt: string
 }
 
 export const Bookmarks = () => {
@@ -30,7 +34,7 @@ export const Bookmarks = () => {
     const [nothing, setNothing] = useState(false)
 
     if (loading) return (
-      <div className="container mx-auto max-w-3xl mb-4">
+      <div className="mb-4">
         <p>Loading...</p>
       </div>
     )
@@ -38,8 +42,8 @@ export const Bookmarks = () => {
     if (error) return <p>Error :(</p>;
 
     return (
-        <ul className="container mx-auto max-w-3xl mb-4 px-3 py-6 flex flex-wrap">
-            {data?.bookmarks?.map(({ id, videoUrl, url, title }) => {
+        <ul className="mb-4 px-3 py-6 flex flex-wrap">
+            {data?.bookmarks?.map(({ id, videoUrl, url, title, description }) => {
 
               if (videoUrl) return (
                   <li 
@@ -59,7 +63,8 @@ export const Bookmarks = () => {
                         href={url}
                         target="_blank"
                       >
-                        { url }
+                        { title }
+                        { description }
                       </a>
                     </h2>
 
@@ -73,16 +78,16 @@ export const Bookmarks = () => {
 
               return (
                   <li 
-                    className="pb-2"
+                    className="pb-2 mb-3 basis-full flex"
                     key={id}
                   >
 
-                    <h3 className="text-2xl">{ title }</h3>
                     <a 
                       href={url}
                       target="_blank"
                     >
-                      {url}
+                      <h3 className="text-2xl">{ title }</h3>
+                      { description }
                     </a>
 
                     <DeleteBookmark

@@ -6,6 +6,7 @@ const typeDefs = gql`
   type Bookmark {
     id: ID!
     title: String
+    description: String
     url: String
     videoUrl: String
     createdAt: String
@@ -14,7 +15,8 @@ const typeDefs = gql`
   input BookmarkInput {
     title: String
     url: String
-    videoUrl: String
+    description: String
+    videoUrl?: String
   }
 
   type Query {
@@ -27,8 +29,6 @@ const typeDefs = gql`
   }
 `
   
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
     bookmarks: () => allBookmarks()

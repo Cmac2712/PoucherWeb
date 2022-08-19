@@ -6,9 +6,11 @@ import { Sidebar } from './components/Sidebar'
 function App() {
 
   return (
-    <div className='bg-gray-50'>
-      <Sidebar />
-      <Bookmarks />
+    <div className='flex bg-gray-50'>
+        <Sidebar />
+        <div className='h-screen overflow-scroll'>
+          <Bookmarks />
+        </div>
     </div>
   )
 }

@@ -33,6 +33,13 @@ functions:
         path: /screenshot
         method: post
         cors: true
+  getBookmarkInfo: 
+    handler: getBookmarkInfo.getBookmarkInfoHandler
+    events:
+    - http:
+        path: /getBookmarkInfo
+        method: post
+        cors: true
 plugins:
   - serverless-offline
 package:
