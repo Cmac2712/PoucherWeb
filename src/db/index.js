@@ -8,6 +8,19 @@ exports.createBookmark = async function(bookmark) {
   })
 }
 
+exports.updateBookmark = async function(id, updates) {
+  const bookmark = await prisma.bookmark.update({
+    where: {
+      id: parseInt(id),
+    }, 
+    data: {
+      ...updates
+    }
+  })
+
+  return bookmark;
+}
+
 exports.deleteBookmark = async function(id) {
   const bookmark = await prisma.bookmark.delete({
     where: {

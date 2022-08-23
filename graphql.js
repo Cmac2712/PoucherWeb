@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
 const { v4: uuidv4, } = require('uuid');
-const { allBookmarks, deleteBookmark, createBookmark } = require('./src/db/index.js');
+const { allBookmarks, deleteBookmark, createBookmark, updateBookmark } = require('./src/db/index.js');
 
 const typeDefs = gql`
   type Bookmark {
@@ -8,7 +8,8 @@ const typeDefs = gql`
     title: String
     description: String
     url: String
-    videoUrl: String
+    videoURL: String
+    screenshotURL: String
     createdAt: String
   }
 
@@ -16,7 +17,7 @@ const typeDefs = gql`
     title: String
     url: String
     description: String
-    videoUrl?: String
+    screenshotURL: String
   }
 
   type Query {
@@ -25,23 +26,22 @@ const typeDefs = gql`
 
   type Mutation {
     createBookmark(bookmark: BookmarkInput): Bookmark 
+    updateBookmark(id: ID!, updates: BookmarkInput): Bookmark 
     deleteBookmark(id: ID!): Bookmark 
   }
 `
-  
+
 const resolvers = {
   Query: {
     bookmarks: () => allBookmarks()
-  }
-  ,
+  },
   Mutation: {
+    updateBookmark: (root, { id, updates }) => updateBookmark(id, updates),
     createBookmark: (root, { bookmark }) => createBookmark({
       ...bookmark,
       authorId: 1,
     }),
-    deleteBookmark: (root, { id } ) => {
-      return deleteBookmark(id)
-    }
+    deleteBookmark: (root, { id } ) => deleteBookmark(id)
   } 
 };
 

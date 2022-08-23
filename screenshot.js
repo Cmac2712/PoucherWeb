@@ -87,8 +87,7 @@ exports.screenshotHandler = async (event, context, callback) => {
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },
         body: JSON.stringify({
-            thumbnailKey,
-            pageTitle: 'howdy'
+            thumbnailKey
         }) 
     };
 };

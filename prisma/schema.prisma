@@ -9,15 +9,16 @@ datasource db {
 }
 
 model Bookmark {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  url         String?
-  published   Boolean  @default(false)
-  authorId    Int
-  videoUrl    String?
-  description String?
-  author      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  url           String?
+  published     Boolean  @default(false)
+  authorId      Int
+  videoURL      String?
+  description   String?
+  screenshotURL String?
+  author        User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Profile {

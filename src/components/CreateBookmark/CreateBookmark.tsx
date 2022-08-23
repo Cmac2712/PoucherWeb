@@ -3,26 +3,30 @@ import { useEffect, useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 
 import { Bookmark, GET_BOOKMARKS } from '../Bookmarks';
+import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
+import { UpdateBookmark } from '../UpdateBookmark';
 
 const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
         createBookmark(bookmark: $bookmark) {
+                id
                 title
                 description
                 url
-                videoUrl
+                videoURL
             }
 	}
 `;
 
-interface BookmarkInput {
+export interface BookmarkInput {
     title: string
     url: string
+    screenshotURL?: string | null 
     description?: string
 }
 
 export const getBookmarkInfo = async (url: string) => {
-    const endpoint =  import.meta.env.VITE_SERVER_ENDPOINT
+    const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
     const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
         url: encodeURIComponent(url)
     })
@@ -30,21 +34,30 @@ export const getBookmarkInfo = async (url: string) => {
     return response.data.page;
 }
 
-export const getScreenshot = async (url:string) => {
-        const endpoint =  import.meta.env.VITE_SERVER_ENDPOINT
+export const getScreenshot = async (url: string) => {
+
+    console.log('getting screenshot from:', url)
+
+    try {
+        const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
         const response = await axios.post(`${endpoint}screenshot?url=${encodeURIComponent(url)}`, {
             url: encodeURIComponent(url)
         })
-    
-        return response.data.thumbnailKey
+
+        console.log('response from screenshot:', response)
+
+        return response.data.thumbnailKey as string | null;
+    } catch (e) {
+        console.error(e)
+        return false
+    }
 }
 
-export const getVideo = async (url:string) => {
+export const getVideo = async (url: string) => {
     const endpoint = import.meta.env.MODE === 'production' ? import.meta.env.VITE_SERVER_ENDPOINT : 'http://localhost:3001/dev/'
     const response = await axios.get(`${endpoint}video?name=${encodeURIComponent(url)}`)
 
     return response.data.body.download[1].url
-
 }
 
 export const CreateBookmark = () => {
@@ -62,6 +75,14 @@ export const CreateBookmark = () => {
         ]
     });
 
+    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION, {
+        refetchQueries: [
+        {
+            query: GET_BOOKMARKS
+        }
+        ]
+    });
+
     return (
         <div className="container mx-auto max-w-3xl">
             <form
@@ -70,14 +91,25 @@ export const CreateBookmark = () => {
 
                     const info = await getBookmarkInfo(formData.url)
 
-                    createBookmark({
+                    const createdBookmark = await createBookmark({
                         variables: {
                             bookmark: {
                                 ...info,
                                 url: formData.url
-                            } 
+                            }
                         }
                     })
+
+                    //Update bookmark with screenshot
+                    updateBookmarkWithScreenshot({
+                        variables: {
+                            id: createdBookmark?.data?.createBookmark?.id,
+                            updates: {
+                                screenshotURL: await getScreenshot(formData.url)
+                            }
+                        }
+                    })
+
                     setFormData({ title: "", url: "" })
                 }}
             >

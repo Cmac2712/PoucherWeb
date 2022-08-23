@@ -28,6 +28,11 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
     } catch (error) {
         console.log('Error: ' ,error)
         return {
+            headers: {
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            },
             statusCode: 500,
             body: JSON.stringify(error)
         };

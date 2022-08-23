@@ -27,6 +27,7 @@ export const DeleteBookmark = (
 
     return (
         <button
+            className="text-red-900 font-bold uppercase"
             onClick={async (e) => {
                 e.preventDefault()
                 setDeleted([...deleted, id])
