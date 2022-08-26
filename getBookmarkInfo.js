@@ -19,7 +19,7 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
         let page = await browser.newPage();
 
         await page.goto( decodeURIComponent(req?.url), {
-            waitUntil: 'networkidle2'
+            waitUntil: 'load'
         });
 
     pageTitle = await page.title();
@@ -56,3 +56,59 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
         }) 
     };
 };
+
+
+/**
+ * METHOD 2
+ */
+
+// const axios = require('axios').default;
+
+// function matchTitle(str) {
+//     const match = str.match(/<title>(.*)<\/title>/);
+//     return match ? match[1] : 'No title found';
+// }
+
+// function matchDescription(str) {
+//     const match = str.match(/<meta name="description" content="(.*)"/);
+//     return match ? match[1] : 'No description found';
+// }
+
+// exports.getBookmarkInfoHandler = async (event, context, callback) => {
+
+//     const url = decodeURIComponent(JSON.parse(event.body)?.url); 
+//     let response;
+
+//     try {
+//        response = await axios.get(url)
+//     } catch (e) {
+//         console.log('Error: ' ,e)
+
+//         return {
+//             statusCode: 500,
+//             headers: {
+//                 "Access-Control-Allow-Headers" : "Content-Type",
+//                 "Access-Control-Allow-Origin": "*",
+//                 "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+//             },
+//             body: JSON.stringify({
+//                 'error': 'failed to fetch page'
+//             }) 
+//         };
+//     }
+
+//     return {
+//         statusCode: 200,
+//         headers: {
+//             "Access-Control-Allow-Headers" : "Content-Type",
+//             "Access-Control-Allow-Origin": "*",
+//             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+//         },
+//         body: JSON.stringify({
+//             'page': {
+//                 'title': matchTitle(response?.data),
+//                 'description':  matchDescription(response?.data)
+//             } 
+//         }) 
+//     };
+// };

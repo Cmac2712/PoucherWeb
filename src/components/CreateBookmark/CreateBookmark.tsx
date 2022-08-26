@@ -27,6 +27,7 @@ export interface BookmarkInput {
 
 export const getBookmarkInfo = async (url: string) => {
     const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
+    //const endpoint = 'http://localhost:3001/dev/';
     const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
         url: encodeURIComponent(url)
     })
@@ -100,7 +101,7 @@ export const CreateBookmark = () => {
                         }
                     })
 
-                    //Update bookmark with screenshot
+                    // //Update bookmark with screenshot
                     updateBookmarkWithScreenshot({
                         variables: {
                             id: createdBookmark?.data?.createBookmark?.id,
