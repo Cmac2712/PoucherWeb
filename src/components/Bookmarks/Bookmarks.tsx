@@ -13,8 +13,16 @@ export interface Bookmark {
 }
 
 const GET_BOOKMARKS_BY_AUTHOR = gql`
-  query GetBookmarksByAuthor($id: ID!) {
-    getBookmarksByAuthor(id: $id) {
+  query GetBookmarksByAuthor(
+      $id: ID!
+      $skip: Int
+      $take: Int
+    ) {
+    getBookmarksByAuthor(
+        id: $id
+        skip: $skip
+        take: $take
+      ) {
       id
       title
       description
@@ -34,15 +42,15 @@ export const Bookmarks = ({
   authorID 
 }:Props) => {
 
-    const { loading, error, data } = useQuery<{
+    const { loading, error, data, fetchMore } = useQuery<{
         getBookmarksByAuthor: Bookmark[]
     }>(GET_BOOKMARKS_BY_AUTHOR, {
         variables: {
-          id: authorID 
+          id: authorID,
+          skip: 0,
+          take: 6 
         }
     })
-
-    const [nothing, setNothing] = useState(false)
 
     if (loading) return (
       <div className="mb-4">
@@ -81,6 +89,20 @@ export const Bookmarks = ({
             }
 
             )}
+            <li>
+              {/* <button
+                onClick={() => {
+                  fetchMore({
+                    variables: {
+                      skip: 6,
+                      take: 12
+                    }
+                  })
+                }}
+              >
+                More
+              </button> */}
+            </li>
         </ul>
     );
 }

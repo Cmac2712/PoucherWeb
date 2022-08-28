@@ -24,7 +24,7 @@ const typeDefs = gql`
 
   type Query {
     bookmarks: [Bookmark]
-    getBookmarksByAuthor(id: ID!): [Bookmark]
+    getBookmarksByAuthor(id: ID!, skip: Int, take: Int): [Bookmark]
   }
 
   type Mutation {
@@ -37,7 +37,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     bookmarks: () => allBookmarks(),
-    getBookmarksByAuthor: (root, { id }) => getBookmarksByAuthor(id) 
+    getBookmarksByAuthor: (root, { id, skip, take }) => getBookmarksByAuthor(id, skip, take) 
   },
   Mutation: {
     updateBookmark: (root, { id, updates }) => updateBookmark(id, updates),

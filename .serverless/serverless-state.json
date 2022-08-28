@@ -255,7 +255,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z/apollo-lambda.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z/apollo-lambda.zip"
               },
               "Handler": "s_graphql.handler",
               "Runtime": "nodejs16.x",
@@ -280,7 +280,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z/apollo-lambda.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z/apollo-lambda.zip"
               },
               "Handler": "s_video.handler",
               "Runtime": "nodejs16.x",
@@ -305,7 +305,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z/apollo-lambda.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z/apollo-lambda.zip"
               },
               "Handler": "s_screenshot.handler",
               "Runtime": "nodejs16.x",
@@ -330,7 +330,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z/apollo-lambda.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z/apollo-lambda.zip"
               },
               "Handler": "s_getBookmarkInfo.handler",
               "Runtime": "nodejs16.x",
@@ -348,44 +348,44 @@
               "GetBookmarkInfoLogGroup"
             ]
           },
-          "GraphqlLambdaVersionwhiJCQpe432Nj5nFeeOvs0llzJVv3MQa6gjwsRD4Xx8": {
+          "GraphqlLambdaVersionVUgVGDdSLPCuAn0SrZ9GI2o8CBoPw7a9vJPJnAx63Q": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GraphqlLambdaFunction"
               },
-              "CodeSha256": "qf6xMx7xMDVAz0lWaw7sJz0CWMtkgRuNfBi9Zm4TvV0="
+              "CodeSha256": "bJXWh9depTp7Z3vMncUhOfiMkItGBATJfV0d5wQHjN0="
             }
           },
-          "VideoLambdaVersionryCvVurgk2mYlywuuxSBGcQvwHIPHY4xfdwcJkT0OA": {
+          "VideoLambdaVersionWrfWpodI1ogjCpu70MjVo6Qkfhni1LM2XZefcOIzgQY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "VideoLambdaFunction"
               },
-              "CodeSha256": "qf6xMx7xMDVAz0lWaw7sJz0CWMtkgRuNfBi9Zm4TvV0="
+              "CodeSha256": "bJXWh9depTp7Z3vMncUhOfiMkItGBATJfV0d5wQHjN0="
             }
           },
-          "ScreenshotLambdaVersionQX3DgmgiA7gA0T7Z2u5lnJUuWj4bpbmWxkJL6Y2eeq8": {
+          "ScreenshotLambdaVersionuqpzYth2A5Of8Hx70jScXv6128JYptjQ7tJ4qEg8VU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ScreenshotLambdaFunction"
               },
-              "CodeSha256": "qf6xMx7xMDVAz0lWaw7sJz0CWMtkgRuNfBi9Zm4TvV0="
+              "CodeSha256": "bJXWh9depTp7Z3vMncUhOfiMkItGBATJfV0d5wQHjN0="
             }
           },
-          "GetBookmarkInfoLambdaVersion4mAOMl77o8FEPsYuJuosE26VKgQWE9DSZhdEQcZmVAk": {
+          "GetBookmarkInfoLambdaVersionSP6bsBXQof5vZ3ukrlTOvjKaQEse4EwxkjyQge5V8c": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetBookmarkInfoLambdaFunction"
               },
-              "CodeSha256": "qf6xMx7xMDVAz0lWaw7sJz0CWMtkgRuNfBi9Zm4TvV0="
+              "CodeSha256": "bJXWh9depTp7Z3vMncUhOfiMkItGBATJfV0d5wQHjN0="
             }
           },
           "ApiGatewayRestApi": {
@@ -864,7 +864,7 @@
               "GetBookmarkInfoLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1661715450502": {
+          "ApiGatewayDeployment1661719326264": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -1141,7 +1141,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z/custom-resources.zip"
+                "S3Key": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z/custom-resources.zip"
               },
               "FunctionName": "apollo-lambda-dev-custom-resource-apigw-cw-role",
               "Handler": "api-gateway-cloud-watch-role/handler.handler",
@@ -1233,7 +1233,7 @@
           "GraphqlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GraphqlLambdaVersionwhiJCQpe432Nj5nFeeOvs0llzJVv3MQa6gjwsRD4Xx8"
+              "Ref": "GraphqlLambdaVersionVUgVGDdSLPCuAn0SrZ9GI2o8CBoPw7a9vJPJnAx63Q"
             },
             "Export": {
               "Name": "sls-apollo-lambda-dev-GraphqlLambdaFunctionQualifiedArn"
@@ -1242,7 +1242,7 @@
           "VideoLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "VideoLambdaVersionryCvVurgk2mYlywuuxSBGcQvwHIPHY4xfdwcJkT0OA"
+              "Ref": "VideoLambdaVersionWrfWpodI1ogjCpu70MjVo6Qkfhni1LM2XZefcOIzgQY"
             },
             "Export": {
               "Name": "sls-apollo-lambda-dev-VideoLambdaFunctionQualifiedArn"
@@ -1251,7 +1251,7 @@
           "ScreenshotLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ScreenshotLambdaVersionQX3DgmgiA7gA0T7Z2u5lnJUuWj4bpbmWxkJL6Y2eeq8"
+              "Ref": "ScreenshotLambdaVersionuqpzYth2A5Of8Hx70jScXv6128JYptjQ7tJ4qEg8VU"
             },
             "Export": {
               "Name": "sls-apollo-lambda-dev-ScreenshotLambdaFunctionQualifiedArn"
@@ -1260,7 +1260,7 @@
           "GetBookmarkInfoLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetBookmarkInfoLambdaVersion4mAOMl77o8FEPsYuJuosE26VKgQWE9DSZhdEQcZmVAk"
+              "Ref": "GetBookmarkInfoLambdaVersionSP6bsBXQof5vZ3ukrlTOvjKaQEse4EwxkjyQge5V8c"
             },
             "Export": {
               "Name": "sls-apollo-lambda-dev-GetBookmarkInfoLambdaFunctionQualifiedArn"
@@ -1446,7 +1446,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "GraphqlLambdaVersionwhiJCQpe432Nj5nFeeOvs0llzJVv3MQa6gjwsRD4Xx8"
+        "versionLogicalId": "GraphqlLambdaVersionVUgVGDdSLPCuAn0SrZ9GI2o8CBoPw7a9vJPJnAx63Q"
       },
       "video": {
         "handler": "s_video.handler",
@@ -1482,7 +1482,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "VideoLambdaVersionryCvVurgk2mYlywuuxSBGcQvwHIPHY4xfdwcJkT0OA"
+        "versionLogicalId": "VideoLambdaVersionWrfWpodI1ogjCpu70MjVo6Qkfhni1LM2XZefcOIzgQY"
       },
       "screenshot": {
         "handler": "s_screenshot.handler",
@@ -1518,7 +1518,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "ScreenshotLambdaVersionQX3DgmgiA7gA0T7Z2u5lnJUuWj4bpbmWxkJL6Y2eeq8"
+        "versionLogicalId": "ScreenshotLambdaVersionuqpzYth2A5Of8Hx70jScXv6128JYptjQ7tJ4qEg8VU"
       },
       "getBookmarkInfo": {
         "handler": "s_getBookmarkInfo.handler",
@@ -1554,7 +1554,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "GetBookmarkInfoLambdaVersion4mAOMl77o8FEPsYuJuosE26VKgQWE9DSZhdEQcZmVAk"
+        "versionLogicalId": "GetBookmarkInfoLambdaVersionSP6bsBXQof5vZ3ukrlTOvjKaQEse4EwxkjyQge5V8c"
       }
     },
     "configValidationMode": "warn",
@@ -1585,7 +1585,7 @@
           "serverless_sdk/**"
         ],
         "artifact": "/Users/craig/Sites/bookmarks/.serverless/apollo-lambda.zip",
-        "artifactDirectoryName": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z"
+        "artifactDirectoryName": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z"
       }
     },
     "app": "apollo-lambda",
@@ -1598,7 +1598,7 @@
     "artifact": "/Users/craig/Sites/bookmarks/.serverless/apollo-lambda.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/apollo-lambda/dev/1661715474109-2022-08-28T19:37:54.109Z",
+    "artifactDirectoryName": "serverless/apollo-lambda/dev/1661719352894-2022-08-28T20:42:32.894Z",
     "artifact": "apollo-lambda.zip"
   }
 }

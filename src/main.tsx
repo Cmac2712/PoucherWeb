@@ -10,10 +10,29 @@ import {
 } from "@apollo/client";
 import './index.css'
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        getBookmarksByAuthor: {
+          // Don't cache separate results based on
+          // any of this field's arguments.
+          keyArgs: false,
+
+          // Concatenate the incoming list items with
+          // the existing list items.
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        }
+      }
+    }
+  }
+})
+
 const client = new ApolloClient({ 
   uri: import.meta.env.VITE_SERVER_ENDPOINT,
-  //uri: 'http://localhost:3001/dev/',
-  cache: new InMemoryCache()
+  cache
 });
 
 ReactDOM
