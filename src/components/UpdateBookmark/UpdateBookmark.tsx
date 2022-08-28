@@ -53,7 +53,7 @@ export const UpdateBookmark = (
     <div className="bookmark-preview flex flex-wrap w-full">
       <h2 className="text-xl w-full">
         <input
-          className="w-full"
+          className="w-full mb-2 bg-base-300 p-2"
           type="text"
           placeholder="new title"
           name="title"
@@ -63,7 +63,7 @@ export const UpdateBookmark = (
       </h2>
       <p className="w-full">
         <textarea
-          className="w-full"
+          className="w-full bg-base-300 p-2"
           placeholder="new description"
           name="description"
           defaultValue={formData.description}
@@ -72,7 +72,7 @@ export const UpdateBookmark = (
       </p>
       <div className="tasks ml-auto">
         <button
-          className="text-green-900 font-bold uppercase mr-2"
+          className="btn font-bold uppercase mt-2"
           onClick={() => {
             updateBookmark({
               variables: {

@@ -14,6 +14,10 @@
     "@apollo/client": "^3.6.9",
     "@auth0/auth0-react": "^1.10.2",
     "@aws-sdk/client-s3": "^3.142.0",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^4.0.0",
     "@sparticuz/chrome-aws-lambda": "^15.5.0",
     "apollo-server-lambda": "^3.10.0",
@@ -28,7 +32,6 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "daisyui": "^2.24.0",
     "@tailwindcss/typography": "^0.5.4",
     "@types/react": "^16.0.0",
     "@types/react-dom": "^18.0.0",
@@ -36,6 +39,7 @@
     "autoprefixer": "^10.4.7",
     "body-parser": "^1.20.0",
     "concurrently": "^7.2.2",
+    "daisyui": "^2.24.0",
     "expres": "^0.0.5",
     "postcss": "^8.4.14",
     "puppeteer": "^16.0.0",

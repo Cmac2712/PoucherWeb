@@ -1,6 +1,8 @@
 import { useState } from "react"
-import { useQuery, useMutation, gql } from "@apollo/client"
+import { useMutation, gql } from "@apollo/client"
 import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const DELETE_BOOKMARK_MUTATION = gql`
   mutation DELETE_BOOKMARK($id: ID!) {
@@ -38,7 +40,7 @@ export const DeleteBookmark = ({
 
     return (
         <button
-            className="text-red-900 font-bold uppercase"
+            className="btn btn-sm font-bold"
             onClick={async (e) => {
                 e.preventDefault()
                 setDeleted([...deleted, id])
@@ -49,7 +51,7 @@ export const DeleteBookmark = ({
                 })
             }}
         >
-            delete
+            <FontAwesomeIcon icon={faTrashCan}/>
         </button>
     )
 }

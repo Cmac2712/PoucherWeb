@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
-
 import { Bookmark, GET_BOOKMARKS_BY_AUTHOR } from '../Bookmarks';
 import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
-import { UpdateBookmark } from '../UpdateBookmark';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
@@ -130,14 +130,14 @@ export const CreateBookmark = () => {
                         onChange={e => setFormData({ ...formData, url: e.target.value })}
                         name="url"
                         placeholder="https://&hellip;"
-                        className="input input-bordered input-primary w-full " 
+                        className="input input-bordered input-primary w-full mr-2" 
                     />
 
                     <button
                         className="btn btn-square flex-grow-1 flex-auto w-auto px-4"
                         type="submit"
                     >
-                        Add
+                        <FontAwesomeIcon icon={faPlus} />
                     </button>
                 </div>
 

@@ -27,7 +27,7 @@ export const BookmarkPreview = ({
     )
 
     return (
-     <div className="bookmark-preview max-w-3xl flex flex-wrap">
+     <div className="bookmark-preview w-full max-w-3xl flex flex-wrap">
         <h2 className="w-full font-bold text-xl">{title}</h2>
         <p className="w-full">{description}</p>
         <a
@@ -38,9 +38,9 @@ export const BookmarkPreview = ({
             { url }
         </a>
 
-        <div className="tasks ml-auto">
+        <div className="tasks flex items-start ml-auto">
             <button
-                className="text-green-900 font-bold uppercase mr-2"
+                className="btn btn-sm text-xs font-bold mr-2"
                 onClick={() => {
                     setUpdateMode(true)
                 }}

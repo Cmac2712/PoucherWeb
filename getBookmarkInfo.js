@@ -1,6 +1,18 @@
 const chromium = require('@sparticuz/chrome-aws-lambda');
 const REGION = "eu-west-2";
 
+async function getPageDescription(page) {
+    let pageDescription = "";
+
+    try {
+        pageDescription = await page.$eval("head > meta[name='description']", element => element.content);
+    } catch (error) {
+        console.log(error);
+    }
+
+    return pageDescription;
+}
+
 exports.getBookmarkInfoHandler = async (event, context, callback) => {
     let browser = null;
     let pageTitle = null;
@@ -20,8 +32,8 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
 
         await page.goto( decodeURIComponent(req?.url));
 
-    pageTitle = await page.title();
-    pageDescription = await page.$eval("head > meta[name='description']", element => element.content);
+        pageTitle = await page.title();
+        pageDescription = await getPageDescription(page);
 
     } catch (error) {
         console.log('Error: ' ,error)
@@ -39,6 +51,9 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
             await browser.close();
         }
     }
+
+
+
     return {
         statusCode: 200,
         headers: {

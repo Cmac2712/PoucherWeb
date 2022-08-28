@@ -4,6 +4,8 @@ import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
 import { Profile } from "../Profile";
 import { CreateBookmark } from "../CreateBookmark";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 export const AdminScreen = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -13,7 +15,14 @@ export const AdminScreen = () => {
   }
 
   if (!isAuthenticated) {
-    return <LoginButton />;
+    return (
+      <div className="flex column items-center justify-center h-screen gradient-brand">
+        <header className="fixed w-full flex justify-end top-0 p-2">
+            <LoginButton />
+        </header>
+        <h1 className="text-5xl font-bold text-white">Bookmarks</h1>
+      </div>
+    ) 
   }
 
   if (isAuthenticated) {
@@ -21,9 +30,11 @@ export const AdminScreen = () => {
       <>
         <div className="drawer drawer-mobile">
           <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content p-5 pt-20 flex flex-col items-center">
+          <div className="drawer-content p-5 pt-20 lg:pt-5 flex flex-col items-center">
 
-            <label htmlFor="my-drawer-2" className="btn btn-ghost fixed left-5 top-5 drawer-button lg:hidden">Toggle Sidebar</label>
+            <label htmlFor="my-drawer-2" className="btn btn-ghost fixed left-5 top-5 drawer-button lg:hidden">
+              <FontAwesomeIcon icon={faBars} />
+            </label>
 
             <Bookmarks authorID={user?.sub} />
 

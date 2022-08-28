@@ -58,12 +58,12 @@ export const Bookmarks = ({
 
                return (
                   <li 
-                    className="pb-2 mb-3 basis-full flex"
+                    className="pb-2 mb-3 basis-full flex items-start"
                     key={id}
                   >
 
                     <img 
-                      className="mr-4 rounded"
+                      className="mt-1 mr-4 rounded"
                       width={100}
                       src={`https://d16sq6175am0h2.cloudfront.net/${screenshotURL}`} 
                       alt="" 

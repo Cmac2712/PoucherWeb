@@ -10,8 +10,7 @@ function App() {
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID }
       redirectUri={window.location.origin}
     >
-
-    <AdminScreen /> 
+      <AdminScreen /> 
 
     </Auth0Provider>
   )
