@@ -27,11 +27,11 @@ export const BookmarkPreview = ({
     )
 
     return (
-     <div className="bookmark-preview flex flex-wrap">
-        <h2 className="text-xl w-full">{title}</h2>
+     <div className="bookmark-preview max-w-3xl flex flex-wrap">
+        <h2 className="w-full font-bold text-xl">{title}</h2>
         <p className="w-full">{description}</p>
         <a
-            className="text-blue-500"
+            className="text-xs text-blue-500"
             href={url}
             target="_blank"
         >

@@ -63,8 +63,8 @@ export const Bookmarks = ({
                   >
 
                     <img 
-                      className="mr-4"
-                      width={150}
+                      className="mr-4 rounded"
+                      width={100}
                       src={`https://d16sq6175am0h2.cloudfront.net/${screenshotURL}`} 
                       alt="" 
                     />
