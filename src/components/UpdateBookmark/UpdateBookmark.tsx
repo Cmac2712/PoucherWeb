@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, gql } from "@apollo/client"
-import { GET_BOOKMARKS } from "../Bookmarks";
+import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks";
 import { BookmarkInput } from "../CreateBookmark";
 
 interface UpdateBookmarkProps {
@@ -8,6 +8,7 @@ interface UpdateBookmarkProps {
   title?: string
   description?: string
   screenshotURL?: string | null
+  authorID?: string
   setMode?: (mode: boolean) => void
 }
 
@@ -19,7 +20,7 @@ export const UPDATE_BOOKMARK_MUTATION = gql`
   }
 `
 export const UpdateBookmark = (
-  { id, title, description, setMode }: UpdateBookmarkProps
+  { id, title, description, authorID, setMode }: UpdateBookmarkProps
 ) => {
 
   const [formData, setFormData] = useState<Partial<BookmarkInput>>({
@@ -27,13 +28,18 @@ export const UpdateBookmark = (
     description
   })
 
-  const [updateBookmark, { loading, error, data }] = useMutation(UPDATE_BOOKMARK_MUTATION, {
+  const [updateBookmark, { loading, error, data }] = useMutation(UPDATE_BOOKMARK_MUTATION
+    , {
     refetchQueries: [
       {
-        query: GET_BOOKMARKS
+        query: GET_BOOKMARKS_BY_AUTHOR,
+        variables: {
+          id: authorID
+        }
       }
     ]
-  });
+  }
+  );
 
   if (loading) return (
     <div className="mb-4">

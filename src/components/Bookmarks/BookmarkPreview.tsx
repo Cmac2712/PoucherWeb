@@ -2,6 +2,7 @@ import { useState } from "react"
 import { UpdateBookmark } from "../UpdateBookmark"
 import { DeleteBookmark } from "../DeleteBookmark"
 import { Bookmark } from "./Bookmarks"
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const BookmarkPreview = ({
     id,
@@ -11,6 +12,9 @@ export const BookmarkPreview = ({
 }: Bookmark) => {
 
     const [updateMode, setUpdateMode] = useState(false)
+    const { user, isAuthenticated, isLoading } = useAuth0();
+
+    if (isLoading) return <p>Loading...</p>
 
     if (updateMode) return ( 
         <UpdateBookmark
@@ -18,6 +22,7 @@ export const BookmarkPreview = ({
             title={title}
             description={description}
             setMode={setUpdateMode}
+            authorID={user?.sub}
         /> 
     )
 
@@ -43,6 +48,7 @@ export const BookmarkPreview = ({
 
             <DeleteBookmark
                 id={id}
+                authorID={user?.sub}
             />
         </div>
     </div>

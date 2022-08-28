@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQuery, useMutation, gql } from "@apollo/client"
-import { GET_BOOKMARKS } from "../Bookmarks"
+import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks"
 
 const DELETE_BOOKMARK_MUTATION = gql`
   mutation DELETE_BOOKMARK($id: ID!) {
@@ -12,16 +12,27 @@ const DELETE_BOOKMARK_MUTATION = gql`
   }
 `
 
-export const DeleteBookmark = (
-    { id }: { id: number }
-) => {
+interface Props {
+    id: number,
+    authorID: string
+}
+
+export const DeleteBookmark = ({
+    id,
+    authorID
+}: Props ) => {
 
     const [deleteBookmark, { loading, error, data }] = useMutation(DELETE_BOOKMARK_MUTATION, {
-        refetchQueries: () => [
-            { query: GET_BOOKMARKS },
-            'bookmarks'
-        ]
-    })
+    refetchQueries: [
+      {
+        query: GET_BOOKMARKS_BY_AUTHOR,
+        variables: {
+          id: authorID
+        }
+      }
+    ]
+  }
+    )
 
     const [deleted, setDeleted] = useState<String[]>([])
 

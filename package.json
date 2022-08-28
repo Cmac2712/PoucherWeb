@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@auth0/auth0-react": "^1.10.2",
     "@aws-sdk/client-s3": "^3.142.0",
     "@prisma/client": "^4.0.0",
     "@sparticuz/chrome-aws-lambda": "^15.5.0",

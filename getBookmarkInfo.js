@@ -18,9 +18,7 @@ exports.getBookmarkInfoHandler = async (event, context, callback) => {
 
         let page = await browser.newPage();
 
-        await page.goto( decodeURIComponent(req?.url), {
-            waitUntil: 'load'
-        });
+        await page.goto( decodeURIComponent(req?.url));
 
     pageTitle = await page.title();
     pageDescription = await page.$eval("head > meta[name='description']", element => element.content);

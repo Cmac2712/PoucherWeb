@@ -1,17 +1,29 @@
-import { CreateBookmark } from "../CreateBookmark"
+import { ReactNode } from 'react';
+import { Profile } from '../Profile'
+import { CreateBookmark } from '../CreateBookmark'
 
-export const Sidebar = () => {
+interface Props {
+    top?: ReactNode | HTMLElement,
+    bottom?: ReactNode | HTMLElement
+}
+
+export const Sidebar = ({
+    top,
+    bottom
+}:Props) => {
 
     return (
        <nav
         id="sidebar"
         className="flex flex-col bg-gray-800 p-3 h-screen w-64 text-white"
        >
-            <h1 className="">My Bookmarks</h1>
-            <a href="">I am a sidebar</a>
-
+            <div className="sidebar-bottom mt-auto">
+                 <Profile />
+                { top }
+            </div>
             <div className="sidebar-bottom mt-auto">
                 <CreateBookmark />
+                { bottom}
             </div>
        </nav> 
     )

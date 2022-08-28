@@ -1,17 +1,22 @@
-import { useEffect } from 'react'
 import './app.css'
-import { Bookmarks } from './components/Bookmarks'
-import { Sidebar } from './components/Sidebar'
+import { Auth0Provider } from '@auth0/auth0-react'
+import { LoginButton } from './components/LoginButton'
+import { AdminScreen } from './components/AdminScreen/AdminScreen'
 
 function App() {
 
   return (
-    <div className='flex bg-gray-50'>
-        <Sidebar />
-        <div className='h-screen overflow-scroll'>
-          <Bookmarks />
-        </div>
-    </div>
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID }
+      redirectUri={window.location.origin}
+    >
+
+    <LoginButton />
+
+    <AdminScreen /> 
+
+    </Auth0Provider>
   )
 }
 

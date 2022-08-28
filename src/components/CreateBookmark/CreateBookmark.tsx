@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useEffect, useState } from "react";
 import { useMutation, gql } from "@apollo/client";
+import { useAuth0 } from "@auth0/auth0-react";
 
-import { Bookmark, GET_BOOKMARKS } from '../Bookmarks';
+import { Bookmark, GET_BOOKMARKS_BY_AUTHOR } from '../Bookmarks';
 import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
 import { UpdateBookmark } from '../UpdateBookmark';
 
@@ -27,7 +28,6 @@ export interface BookmarkInput {
 
 export const getBookmarkInfo = async (url: string) => {
     const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
-    //const endpoint = 'http://localhost:3001/dev/';
     const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
         url: encodeURIComponent(url)
     })
@@ -37,15 +37,11 @@ export const getBookmarkInfo = async (url: string) => {
 
 export const getScreenshot = async (url: string) => {
 
-    console.log('getting screenshot from:', url)
-
     try {
         const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
         const response = await axios.post(`${endpoint}screenshot?url=${encodeURIComponent(url)}`, {
             url: encodeURIComponent(url)
         })
-
-        console.log('response from screenshot:', response)
 
         return response.data.thumbnailKey as string | null;
     } catch (e) {
@@ -63,26 +59,37 @@ export const getVideo = async (url: string) => {
 
 export const CreateBookmark = () => {
 
+    const { user, isAuthenticated, isLoading } = useAuth0();
     const [formData, setFormData] = useState<BookmarkInput>({
         title: "",
         url: ""
     })
 
-    const [createBookmark, { data, loading, error }] = useMutation<Bookmark>(CREATE_BOOKMARK_MUTATION, {
+    const [createBookmark, { data, loading, error }] = useMutation<Bookmark>(CREATE_BOOKMARK_MUTATION
+        , {
         refetchQueries: [
             {
-                query: GET_BOOKMARKS
+                query: GET_BOOKMARKS_BY_AUTHOR,
+                variables: {
+                    id: user?.sub
+                }
             }
         ]
-    });
+    }
+    );
 
-    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION, {
+    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION
+        , {
         refetchQueries: [
         {
-            query: GET_BOOKMARKS
+            query: GET_BOOKMARKS_BY_AUTHOR,
+            variables: {
+                id: user?.sub
+            }
         }
         ]
-    });
+    }
+    );
 
     return (
         <div className="container mx-auto max-w-3xl">
@@ -96,6 +103,7 @@ export const CreateBookmark = () => {
                         variables: {
                             bookmark: {
                                 ...info,
+                                authorID: user?.sub,
                                 url: formData.url
                             }
                         }

@@ -14,11 +14,10 @@ model Bookmark {
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   url           String?
   published     Boolean  @default(false)
-  authorId      Int
-  videoURL      String?
   description   String?
+  videoURL      String?
   screenshotURL String?
-  author        User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  authorID      String?  @db.VarChar
 }
 
 model Profile {
@@ -29,9 +28,8 @@ model Profile {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  name      String?    @db.VarChar(255)
-  email     String     @unique @db.VarChar(255)
-  bookmarks Bookmark[]
-  profile   Profile?
+  id      Int      @id @default(autoincrement())
+  name    String?  @db.VarChar(255)
+  email   String   @unique @db.VarChar(255)
+  profile Profile?
 }

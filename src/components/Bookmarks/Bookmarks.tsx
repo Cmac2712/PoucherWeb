@@ -2,8 +2,6 @@ import { useState } from "react"
 import { useQuery, useMutation, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
 
-import { Video } from "../Video"
-
 export interface Bookmark {
     id: number
     title: string
@@ -14,9 +12,9 @@ export interface Bookmark {
     createdAt: string
 }
 
-const GET_BOOKMARKS = gql`
-  query GetBookmarks {
-    bookmarks {
+const GET_BOOKMARKS_BY_AUTHOR = gql`
+  query GetBookmarksByAuthor($id: ID!) {
+    getBookmarksByAuthor(id: $id) {
       id
       title
       description
@@ -28,10 +26,21 @@ const GET_BOOKMARKS = gql`
   }
 `
 
-export const Bookmarks = () => {
+interface Props {
+  authorID: string
+}
+
+export const Bookmarks = ({ 
+  authorID 
+}:Props) => {
+
     const { loading, error, data } = useQuery<{
-        bookmarks: Bookmark[]
-    }>(GET_BOOKMARKS)
+        getBookmarksByAuthor: Bookmark[]
+    }>(GET_BOOKMARKS_BY_AUTHOR, {
+        variables: {
+          id: authorID 
+        }
+    })
 
     const [nothing, setNothing] = useState(false)
 
@@ -45,7 +54,7 @@ export const Bookmarks = () => {
 
     return (
         <ul className="mb-4 px-3 py-6 flex flex-wrap">
-            {data?.bookmarks?.map(({ id, screenshotURL, url, title, description }) => {
+            {data?.getBookmarksByAuthor?.map(({ id, screenshotURL, url, title, description }) => {
 
                return (
                   <li 
@@ -76,4 +85,4 @@ export const Bookmarks = () => {
     );
 }
 
-export { GET_BOOKMARKS }
+export { GET_BOOKMARKS_BY_AUTHOR }

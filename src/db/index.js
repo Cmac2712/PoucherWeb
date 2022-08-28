@@ -31,6 +31,19 @@ exports.deleteBookmark = async function(id) {
   return bookmark;
 }
 
+exports.getBookmarksByAuthor = async function(id) {
+  const bookmarks = await prisma.bookmark.findMany({
+    where: {
+      authorID: id,
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
+
+  return bookmarks;
+}
+
 exports.allBookmarks = async function() {
   const allBookmarks = await prisma.bookmark.findMany({
     orderBy: {
