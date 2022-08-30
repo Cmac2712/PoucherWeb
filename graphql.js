@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
 const { v4: uuidv4, } = require('uuid');
-const { allBookmarks, deleteBookmark, createBookmark, updateBookmark, getBookmarksByAuthor } = require('./src/db/index.js');
+const { allBookmarks, deleteBookmark, createBookmark, updateBookmark, getBookmarksByAuthor, getBookmarksCount } = require('./src/db/index.js');
 
 const typeDefs = gql`
   type Bookmark {
@@ -24,7 +24,8 @@ const typeDefs = gql`
 
   type Query {
     bookmarks: [Bookmark]
-    getBookmarksByAuthor(id: ID!, skip: Int, take: Int): [Bookmark]
+    getBookmarksByAuthor(id: ID!, offset: Int, limit: Int): [Bookmark]
+    getBookmarksCount(id: ID!): Int
   }
 
   type Mutation {
@@ -37,7 +38,8 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     bookmarks: () => allBookmarks(),
-    getBookmarksByAuthor: (root, { id, skip, take }) => getBookmarksByAuthor(id, skip, take) 
+    getBookmarksByAuthor: (root, { id, offset, limit }) => getBookmarksByAuthor(id, offset, limit),
+    getBookmarksCount: (root, { id }) => getBookmarksCount(id)
   },
   Mutation: {
     updateBookmark: (root, { id, updates }) => updateBookmark(id, updates),

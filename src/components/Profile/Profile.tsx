@@ -12,7 +12,7 @@ export const Profile = () => {
       <div className="profile">
         <div className="avatar">
           <div className="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={user.picture} alt={user.name} referrerpolicy="no-referrer" />
+            <img src={user.picture} alt={user.name} referrerPolicy="no-referrer" />
           </div>
         </div>
         <div className="text-sm">

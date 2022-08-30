@@ -38,10 +38,6 @@ export const AdminScreen = () => {
 
             <Bookmarks authorID={user?.sub} />
 
-            <div className="toolbar mt-auto mr-auto">
-              <CreateBookmark />
-            </div>
-          
           </div> 
           <div className="drawer-side">
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
@@ -49,7 +45,12 @@ export const AdminScreen = () => {
               <li className="bg-base-300">
                 <Profile />
               </li>
-              <li className="mt-auto p-4">
+
+            <div className="toolbar mt-auto mx-5">
+              <CreateBookmark />
+            </div>
+          
+              <li className="p-4">
                 <LogoutButton />
               </li>
             </ul>

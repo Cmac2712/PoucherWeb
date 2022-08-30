@@ -31,6 +31,14 @@ exports.deleteBookmark = async function(id) {
   return bookmark;
 }
 
+exports.getBookmarksCount = async function(id) {
+  return await prisma.bookmark.count({
+    where: {
+      authorID: id,
+    },
+  })
+}
+
 exports.getBookmarksByAuthor = async function(id, skip, take) {
   const bookmarks = await prisma.bookmark.findMany({
     skip,
