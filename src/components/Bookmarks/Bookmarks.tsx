@@ -1,6 +1,7 @@
-import { useState } from "react"
-import { useQuery, useMutation, gql } from "@apollo/client"
+import { useState, createContext } from "react"
+import { useQuery, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
+import { CreateBookmark } from "../CreateBookmark"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
@@ -44,15 +45,25 @@ const GET_BOOKMARKS_BY_AUTHOR = gql`
   }
 `
 
+export interface PaginationProps {
+    perPage: number
+    offset: number
+}
 interface Props {
   authorID: string
 }
+
+export const PageContext = createContext({
+  perPage: 0,
+  offset: 0,
+  setOffset: () => {}
+})
 
 export const Bookmarks = ({ 
   authorID 
 }:Props) => {
 
-    const [perPage, setPerPage] = useState(10)
+    const [perPage, setPerPage] = useState(7)
     const [offset, setOffset] = useState(0)
 
     const { loading, error, data, fetchMore } = useQuery<{
@@ -78,80 +89,97 @@ export const Bookmarks = ({
     const currentPage = Math.floor(offset / perPage) + 1
 
     return (
+    <PageContext.Provider
+      value={{
+        perPage,
+        setOffset,
+        offset
+      }
+      }
+    >
       <div className="flex flex-wrap items-start h-full">
         <ul className="px-3">
-            {data?.getBookmarksByAuthor?.map(({ id, screenshotURL, url, title, description }) => {
+          {data?.getBookmarksByAuthor?.map(({ id, screenshotURL, url, title, description, createdAt }) => {
 
-               return (
-                  <li 
-                    className="basis-full mb-7 flex items-start"
-                    key={id}
-                  >
+            return (
+              <li
+                className="basis-full mb-7 flex items-start"
+                key={id}
+              >
 
-                    <img 
-                      className="mt-1 mr-4 rounded"
-                      width={100}
-                      src={`https://d16sq6175am0h2.cloudfront.net/${screenshotURL}`} 
-                      alt="" 
-                    />
+                <img
+                  className="mt-1 mr-4 rounded"
+                  width={100}
+                  src={`https://d16sq6175am0h2.cloudfront.net/${screenshotURL}`}
+                  alt=""
+                />
 
-                    <BookmarkPreview
-                      id={id}
-                      url={url}
-                      title={title}
-                      description={description}
-                    />
+                <BookmarkPreview
+                  id={id}
+                  url={url}
+                  title={title}
+                  description={description}
+                  createdAt={createdAt}
+                />
 
-                  </li>
-              )
-            }
+              </li>
+            )
+          }
 
-            )}
+          )}
         </ul>
 
-{/* PAGINATION */}
-{
-  pages > 1 &&
 
-        <div className="flex justify-center basis-full">
-          <div className="btn-group">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => {
-                setOffset(offset - perPage)
-              }}
-              className="btn btn-md"
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </button>
-
-            {Array.from(Array(pages), (e, i) => {
-              return (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setOffset(i * perPage)
-                  }}
-                  className={`btn btn-md ${currentPage === i + 1 ? 'btn-active' : ''}`}>
-                  {i + 1}
-                </button>
-              )
-            })}
-
-            <button
-              disabled={currentPage === pages}
-              onClick={() => {
-                setOffset(offset + perPage)
-              }}
-              className="btn btn-md"
-            >
-              <FontAwesomeIcon icon={faAngleRight} />
-            </button>
-          </div>
+        <div className="fixed bottom-10 right-10">
+          <CreateBookmark />
         </div>
 
-      }
-    </div>
+        {/* PAGINATION */}
+        {
+          pages > 1 &&
+
+          <div className="flex justify-center basis-full mb-5 max-w-3xl mt-auto">
+
+            <div className="btn-group">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => {
+                  setOffset(offset - perPage)
+                }}
+                className="btn btn-md"
+              >
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </button>
+
+              {Array.from(Array(pages), (e, i) => {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setOffset(i * perPage)
+                    }}
+                    className={`btn btn-md ${currentPage === i + 1 ? 'btn-active' : ''}`}>
+                    {i + 1}
+                  </button>
+                )
+              })}
+
+              <button
+                disabled={currentPage === pages}
+                onClick={() => {
+                  setOffset(offset + perPage)
+                }}
+                className="btn btn-md"
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </button>
+            </div>
+          </div>
+
+        }
+      </div>
+
+    </PageContext.Provider>
   );
 }
 

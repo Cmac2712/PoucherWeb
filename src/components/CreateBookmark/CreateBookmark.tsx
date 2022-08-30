@@ -1,11 +1,12 @@
 import axios from 'axios'
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Bookmark, GET_BOOKMARKS_BY_AUTHOR } from '../Bookmarks';
 import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { PageContext } from '../Bookmarks';
 
 const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
@@ -59,6 +60,7 @@ export const getVideo = async (url: string) => {
 
 export const CreateBookmark = () => {
 
+    const { offset, perPage} = useContext(PageContext)
     const { user, isAuthenticated, isLoading } = useAuth0();
     const [formData, setFormData] = useState<BookmarkInput>({
         title: "",
@@ -84,7 +86,9 @@ export const CreateBookmark = () => {
         {
             query: GET_BOOKMARKS_BY_AUTHOR,
             variables: {
-                id: user?.sub
+                id: user?.sub,
+                offset,
+                limit: perPage
             }
         }
         ]

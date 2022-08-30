@@ -4,12 +4,15 @@ import { DeleteBookmark } from "../DeleteBookmark"
 import { Bookmark } from "./Bookmarks"
 import { useAuth0 } from "@auth0/auth0-react";
 
+interface Props extends Bookmark {
+} 
+
 export const BookmarkPreview = ({
     id,
     url,
     title,
     description
-}: Bookmark) => {
+}:Props) => {
 
     const [updateMode, setUpdateMode] = useState(false)
     const [hover, setHover] = useState(false)
@@ -55,6 +58,7 @@ export const BookmarkPreview = ({
                     id={id}
                     authorID={user?.sub}
                 />
+
             </div>
         </div>
     )

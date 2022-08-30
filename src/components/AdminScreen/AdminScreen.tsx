@@ -3,7 +3,6 @@ import { LoginButton } from "../LoginButton";
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
 import { Profile } from "../Profile";
-import { CreateBookmark } from "../CreateBookmark";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 
@@ -45,12 +44,8 @@ export const AdminScreen = () => {
               <li className="bg-base-300">
                 <Profile />
               </li>
-
-            <div className="toolbar mt-auto mx-5">
-              <CreateBookmark />
-            </div>
           
-              <li className="p-4">
+              <li className="p-4 mt-auto">
                 <LogoutButton />
               </li>
             </ul>

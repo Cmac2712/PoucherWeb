@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useMutation, gql } from "@apollo/client"
 import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks";
 import { BookmarkInput } from "../CreateBookmark";
+import { PageContext } from "../Bookmarks";
 
-interface UpdateBookmarkProps {
+interface Props {
   id?: number
   title?: string
   description?: string
@@ -19,10 +20,15 @@ export const UPDATE_BOOKMARK_MUTATION = gql`
     }
   }
 `
-export const UpdateBookmark = (
-  { id, title, description, authorID, setMode }: UpdateBookmarkProps
-) => {
+export const UpdateBookmark = ({ 
+  id, 
+  title, 
+  description, 
+  authorID, 
+  setMode 
+}: Props) => {
 
+  const { offset, perPage} = useContext(PageContext)
   const [formData, setFormData] = useState<Partial<BookmarkInput>>({
     title,
     description
@@ -34,7 +40,9 @@ export const UpdateBookmark = (
       {
         query: GET_BOOKMARKS_BY_AUTHOR,
         variables: {
-          id: authorID
+          id: authorID,
+          offset,
+          limit: perPage
         }
       }
     ]
