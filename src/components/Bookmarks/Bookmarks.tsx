@@ -112,43 +112,47 @@ export const Bookmarks = ({
 {/* PAGINATION */}
 {
   pages > 1 &&
-  <div className="btn-group mt-auto">
-    <button 
-      disabled={currentPage === 1}
-      onClick={() => {
-        setOffset(offset - perPage)
-      }}
-      className="btn btn-md"
-    >
-      <FontAwesomeIcon icon={faAngleLeft} />
-    </button>
 
-    {Array.from(Array(pages), (e, i) => {
-      return (
-        <button 
-          key={i} 
-          onClick={() => {
-            setOffset(i * perPage)
-          }}
-          className={`btn btn-md ${ currentPage === i +1 ? 'btn-active' : ''}`}>
-            {i + 1}
-        </button>   
-      ) 
-    })}
+        <div className="flex justify-center basis-full">
+          <div className="btn-group">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => {
+                setOffset(offset - perPage)
+              }}
+              className="btn btn-md"
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </button>
 
-    <button
-      disabled={currentPage === pages}
-      onClick={() => {
-        setOffset(offset + perPage)
-      }}
-      className="btn btn-md"
-    >
-      <FontAwesomeIcon icon={faAngleRight} />
-    </button>
-  </div>
-}
-      </div>
-    );
+            {Array.from(Array(pages), (e, i) => {
+              return (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setOffset(i * perPage)
+                  }}
+                  className={`btn btn-md ${currentPage === i + 1 ? 'btn-active' : ''}`}>
+                  {i + 1}
+                </button>
+              )
+            })}
+
+            <button
+              disabled={currentPage === pages}
+              onClick={() => {
+                setOffset(offset + perPage)
+              }}
+              className="btn btn-md"
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </button>
+          </div>
+        </div>
+
+      }
+    </div>
+  );
 }
 
 export { GET_BOOKMARKS_BY_AUTHOR }
