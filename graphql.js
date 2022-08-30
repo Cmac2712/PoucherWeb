@@ -15,6 +15,7 @@ const typeDefs = gql`
   }
 
   input BookmarkInput {
+    id: ID
     title: String
     url: String
     authorID: ID

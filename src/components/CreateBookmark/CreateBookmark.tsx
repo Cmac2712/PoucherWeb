@@ -7,6 +7,7 @@ import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { PageContext } from '../Bookmarks';
+import { v4 as uuidv4 } from 'uuid';
 
 const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
@@ -73,7 +74,9 @@ export const CreateBookmark = () => {
             {
                 query: GET_BOOKMARKS_BY_AUTHOR,
                 variables: {
-                    id: user?.sub
+                    id: user?.sub,
+                    offset,
+                    limit: perPage
                 }
             }
         ]
@@ -101,19 +104,36 @@ export const CreateBookmark = () => {
                 onSubmit={async (e) => {
                     e.preventDefault()
 
+                    const id = uuidv4()
                     const info = await getBookmarkInfo(formData.url)
+
+                    console.log('id', id);
 
                     const createdBookmark = await createBookmark({
                         variables: {
                             bookmark: {
+                                id,
                                 ...info,
                                 authorID: user?.sub,
                                 url: formData.url
                             }
+                        },
+                        optimisticResponse: {
+                                createBookmark: {
+                                    id,
+                                    title: info.title,
+                                    description: info.description,
+                                    url: formData.url,
+                                    videoURL: ''
+                                }
                         }
                     })
 
-                    // //Update bookmark with screenshot
+                    console.log('createdBookmark: ', createdBookmark);
+
+                    setFormData({ title: "", url: "" })
+
+                    // Update bookmark with screenshot
                     updateBookmarkWithScreenshot({
                         variables: {
                             id: createdBookmark?.data?.createBookmark?.id,
@@ -123,7 +143,6 @@ export const CreateBookmark = () => {
                         }
                     })
 
-                    setFormData({ title: "", url: "" })
                 }}
             >
 
