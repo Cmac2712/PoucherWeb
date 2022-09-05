@@ -2,6 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes skeleton-loading {
+  0% {
+    /* background-color: #2B313D; */
+    background-color: #3c4455;
+  }
+  100% {
+    background-color: #4b556a;
+  }
+}
+
 .gradient-brand {
     background-image: linear-gradient(to right, #8e2de2, #4a00e0);
+
+}
+
+.bookmark-skeleton {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 4rem;
+}
+
+.bookmark-skeleton-info {
+    flex-basis: calc(100% - 100px + 2rem);
+}
+
+.bookmark-skeleton-info div {
+    border-radius: 2px;
+    height: 1rem;
+    margin-bottom: 3px;
+    position: relative;
+    display: flex;
+}
+
+.bookmark-skeleton-image, 
+.bookmark-skeleton-info div {
+    animation: skeleton-loading 1s linear infinite alternate;
+    opacity: .1;
+}
+
+.bookmark-skeleton-info div:nth-child(1) {
+    height: 1.5rem;
+}
+
+.bookmark-skeleton-info div:nth-child(2) {
+}
+
+.bookmark-skeleton-info div:nth-child(3) {
+}
+
+.bookmark-skeleton-image {
+    flex: 0 0 100px;
+    height: 62.5px;
+    width: 100px;
+    border-radius: .25rem;
+    margin-right: 1rem;
+    margin-bottom: auto;
+}
+
+.bookmark-skeleton div:nth-child(2) {
+    height: 3rem;
 }

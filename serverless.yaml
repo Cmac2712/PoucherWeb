@@ -12,11 +12,11 @@ functions:
     handler: graphql.graphqlHandler
     events:
     - http:
-        path: /test
+        path: /
         method: post
         cors: true
     - http:
-        path: /test
+        path: /
         method: get
         cors: true
   video: 

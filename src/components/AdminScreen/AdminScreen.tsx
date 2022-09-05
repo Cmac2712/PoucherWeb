@@ -5,12 +5,13 @@ import { Bookmarks } from '../Bookmarks'
 import { Profile } from "../Profile";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { Loader } from "../Loader/Loader";
 
 export const AdminScreen = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loader />
   }
 
   if (!isAuthenticated) {
@@ -29,7 +30,7 @@ export const AdminScreen = () => {
       <>
         <div className="drawer drawer-mobile">
           <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content p-5 pt-20 lg:pt-5 flex flex-col items-center">
+          <div className="drawer-content pt-20 lg:pt-5 flex flex-col">
 
             <label htmlFor="my-drawer-2" className="btn btn-ghost fixed left-5 top-5 drawer-button lg:hidden">
               <FontAwesomeIcon icon={faBars} />

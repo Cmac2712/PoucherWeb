@@ -4,6 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Bookmark, GET_BOOKMARKS_BY_AUTHOR } from '../Bookmarks';
 import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
+import { Loader } from '../Loader/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { PageContext } from '../Bookmarks';
@@ -21,18 +22,14 @@ const CREATE_BOOKMARK_MUTATION = gql`
 	}
 `;
 
-export interface BookmarkInput {
-    title: string
-    url: string
-    screenshotURL?: string | null 
-    description?: string
-}
-
-export const getBookmarkInfo = async (url: string) => {
+export const getBookmarkInfo = async (url: string, cb?: () => void) => {
     const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
+    //const endpoint = 'http://localhost:3001/dev/'
     const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
         url: encodeURIComponent(url)
     })
+
+    if (typeof cb !== 'undefined') cb()
 
     return response.data.page;
 }
@@ -61,41 +58,43 @@ export const getVideo = async (url: string) => {
 
 export const CreateBookmark = () => {
 
-    const { offset, perPage} = useContext(PageContext)
+    const { offset, perPage } = useContext(PageContext)
     const { user, isAuthenticated, isLoading } = useAuth0();
-    const [formData, setFormData] = useState<BookmarkInput>({
+    const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
         title: "",
         url: ""
     })
+    const [loadingInfo, setLoadingInfo] = useState(false)
 
-    const [createBookmark, { data, loading, error }] = useMutation<Bookmark>(CREATE_BOOKMARK_MUTATION
+    const [createBookmark, { data, loading, error }] = useMutation<{
+        createBookmark: Bookmark
+    }>(CREATE_BOOKMARK_MUTATION
         , {
-        refetchQueries: [
-            {
-                query: GET_BOOKMARKS_BY_AUTHOR,
-                variables: {
-                    id: user?.sub,
-                    offset,
-                    limit: perPage
+            refetchQueries: [
+                {
+                    query: GET_BOOKMARKS_BY_AUTHOR,
+                    variables: {
+                        id: user?.sub,
+                        offset,
+                        limit: perPage
+                    }
                 }
-            }
-        ]
-    }
+            ]
+        }
     );
 
-    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION
-        , {
-        refetchQueries: [
-        {
-            query: GET_BOOKMARKS_BY_AUTHOR,
-            variables: {
-                id: user?.sub,
-                offset,
-                limit: perPage
-            }
+    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION, {
+            refetchQueries: [
+                {
+                    query: GET_BOOKMARKS_BY_AUTHOR,
+                    variables: {
+                        id: user?.sub,
+                        offset,
+                        limit: perPage
+                    }
+                }
+            ]
         }
-        ]
-    }
     );
 
     return (
@@ -104,63 +103,49 @@ export const CreateBookmark = () => {
                 onSubmit={async (e) => {
                     e.preventDefault()
 
+                    setFormData({ title: "", url: "" })
+                    setLoadingInfo(true);
+
                     const id = uuidv4()
-                    const info = await getBookmarkInfo(formData.url)
+                    const info = await getBookmarkInfo(formData.url, () => setLoadingInfo(false))
 
-                    console.log('id', id);
-
-                    const createdBookmark = await createBookmark({
+                    createBookmark(({
                         variables: {
                             bookmark: {
                                 id,
-                                ...info,
+                                title: info.title,
+                                description: info.description,
                                 authorID: user?.sub,
-                                url: formData.url
-                            }
-                        },
-                        optimisticResponse: {
-                                createBookmark: {
-                                    id,
-                                    title: info.title,
-                                    description: info.description,
-                                    url: formData.url,
-                                    videoURL: ''
-                                }
-                        }
-                    })
-
-                    console.log('createdBookmark: ', createdBookmark);
-
-                    setFormData({ title: "", url: "" })
-
-                    // Update bookmark with screenshot
-                    updateBookmarkWithScreenshot({
-                        variables: {
-                            id: createdBookmark?.data?.createBookmark?.id,
-                            updates: {
-                                screenshotURL: await getScreenshot(formData.url)
+                                url: formData.url,
+                                screenshotURL: info.image,
                             }
                         }
-                    })
+                    }))
 
                 }}
             >
 
                 <div className="flex">
-                    <input 
-                        type="text" 
+                    <input
+                        disabled={loading || loadingInfo}
+                        type="text"
                         value={formData.url}
                         onChange={e => setFormData({ ...formData, url: e.target.value })}
                         name="url"
                         placeholder="https://&hellip;"
-                        className="input input-bordered input-primary w-full mr-2" 
+                        className="input input-bordered input-primary w-full mr-2"
                     />
 
                     <button
-                        className="btn btn-square flex-grow-1 flex-auto w-auto px-4"
+                        className="btn btn-square w-28 flex-grow-1 flex-auto px-4"
                         type="submit"
                     >
-                        <FontAwesomeIcon icon={faPlus} />
+                        {
+                            loading || loadingInfo ? 
+                                <Loader
+                                /> :
+                                <FontAwesomeIcon icon={faPlus} />
+                        }
                     </button>
                 </div>
 

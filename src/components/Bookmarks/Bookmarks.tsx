@@ -13,7 +13,7 @@ export interface Bookmark {
     url: string
     videoURL?: string
     screenshotURL?: string
-    createdAt: string
+    createdAt?: string
 }
 
 const GET_BOOKMARKS_BY_AUTHOR_COUNT = gql`
@@ -68,6 +68,7 @@ export const Bookmarks = ({
 
     const { loading, error, data, fetchMore } = useQuery<{
         getBookmarksByAuthor: Bookmark[]
+        getBookmarksCount: number
     }>(GET_BOOKMARKS_BY_AUTHOR, {
         variables: {
           id: authorID,
@@ -98,28 +99,22 @@ export const Bookmarks = ({
       }
     >
       <div className="flex flex-wrap items-start h-full">
-        <ul className="px-3">
+        <ul className="basis-full">
+
           {data?.getBookmarksByAuthor?.map(({ id, screenshotURL, url, title, description, createdAt }) => {
 
             return (
               <li
-                className="basis-full mb-7 flex items-start"
+                className="basis-full border-base-300 border-t first:border-0"
                 key={id}
               >
-
-                <img
-                  className="mt-1 mr-4 rounded"
-                  width={100}
-                  src={`https://d16sq6175am0h2.cloudfront.net/${screenshotURL}`}
-                  alt=""
-                />
-
                 <BookmarkPreview
                   id={id}
                   url={url}
                   title={title}
                   description={description}
                   createdAt={createdAt}
+                  screenshotURL={screenshotURL}
                 />
 
               </li>
@@ -129,7 +124,6 @@ export const Bookmarks = ({
           )}
         </ul>
 
-
         <div className="fixed bottom-10 right-10">
           <CreateBookmark />
         </div>
@@ -138,7 +132,7 @@ export const Bookmarks = ({
         {
           pages > 1 &&
 
-          <div className="flex justify-center basis-full mb-5 max-w-3xl mt-auto">
+          <div className="flex basis-full mb-5 max-w-3xl mt-auto">
 
             <div className="btn-group">
               <button
