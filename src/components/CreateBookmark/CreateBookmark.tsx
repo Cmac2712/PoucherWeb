@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { usePage } from '../../contexts/page-context';
 import { v4 as uuidv4 } from 'uuid';
+import './CreateBookmark.css'
 
 const CREATE_BOOKMARK_MUTATION = gql`
 	mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
@@ -64,6 +65,7 @@ export const CreateBookmark = () => {
         title: "",
         url: ""
     })
+    const [open, setOpen] = useState(false)
     const [loadingInfo, setLoadingInfo] = useState(false)
 
     const [createBookmark, { data, loading, error }] = useMutation<{
@@ -107,7 +109,10 @@ export const CreateBookmark = () => {
                     setLoadingInfo(true);
 
                     const id = uuidv4()
-                    const info = await getBookmarkInfo(formData.url, () => setLoadingInfo(false))
+                    const info = await getBookmarkInfo(formData.url, () => {
+                        setLoadingInfo(false)
+                        setOpen(false)
+                    })
 
                     createBookmark(({
                         variables: {
@@ -125,31 +130,38 @@ export const CreateBookmark = () => {
                 }}
             >
 
-                <div className="flex">
-                    <input
-                        disabled={loading || loadingInfo}
-                        type="text"
-                        value={formData.url}
-                        onChange={e => setFormData({ ...formData, url: e.target.value })}
-                        name="url"
-                        placeholder="https://&hellip;"
-                        className="input input-bordered input-primary w-full max-w-xs mr-2"
-                    />
+                        <div className={`flex absolute top-0 bottom-0 right-4 m-auto h-12 z-10 ${open ? 'slide-in' : 'slide-out'}`}>
+                            <input
+                                disabled={loading || loadingInfo}
+                                type="text"
+                                value={formData.url}
+                                onChange={e => setFormData({ ...formData, url: e.target.value })}
+                                name="url"
+                                placeholder="https://&hellip;"
+                                className="input input-bordered input-primary w-full max-w-xs mr-2"
+                            />
 
-                    <button
-                        className="btn btn-square w-28 flex-grow-0 flex-auto px-4"
-                        type="submit"
-                    >
-                        {
-                            loading || loadingInfo ? 
-                                <Loader
-                                /> :
-                                <FontAwesomeIcon icon={faPlus} />
-                        }
-                    </button>
-                </div>
+                            <button
+                                className="btn btn-square w-28 flex-grow-0 flex-auto px-4"
+                                type="submit"
+                            >
+                                {
+                                    loading || loadingInfo ? 
+                                        <Loader
+                                        /> : 'Add'
+                                        
+                                }
+                            </button>
+                        </div>
 
             </form>
+                    <button
+                        className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
+                        onClick={() => setOpen(!open)}
+                    >
+                        {!open && <FontAwesomeIcon icon={faPlus} />}
+                    </button>
+
         </div>
     )
 }

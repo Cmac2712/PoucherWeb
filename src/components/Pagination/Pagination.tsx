@@ -12,7 +12,7 @@ export const Pagination = ({
 
     return (
 
-        <div className="flex basis-full max-w-3xl mt-auto">
+        <div className="flex basis-full max-w-3xl">
 
             <div className="btn-group">
                 <button

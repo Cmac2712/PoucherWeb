@@ -41,11 +41,8 @@ export const AdminScreen = () => {
             <PageProvider>
               <Bookmarks authorID={user?.sub} />
 
-
-              <footer className="fixed flex flex-col md:flex-row bottom-0 left-0 lg:left-80 right-0 bg-base-300 p-4 w-100 border-t-2 border-base-100">
-                <div className="mb-4 md:mb-0">
-                  <Pagination/>
-                </div>
+              <footer className="fixed flex flex-row justify-between items-center bottom-0 left-0 lg:left-80 right-0 bg-base-300 p-4 w-100 border-t-2 border-base-100">
+                <Pagination/>
                 <div className="md:ml-auto">
                   <CreateBookmark/>
                 </div>
