@@ -36,9 +36,9 @@ export const BookmarkPreview = ({
         <div
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
-            className={`bookmark-preview px-4 py-5 relative w-full max-w-3xl flex flex-wrap md:flex-nowrap`}
+            className={`bookmark-preview px-4 py-5 lg:py-3 relative w-full max-w-3xl flex flex-wrap md:flex-nowrap`}
         >
-            <div className="bookmark-preview-image mr-0 w-28 md:h-28 max-h-28 basis-28 shrink-0 object-cover overflow-hidden text-0 mb-2">
+            <div className="bookmark-preview-image mr-0 w-24 md:h-24 max-h-24 basis-24 shrink-0 object-cover overflow-hidden text-0 mb-2">
                 <img
                     className="rounded"
                     width='100%'
@@ -49,8 +49,8 @@ export const BookmarkPreview = ({
             </div>
 
             <div className="bookmark-preview-info basis-auto md:pl-4">
-                <h2 className="w-full font-bold text-xl mb-3">{title}</h2>
-                <p className="w-full mb-3 bookmark-preview-description">{description}</p>
+                <h2 className="w-full font-bold text-lg mb-3 lg:mb-0">{title}</h2>
+                <p className="text-base w-full mb-3 bookmark-preview-description">{description}</p>
                 <a
                     className="text-xs text-blue-500"
                     href={url}
