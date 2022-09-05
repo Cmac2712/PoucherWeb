@@ -7,7 +7,7 @@ import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
 import { Loader } from '../Loader/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { PageContext } from '../Bookmarks';
+import { usePage } from '../../contexts/page-context';
 import { v4 as uuidv4 } from 'uuid';
 
 const CREATE_BOOKMARK_MUTATION = gql`
@@ -58,7 +58,7 @@ export const getVideo = async (url: string) => {
 
 export const CreateBookmark = () => {
 
-    const { offset, perPage } = useContext(PageContext)
+    const { offset, perPage } = usePage()
     const { user, isAuthenticated, isLoading } = useAuth0();
     const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
         title: "",
@@ -133,11 +133,11 @@ export const CreateBookmark = () => {
                         onChange={e => setFormData({ ...formData, url: e.target.value })}
                         name="url"
                         placeholder="https://&hellip;"
-                        className="input input-bordered input-primary w-full mr-2"
+                        className="input input-bordered input-primary w-full max-w-xs mr-2"
                     />
 
                     <button
-                        className="btn btn-square w-28 flex-grow-1 flex-auto px-4"
+                        className="btn btn-square w-28 flex-grow-0 flex-auto px-4"
                         type="submit"
                     >
                         {

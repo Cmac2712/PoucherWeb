@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useMutation, gql } from "@apollo/client"
 import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks";
 import { BookmarkInput } from "../CreateBookmark";
-import { PageContext } from "../Bookmarks";
+import { usePage } from "../../contexts/page-context";
 
 interface Props {
   id?: number
@@ -28,7 +28,7 @@ export const UpdateBookmark = ({
   setMode 
 }: Props) => {
 
-  const { offset, perPage} = useContext(PageContext)
+  const { offset, perPage } = usePage()
   const [formData, setFormData] = useState<Partial<BookmarkInput>>({
     title,
     description

@@ -3,7 +3,7 @@ import { useMutation, gql } from "@apollo/client"
 import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { PageContext } from "../Bookmarks";
+import { usePage } from "../../contexts/page-context";
 
 const DELETE_BOOKMARK_MUTATION = gql`
   mutation DELETE_BOOKMARK($id: ID!) {
@@ -27,7 +27,7 @@ export const DeleteBookmark = ({
     authorID
 }: Props ) => {
 
-    const { perPage, offset } = useContext(PageContext)
+    const { perPage, offset } = usePage()
     const [deleteBookmark, { loading, error, data }] = useMutation(DELETE_BOOKMARK_MUTATION, {
     refetchQueries: [
       {

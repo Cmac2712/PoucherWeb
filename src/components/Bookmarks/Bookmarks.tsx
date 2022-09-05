@@ -1,10 +1,6 @@
-import { useState, createContext } from "react"
 import { useQuery, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
-import { CreateBookmark } from "../CreateBookmark"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
+import { usePage } from '../../contexts/page-context'
 
 export interface Bookmark {
     id: number
@@ -53,23 +49,17 @@ interface Props {
   authorID: string
 }
 
-export const PageContext = createContext({
-  perPage: 0,
-  offset: 0,
-  setOffset: () => {}
-})
-
 export const Bookmarks = ({ 
   authorID 
 }:Props) => {
 
-    const [perPage, setPerPage] = useState(7)
-    const [offset, setOffset] = useState(0)
+    const { perPage, offset, count, setCount } = usePage()
 
     const { loading, error, data, fetchMore } = useQuery<{
         getBookmarksByAuthor: Bookmark[]
         getBookmarksCount: number
     }>(GET_BOOKMARKS_BY_AUTHOR, {
+        onCompleted: ({getBookmarksCount}) => setCount(getBookmarksCount),
         variables: {
           id: authorID,
           offset,
@@ -85,19 +75,7 @@ export const Bookmarks = ({
 
     if (error) return <p>Error :(</p>;
 
-    const count = data?.getBookmarksCount || 0;
-    const pages = Math.ceil(count / perPage)
-    const currentPage = Math.floor(offset / perPage) + 1
-
     return (
-    <PageContext.Provider
-      value={{
-        perPage,
-        setOffset,
-        offset
-      }
-      }
-    >
       <div className="flex flex-wrap items-start h-full">
         <ul className="basis-full">
 
@@ -124,56 +102,7 @@ export const Bookmarks = ({
           )}
         </ul>
 
-        <div className="fixed bottom-10 right-10">
-          <CreateBookmark />
-        </div>
-
-        {/* PAGINATION */}
-        {
-          pages > 1 &&
-
-          <div className="flex basis-full mb-5 max-w-3xl mt-auto">
-
-            <div className="btn-group">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => {
-                  setOffset(offset - perPage)
-                }}
-                className="btn btn-md"
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </button>
-
-              {Array.from(Array(pages), (e, i) => {
-                return (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setOffset(i * perPage)
-                    }}
-                    className={`btn btn-md ${currentPage === i + 1 ? 'btn-active' : ''}`}>
-                    {i + 1}
-                  </button>
-                )
-              })}
-
-              <button
-                disabled={currentPage === pages}
-                onClick={() => {
-                  setOffset(offset + perPage)
-                }}
-                className="btn btn-md"
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </button>
-            </div>
-          </div>
-
-        }
       </div>
-
-    </PageContext.Provider>
   );
 }
 

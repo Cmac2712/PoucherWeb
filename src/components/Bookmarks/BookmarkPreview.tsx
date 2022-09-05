@@ -2,7 +2,9 @@ import { useState } from "react"
 import { UpdateBookmark } from "../UpdateBookmark"
 import { DeleteBookmark } from "../DeleteBookmark"
 import { Bookmark } from "./Bookmarks"
-import { useAuth0 } from "@auth0/auth0-react";
+import { Loader } from "../Loader/Loader"
+import { useAuth0 } from "@auth0/auth0-react"
+import './Bookmarks.css'
 
 interface Props extends Bookmark { } 
 
@@ -18,7 +20,7 @@ export const BookmarkPreview = ({
     const [hover, setHover] = useState(false)
     const { user, isAuthenticated, isLoading } = useAuth0()
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <Loader /> 
 
     if (updateMode) return ( 
         <UpdateBookmark
@@ -48,7 +50,7 @@ export const BookmarkPreview = ({
 
             <div className="bookmark-preview-info basis-auto md:pl-4">
                 <h2 className="w-full font-bold text-xl mb-3">{title}</h2>
-                <p className="w-full mb-3">{description}</p>
+                <p className="w-full mb-3 bookmark-preview-description">{description}</p>
                 <a
                     className="text-xs text-blue-500"
                     href={url}
