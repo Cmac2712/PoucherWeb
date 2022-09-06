@@ -3,18 +3,17 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import { usePage } from '../../contexts/page-context'
 
-export const Pagination = ({
-}) => {
+export const Pagination = () => {
 
     const { perPage, offset, setOffset, count } = usePage()
     const pages = Math.ceil(count / perPage)
     const currentPage = Math.floor(offset / perPage) + 1
 
+    if (pages <= 1) return null
+
     return (
-
         <div className="flex basis-full max-w-3xl">
-
-            <div className="btn-group">
+            <div className="btn-group ">
                 <button
                     disabled={currentPage === 1}
                     onClick={() => {

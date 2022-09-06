@@ -1,6 +1,6 @@
 import { useState, useContext } from "react"
 import { useMutation, gql } from "@apollo/client"
-import { GET_BOOKMARKS_BY_AUTHOR } from "../Bookmarks"
+import { SEARCH_BOOKMARKS } from "../Bookmarks"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { usePage } from "../../contexts/page-context";
@@ -18,8 +18,6 @@ const DELETE_BOOKMARK_MUTATION = gql`
 interface Props {
     id?: number,
     authorID?: string
-    offset: number
-    limit: number
 }
 
 export const DeleteBookmark = ({
@@ -27,15 +25,20 @@ export const DeleteBookmark = ({
     authorID
 }: Props ) => {
 
-    const { perPage, offset } = usePage()
+    const { perPage, offset, search } = usePage()
     const [deleteBookmark, { loading, error, data }] = useMutation(DELETE_BOOKMARK_MUTATION, {
     refetchQueries: [
       {
-        query: GET_BOOKMARKS_BY_AUTHOR,
+        query: SEARCH_BOOKMARKS,
         variables: {
           id: authorID,
           offset,
-          limit: perPage 
+          limit: perPage,
+          input: {
+            authorID,
+            title: search,
+            description: search
+          }
         }
       }
     ]

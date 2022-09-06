@@ -1,6 +1,7 @@
 import { useQuery, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
 import { usePage } from '../../contexts/page-context'
+import { Loader } from "../Loader/Loader"
 
 export interface Bookmark {
     id: number
@@ -8,15 +9,32 @@ export interface Bookmark {
     description: string
     url: string
     videoURL?: string
+    authorID?: string
     screenshotURL?: string
     createdAt?: string
 }
 
-const GET_BOOKMARKS_BY_AUTHOR_COUNT = gql`
-  query GetBookmarksByAuthorCount($authorId: ID!) {
-    getBookmarksByAuthorCount(id: $authorId)
+const GET_BOOKMARKS_COUNT = gql`
+  query GetBookmarksCount($input: BookmarkInput) {
+    getBookmarksCount(input: $input)
   }
-`;
+`
+
+const SEARCH_BOOKMARKS = gql`
+  query SearchBookmarks($offset: Int, $limit: Int, $input: BookmarkInput) {
+    searchBookmarks(offset: $offset, limit: $limit, input: $input) {
+      id
+      authorID
+      title
+      description
+      url
+      videoURL
+      screenshotURL
+      createdAt
+    }
+    getBookmarksCount(input: $input)
+}
+`
 
 const GET_BOOKMARKS_BY_AUTHOR = gql`
   query GetBookmarksByAuthor(
@@ -44,7 +62,9 @@ const GET_BOOKMARKS_BY_AUTHOR = gql`
 export interface PaginationProps {
     perPage: number
     offset: number
+    search: string
 }
+
 interface Props {
   authorID: string
 }
@@ -53,33 +73,40 @@ export const Bookmarks = ({
   authorID 
 }:Props) => {
 
-    const { perPage, offset, count, setCount } = usePage()
+    const { perPage, offset, count, setCount, search, setSearch } = usePage()
 
     const { loading, error, data, fetchMore } = useQuery<{
-        getBookmarksByAuthor: Bookmark[]
+        searchBookmarks: Bookmark[]
         getBookmarksCount: number
-    }>(GET_BOOKMARKS_BY_AUTHOR, {
+    }>(SEARCH_BOOKMARKS, {
         onCompleted: ({getBookmarksCount}) => setCount(getBookmarksCount),
         variables: {
-          id: authorID,
           offset,
-          limit: perPage
+          limit: perPage,
+          input: {
+            authorID,
+            title: search,
+            description: search
+          }
         }
     })
 
-    if (loading) return (
-      <div className="mb-4">
-        <p>Loading...</p>
-      </div>
-    )
+    if (loading) return <Loader />
 
-    if (error) return <p>Error :(</p>;
+    if (error) return <p>{JSON.stringify(error)}</p>;
 
     return (
-      <div className="flex flex-wrap items-start h-full">
+      <div className="flex flex-wrap items-start">
+
+        { search &&
+          <div className="search-text p-4">
+            <p>Search results for <em>{search}</em></p>
+          </div>
+        }
+
         <ul className="basis-full">
 
-          {data?.getBookmarksByAuthor?.map(({ id, screenshotURL, url, title, description, createdAt }) => {
+          {data?.searchBookmarks?.map(({ id, screenshotURL, url, title, description, createdAt }) => {
 
             return (
               <li
@@ -106,4 +133,4 @@ export const Bookmarks = ({
   );
 }
 
-export { GET_BOOKMARKS_BY_AUTHOR }
+export { SEARCH_BOOKMARKS }

@@ -31,11 +31,28 @@ exports.deleteBookmark = async function(id) {
   return bookmark;
 }
 
-exports.getBookmarksCount = async function(id) {
+exports.getBookmarksCount = async function(authorID, title, description) {
   return await prisma.bookmark.count({
     where: {
-      authorID: id,
+      authorID
     },
+    where: {
+      authorID,
+      OR: [
+        {
+            title: {
+              contains: title,
+              mode: 'insensitive'
+            }
+        },
+        {
+            description: {
+              contains: description,
+              mode: 'insensitive'
+            }
+        }
+      ]
+    } 
   })
 }
 
@@ -54,12 +71,32 @@ exports.getBookmarksByAuthor = async function(id, skip, take) {
   return bookmarks;
 }
 
-exports.allBookmarks = async function() {
-  const allBookmarks = await prisma.bookmark.findMany({
+exports.searchBookmarks = async function(skip, take, authorID, title, description) {
+  const searchBookmarks = await prisma.bookmark.findMany({
+    skip, 
+    take,
     orderBy: {
       createdAt: 'desc'
-    }
+    },
+    where: {
+      authorID,
+      OR: [
+        {
+            title: {
+              contains: title,
+              mode: 'insensitive'
+            }
+        },
+        {
+            description: {
+              contains: description,
+              mode: 'insensitive'
+            }
+        }
+      ]
+    } 
+    
   })
 
-  return allBookmarks;
+  return searchBookmarks;
 } 

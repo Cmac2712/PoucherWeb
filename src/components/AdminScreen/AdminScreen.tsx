@@ -8,6 +8,7 @@ import { Profile } from "../Profile";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { Loader } from "../Loader/Loader";
+import { Search } from "../Search";
 import { PageProvider } from "../../contexts/page-context";
 
 
@@ -41,11 +42,12 @@ export const AdminScreen = () => {
             <PageProvider>
               <Bookmarks authorID={user?.sub} />
 
-              <footer className="fixed flex flex-row justify-between items-center bottom-0 left-0 lg:left-80 right-0 bg-base-300 p-4 w-100 border-t-2 border-base-100">
-                <Pagination/>
-                <div className="md:ml-auto">
-                  <CreateBookmark/>
+              <footer className="fixed flex flex-row justify-between bottom-0 left-0 lg:left-80 right-0 bg-base-300 p-4 w-100 border-t-2 border-base-100">
+                <Pagination />
+                <div className="absolute right-20">
+                  <Search />
                 </div>
+                <CreateBookmark />
               </footer>
             </PageProvider>
 
