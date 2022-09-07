@@ -43,7 +43,7 @@ export const AdminScreen = () => {
               <Bookmarks authorID={user?.sub} />
 
               <footer className="fixed flex flex-row justify-between bottom-0 left-0 lg:left-80 right-0 bg-base-300 p-4 w-100 border-t-2 border-base-100">
-                <div className="relative z-20">
+                <div className="relative z-20 h-12">
                   <Pagination />
                 </div>
                 <div className="absolute right-20 z-10">

@@ -3,14 +3,6 @@ import { usePage } from '../../contexts/page-context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faClose } from '@fortawesome/free-solid-svg-icons'
 
-function debounce(func, timeout = 300){
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
-    };
-  }
-
 export const Search = () => {
     const [open, setOpen] = useState(false)
     const { setOffset, setSearch } = usePage()
@@ -42,6 +34,7 @@ export const Search = () => {
                         className="input input-bordered input-primary w-full max-w-xs rounded-none"
                         type="text"
                         name="search"
+                        autoComplete='off'
                         placeholder="Search&hellip;"
                         onChange={e => {
                             setSearch(e.target.value)

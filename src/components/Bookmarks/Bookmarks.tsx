@@ -99,8 +99,15 @@ export const Bookmarks = ({
       <div className="flex flex-wrap items-start">
 
         { search &&
-          <div className="search-text p-4">
-            <p>Search results for <em>{search}</em></p>
+          <div className="flex search-text p-4">
+            <p className="mr-2">
+              Search results for <em>{search}</em>
+            </p>
+            <button 
+              onClick={() => setSearch('') }
+              className="text-blue-500 underline">
+                clear search
+            </button>
           </div>
         }
 
