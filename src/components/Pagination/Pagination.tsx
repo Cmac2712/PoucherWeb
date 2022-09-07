@@ -13,7 +13,7 @@ export const Pagination = () => {
 
     return (
         <div className="flex basis-full max-w-3xl">
-            <div className="btn-group ">
+            <div className="btn-group flex-nowrap">
                 <button
                     disabled={currentPage === 1}
                     onClick={() => {

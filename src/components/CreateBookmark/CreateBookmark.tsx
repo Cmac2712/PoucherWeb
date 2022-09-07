@@ -22,14 +22,14 @@ const CREATE_BOOKMARK_MUTATION = gql`
             }
 	}
 `;
-const isURL = (str:string) => {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-  return !!pattern.test(str);
+const isURL = (str: string) => {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(str);
 }
 
 export const getBookmarkInfo = async (url: string, cb?: () => void) => {
@@ -76,28 +76,10 @@ export const CreateBookmark = () => {
     })
     const [open, setOpen] = useState(false)
     const [loadingInfo, setLoadingInfo] = useState(false)
-    const [url, setUrl] = useState('')
     const [createBookmark, { data, loading, error }] = useMutation<{
         createBookmark: Bookmark
     }>(CREATE_BOOKMARK_MUTATION
         , {
-            refetchQueries: [
-                {
-                    query: SEARCH_BOOKMARKS,
-                    variables: {
-                        offset,
-                        limit: perPage,
-                        input: {
-                            authorID: user?.sub,
-                            title: search,
-                            description: search 
-                        }
-                    }
-                }
-            ]
-        }
-    )
-    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION, {
             refetchQueries: [
                 {
                     query: SEARCH_BOOKMARKS,
@@ -114,72 +96,90 @@ export const CreateBookmark = () => {
             ]
         }
     )
+    const [updateBookmarkWithScreenshot, updateBookmarkWithScreenshotResponse] = useMutation(UPDATE_BOOKMARK_MUTATION, {
+        refetchQueries: [
+            {
+                query: SEARCH_BOOKMARKS,
+                variables: {
+                    offset,
+                    limit: perPage,
+                    input: {
+                        authorID: user?.sub,
+                        title: search,
+                        description: search
+                    }
+                }
+            }
+        ]
+    }
+    )
 
     return (
-        <div>
-            <form
-                onSubmit={async (e) => {
-                    e.preventDefault()
-
-                    setFormData({ title: "", url: "" })
-                    setLoadingInfo(true);
-
-                    const id = uuidv4()
-                    const info = await getBookmarkInfo(formData.url, () => {
-                        setLoadingInfo(false)
-                        setOpen(false)
-                    })
-
-                    createBookmark(({
-                        variables: {
-                            bookmark: {
-                                id,
-                                title: info.title,
-                                description: info.description,
-                                authorID: user?.sub,
-                                url: formData.url,
-                                screenshotURL: info.image,
+        <>
+            <div className={`flex relative bottom-20 m-auto h-12 z-10 ${open ? 'slide-in' : 'slide-out'}`}>
+                    <button
+                        className='btn btn-square rounded-r-none'
+                        onClick={
+                            e => {
+                                e.preventDefault()
+                                setOpen(false)
                             }
                         }
-                    }))
+                    >
+                        <FontAwesomeIcon icon={faClose} />
+                    </button>
+                <form
+                    className='flex'
+                    onSubmit={async (e) => {
+                        e.preventDefault()
 
-                }}
-            >
-                        <div className={`flex relative m-auto h-12 z-10 ${open ? 'slide-in' : 'slide-out'}`}>
-                            <button
-                                className='btn btn-square rounded-r-none'
-                                onClick={
-                                    e => {
-                                        e.preventDefault()
-                                        setOpen(false)
-                                    }
+                        setFormData({ title: "", url: "" })
+                        setLoadingInfo(true);
+
+                        const id = uuidv4()
+                        const info = await getBookmarkInfo(formData.url, () => {
+                            setLoadingInfo(false)
+                            setOpen(false)
+                        })
+
+                        createBookmark(({
+                            variables: {
+                                bookmark: {
+                                    id,
+                                    title: info.title,
+                                    description: info.description,
+                                    authorID: user?.sub,
+                                    url: formData.url,
+                                    screenshotURL: info.image,
                                 }
-                            >
-                                <FontAwesomeIcon icon={faClose} />
-                            </button>
-                            <input
-                                disabled={loading || loadingInfo}
-                                type="text"
-                                value={formData.url}
-                                onChange={e => setFormData({ ...formData, url: e.target.value })}
-                                name="url"
-                                placeholder="https://&hellip;"
-                                className="input input-bordered input-primary w-full max-w-xs rounded-none"
-                            />
+                            }
+                        }))
 
-                            <button
-                                className="btn btn-square w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
-                                type="submit"
-                            >
-                                {
-                                    loading || loadingInfo ? 
-                                        <Loader /> : 'Add'
-                                        
-                                }
-                            </button>
-                        </div>
+                    }}
+                >
+                    <input
+                        disabled={loading || loadingInfo}
+                        type="text"
+                        value={formData.url}
+                        onChange={e => setFormData({ ...formData, url: e.target.value })}
+                        name="url"
+                        placeholder="https://&hellip;"
+                        className="input input-bordered input-primary w-full max-w-xs rounded-none"
+                    />
 
-            </form>
+                    <button
+                        className="btn btn-square w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
+                        type="submit"
+                    >
+                        {
+                            loading || loadingInfo ?
+                                <Loader /> : 'Add'
+
+                        }
+                    </button>
+
+                </form>
+            </div>
 
             <button
                 className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
@@ -187,7 +187,7 @@ export const CreateBookmark = () => {
                     setOpen(!open)
                     const url = navigator.clipboard.readText().then(clip => {
 
-                        if (!isURL(clip)) return 
+                        if (!isURL(clip)) return
 
                         setFormData({
                             ...formData,
@@ -198,9 +198,9 @@ export const CreateBookmark = () => {
 
                 }
             >
-                {!open && <FontAwesomeIcon icon={faPlus} />}
+                <FontAwesomeIcon icon={faPlus} />
             </button>
 
-        </div>
+        </>
     )
 }
