@@ -12,6 +12,7 @@ const typeDefs = gql`
     videoURL: String
     screenshotURL: String
     createdAt: String
+    tags: String
   }
 
   input BookmarkInput {
@@ -21,6 +22,7 @@ const typeDefs = gql`
     authorID: ID
     description: String
     screenshotURL: String
+    tags: String
   }
 
   type Query {
@@ -38,7 +40,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    searchBookmarks: (root, { offset, limit, input: { title, description, authorID } }) => searchBookmarks(offset, limit, authorID, title, description),
+    searchBookmarks: (root, { offset, limit, input: { title, description, authorID, tags } }) => searchBookmarks(offset, limit, authorID, title, description, tags),
     getBookmarksByAuthor: (root, { id, offset, limit }) => getBookmarksByAuthor(id, offset, limit),
     getBookmarksCount: (root, { input: { authorID, title, description} }) => getBookmarksCount(authorID, title, description)
   },

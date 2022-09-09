@@ -3,8 +3,10 @@ import { useMutation, gql } from "@apollo/client"
 import { SEARCH_BOOKMARKS } from "../Bookmarks";
 import { Bookmark } from "../Bookmarks";
 import { usePage } from "../../contexts/page-context";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
 
-type Props = Bookmark & {
+type Props = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
 }  
 
@@ -21,17 +23,18 @@ export const UpdateBookmark = ({
   description,
   authorID,
   screenshotURL,
+  tags,
   setMode
 }: Props) => {
 
   const { offset, perPage, search } = usePage()
-  const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'description'>>({
+  const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'description' | 'tags'>>({
     title,
-    description
+    description,
+    tags
   })
 
-  const [updateBookmark, { loading, error, data }] = useMutation(UPDATE_BOOKMARK_MUTATION
-    , {
+  const [updateBookmark, { loading, error, data }] = useMutation(UPDATE_BOOKMARK_MUTATION, {
       refetchQueries: [
         {
           query: SEARCH_BOOKMARKS,
@@ -88,6 +91,47 @@ export const UpdateBookmark = ({
             onChange={e => setFormData({ ...formData, description: e.target.value })}
           />
         </p>
+        <p className="w-full mb-4">
+          <input
+            className="w-full bg-base-300 p-2"
+            placeholder="add tags"
+            name="description"
+            onChange={e => {
+              const newTags = `${tags ? tags + ',' : ''}${'tag:'+e.target.value}`
+
+              setFormData({ ...formData, tags: newTags })
+            }}
+          />
+        </p>
+        <div className="tags mb-2">
+          { tags && 
+              <div className="badges">
+                { tags.split(',').map((tag, i) => {
+
+                  const [hide, setHide] = useState(false)
+
+                  return (
+                    <div 
+                      key={i} 
+                      className={`badge badge-info gap-2 mr-2 ${hide ? 'hidden' : ''}`}
+                    >
+                      <button
+                        onClick={e => {
+                          const newTags = tags.split(',').filter(oldTag => oldTag !== tag).join(',')
+
+                          setFormData({ ...formData, tags: newTags })
+                          setHide(true)
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faClose} />
+                      </button>
+                      {tag.split(':')[1]}
+                    </div>
+                  )
+                }) }
+              </div>
+          }
+        </div>
         <div className="tasks ml-auto">
           <button
             className="btn font-bold uppercase mt-2"

@@ -18,6 +18,17 @@ exports.updateBookmark = async function(id, updates) {
     }
   })
 
+  if (updates.tags) {
+    prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          tags: updates.tags
+        }
+      })
+  }
+
   return bookmark;
 }
 
@@ -71,7 +82,8 @@ exports.getBookmarksByAuthor = async function(id, skip, take) {
   return bookmarks;
 }
 
-exports.searchBookmarks = async function(skip, take, authorID, title, description) {
+exports.searchBookmarks = async function(skip, take, authorID, title, description, tags) {
+  console.log('tag: ', tags);
   const searchBookmarks = await prisma.bookmark.findMany({
     skip, 
     take,
@@ -90,6 +102,12 @@ exports.searchBookmarks = async function(skip, take, authorID, title, descriptio
         {
             description: {
               contains: description,
+              mode: 'insensitive'
+            }
+        },
+        {
+            tags: {
+              contains: tags,
               mode: 'insensitive'
             }
         }

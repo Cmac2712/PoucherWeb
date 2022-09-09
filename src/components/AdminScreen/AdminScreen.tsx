@@ -11,7 +11,6 @@ import { Loader } from "../Loader/Loader";
 import { Search } from "../Search";
 import { PageProvider } from "../../contexts/page-context";
 
-
 export const AdminScreen = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 

@@ -6,14 +6,19 @@ import { Loader } from "../Loader/Loader"
 import { useAuth0 } from "@auth0/auth0-react"
 import './Bookmarks.css'
 
-type Props = Bookmark  
+type Props = {
+    data: Bookmark
+}  
 
 export const BookmarkPreview = ({
-    id,
-    url,
-    title,
-    description,
-    screenshotURL
+    data: {
+        id,
+        url,
+        title,
+        description,
+        screenshotURL,
+        tags
+    }
 }:Props) => {
 
     const [updateMode, setUpdateMode] = useState(false)
@@ -30,6 +35,7 @@ export const BookmarkPreview = ({
             setMode={setUpdateMode}
             screenshotURL={screenshotURL}
             authorID={user?.sub}
+            tags={tags}
         /> 
     )
 
@@ -55,12 +61,19 @@ export const BookmarkPreview = ({
                 <h2 className="w-full font-bold text-lg mb-3 lg:mb-0">{title}</h2>
                 <p className="text-base w-full mb-3 bookmark-preview-description">{description}</p>
                 <a
-                    className="text-xs text-blue-500"
+                    className="inline-block text-xs text-blue-500 mb-2"
                     href={url}
                     target="_blank"
                 >
                     {url}
                 </a>
+
+                { tags && 
+                    <div className="badges">
+                     { tags.split(',').map((tag, i) => <div key={i} className="badge badge-info gap-2 mr-2">{tag.split(':')[1]}</div>) }
+                    </div>
+                }
+
             </div>
 
             <div className={`tasks flex items-start ml-auto lg:opacity-0 basis-auto transition-opacity absolute right-4 top-4 md:static ${hover ? 'lg:opacity-100' : '' }`}>

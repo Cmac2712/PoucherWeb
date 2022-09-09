@@ -29,7 +29,6 @@ const cache = new InMemoryCache({
 
 const client = new ApolloClient({ 
   uri: import.meta.env.VITE_SERVER_ENDPOINT,
-  //uri: 'http://localhost:3001/dev/db',
   cache
 });
 

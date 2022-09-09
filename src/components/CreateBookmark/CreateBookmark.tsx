@@ -89,7 +89,8 @@ export const CreateBookmark = () => {
                         input: {
                             authorID: user?.sub,
                             title: search,
-                            description: search
+                            description: search,
+                            tags: search
                         }
                     }
                 }

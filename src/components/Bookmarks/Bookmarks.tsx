@@ -12,6 +12,7 @@ export interface Bookmark {
     authorID?: string
     screenshotURL?: string
     createdAt?: string
+    tags?: string
 }
 
 const GET_BOOKMARKS_COUNT = gql`
@@ -31,6 +32,7 @@ const SEARCH_BOOKMARKS = gql`
       videoURL
       screenshotURL
       createdAt
+      tags
     }
     getBookmarksCount(input: $input)
 }
@@ -86,7 +88,8 @@ export const Bookmarks = ({
           input: {
             authorID,
             title: search,
-            description: search
+            description: search,
+            tags: search
           }
         }
     })
@@ -113,20 +116,15 @@ export const Bookmarks = ({
 
         <ul className="basis-full">
 
-          {data?.searchBookmarks?.map(({ id, screenshotURL, url, title, description, createdAt }) => {
+          {data?.searchBookmarks?.map((data) => {
 
             return (
               <li
                 className="basis-full border-base-300 border-t first:border-0"
-                key={id}
+                key={data.id}
               >
                 <BookmarkPreview
-                  id={id}
-                  url={url}
-                  title={title}
-                  description={description}
-                  createdAt={createdAt}
-                  screenshotURL={screenshotURL}
+                  data={data}
                 />
 
               </li>
