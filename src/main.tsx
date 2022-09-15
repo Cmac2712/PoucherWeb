@@ -41,3 +41,5 @@ ReactDOM
       </ApolloProvider>
     </React.StrictMode>
   )
+
+export { client }

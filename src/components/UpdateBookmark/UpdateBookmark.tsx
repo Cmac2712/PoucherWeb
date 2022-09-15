@@ -1,38 +1,69 @@
 import { useState, useContext } from "react";
 import { useMutation, gql } from "@apollo/client"
-import { SEARCH_BOOKMARKS } from "../Bookmarks";
-import { Bookmark } from "../Bookmarks";
-import { usePage } from "../../contexts/page-context";
+import { SEARCH_BOOKMARKS } from '../Bookmarks'
+import { Bookmark } from "../Bookmarks"
+import { Loader } from '../Loader'
+import { usePage } from "../../contexts/page-context"
+import { CREATE_USER, useUser } from '../../contexts/user-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromFile, faClose } from '@fortawesome/free-solid-svg-icons'
+import { displayTag, updateTags } from '../../utils/tags'
 
 type Props = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
 }  
 
 export const UPDATE_BOOKMARK_MUTATION = gql`
-  mutation UPDATE_BOOKMARK($id: ID!, $updates: BookmarkInput) {
+  mutation UPDATE_BOOKMARK($id: ID!, $updates: BookmarkInput, $userUpdates: UserInput) {
     updateBookmark(id: $id, updates: $updates) {
       title
     }
+    updateUser(user: $userUpdates) {
+      id
+      name
+      email
+      tags
+    }
   }
 `
+
+const mergeTags = (tags:string[], tagsObject: { list: string[] } | null) => {
+
+  if (!tagsObject) return JSON.stringify({ list: tags })
+
+  if (!tags.length) return tagsObject
+
+  return JSON.stringify({
+    list: [...new Set(tags.concat(tagsObject.list))]
+  })
+}
+
+const removeTags = (tags:string[], tagsObject: { list: string[] }) => {
+  if (!tags.length) return tagsObject
+
+  return JSON.stringify({
+    list: tagsObject.list.filter(tag => !tags.includes(tag)) 
+  })
+}
+
 export const UpdateBookmark = ({
   id,
   title,
   description,
-  authorID,
   screenshotURL,
   tags,
   setMode
 }: Props) => {
 
   const { offset, perPage, search } = usePage()
+  const { data: userData } = useUser()
+  const [toDelete, setToDelete] = useState<string[]>([])
   const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'description' | 'tags'>>({
     title,
     description,
-    tags
+    tags: [] 
   })
+  const userTags = userData.createUser.tags;
 
   const [updateBookmark, { loading, error, data }] = useMutation(UPDATE_BOOKMARK_MUTATION, {
       refetchQueries: [
@@ -42,9 +73,10 @@ export const UpdateBookmark = ({
             offset,
             limit: perPage,
             input: {
-              authorID,
+              authorID: userData.createUser.id,
               title: search,
-              description: search
+              description: search,
+              tags: search
             }
           }
         }
@@ -52,13 +84,9 @@ export const UpdateBookmark = ({
     }
   );
 
-  if (loading) return (
-    <div className="mb-4">
-      <p>Loading...</p>
-    </div>
-  )
+  if (loading) return <Loader /> 
 
-  if (error) return <p>Error :(</p>;
+  if (error) return <p>Error :(</p>
 
   return (
      <div  className={`bookmark-preview px-4 py-5 lg:py-3 relative w-full max-w-3xl flex flex-wrap md:flex-nowrap`}>
@@ -95,18 +123,16 @@ export const UpdateBookmark = ({
           <input
             className="w-full bg-base-300 p-2"
             placeholder="add tags"
-            name="description"
+            name="tags"
             onChange={e => {
-              const newTags = `${tags ? tags + ',' : ''}${'tag:'+e.target.value}`
-
-              setFormData({ ...formData, tags: newTags })
+              setFormData({ ...formData, tags: e.target.value.split(' ').map(tag => 'tag:' + tag) })
             }}
           />
         </p>
         <div className="tags mb-2">
           { tags && 
               <div className="badges">
-                { tags.split(',').map((tag, i) => {
+                { tags.list.map((tag, i) => {
 
                   const [hide, setHide] = useState(false)
 
@@ -117,18 +143,17 @@ export const UpdateBookmark = ({
                     >
                       <button
                         onClick={e => {
-                          const newTags = tags.split(',').filter(oldTag => oldTag !== tag).join(',')
-
-                          setFormData({ ...formData, tags: newTags })
+                          setToDelete([...toDelete, tag])
                           setHide(true)
                         }}
                       >
                         <FontAwesomeIcon icon={faClose} />
                       </button>
-                      {tag.split(':')[1]}
+                      { tag ? tag.split(':')[1] : '' }
                     </div>
                   )
-                }) }
+                }) 
+              }
               </div>
           }
         </div>
@@ -136,10 +161,21 @@ export const UpdateBookmark = ({
           <button
             className="btn font-bold uppercase mt-2"
             onClick={() => {
+
+              const newBookmarkTags = mergeTags(formData.tags, removeTags(toDelete, tags))
+              const newUserTags = mergeTags(formData.tags, removeTags(toDelete, JSON.parse(userTags)))
+
               updateBookmark({
                 variables: {
                   id,
-                  updates: formData
+                  updates: {
+                    ...formData,
+                    tags: newBookmarkTags
+                  },
+                  userUpdates: {
+                    id: userData.createUser.id,
+                    tags: newUserTags 
+                  }
                 }
               })
 

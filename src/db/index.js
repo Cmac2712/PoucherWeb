@@ -2,6 +2,45 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
+const getUser = async function(id) {
+  return await prisma.user.findUnique({
+    where: {
+      id
+    }
+  })
+}
+
+exports.getUser = getUser
+
+exports.createUser = async function({ user: { id, email, name, tags }}) {
+
+  const user = await getUser(id)
+
+  if (user) return user
+
+  return await prisma.user.create({
+    data: {
+      id,
+      email,
+      name,
+      tags
+    }
+  })
+}
+
+exports.updateUser = async function({ user: { id, name, email, tags } }) {
+  return await prisma.user.update({
+    where: {
+      id
+    },
+    data: {
+      name,
+      email,
+      tags
+    }
+  })
+}
+
 exports.createBookmark = async function(bookmark) {
   return await prisma.bookmark.create({
     data: bookmark
@@ -9,6 +48,9 @@ exports.createBookmark = async function(bookmark) {
 }
 
 exports.updateBookmark = async function(id, updates) {
+
+  console.log('bookmark updates: ', updates)
+
   const bookmark = await prisma.bookmark.update({
     where: {
       id
@@ -83,7 +125,6 @@ exports.getBookmarksByAuthor = async function(id, skip, take) {
 }
 
 exports.searchBookmarks = async function(skip, take, authorID, title, description, tags) {
-  console.log('tag: ', tags);
   const searchBookmarks = await prisma.bookmark.findMany({
     skip, 
     take,

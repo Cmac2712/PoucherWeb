@@ -4,6 +4,7 @@ import { DeleteBookmark } from "../DeleteBookmark"
 import { Bookmark } from "./Bookmarks"
 import { Loader } from "../Loader/Loader"
 import { useAuth0 } from "@auth0/auth0-react"
+import { displayTag } from "../../utils/tags"
 import './Bookmarks.css'
 
 type Props = {
@@ -34,7 +35,6 @@ export const BookmarkPreview = ({
             description={description}
             setMode={setUpdateMode}
             screenshotURL={screenshotURL}
-            authorID={user?.sub}
             tags={tags}
         /> 
     )
@@ -70,7 +70,7 @@ export const BookmarkPreview = ({
 
                 { tags && 
                     <div className="badges">
-                     { tags.split(',').map((tag, i) => <div key={i} className="badge badge-info gap-2 mr-2">{tag.split(':')[1]}</div>) }
+                     { tags.list.map((tag, i) => <div key={i} className="badge badge-info gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
                     </div>
                 }
 

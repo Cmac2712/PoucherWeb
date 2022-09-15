@@ -8,7 +8,7 @@
     "prisma:pull": "prisma db pull",
     "prisma:generate": "prisma generate",
     "deploy": "serverless deploy",
-    "dev:server": "serverless offline --httpPort 3001"
+    "dev:server": "serverless offline --verbose --httpPort 3001"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",

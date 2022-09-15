@@ -12,7 +12,7 @@ export interface Bookmark {
     authorID?: string
     screenshotURL?: string
     createdAt?: string
-    tags?: string
+    tags?: string[] 
 }
 
 const GET_BOOKMARKS_COUNT = gql`
@@ -103,6 +103,7 @@ export const Bookmarks = ({
 
         { search &&
           <div className="flex search-text p-4">
+           <p>search: </p> { search }
             <p className="mr-2">
               Search results for <em>{search}</em>
             </p>
@@ -118,13 +119,18 @@ export const Bookmarks = ({
 
           {data?.searchBookmarks?.map((data) => {
 
+            const tagsParsed = JSON.parse(data.tags)
+
             return (
               <li
                 className="basis-full border-base-300 border-t first:border-0"
                 key={data.id}
               >
                 <BookmarkPreview
-                  data={data}
+                  data={{
+                    ...data,
+                    tags: tagsParsed 
+                  }}
                 />
 
               </li>

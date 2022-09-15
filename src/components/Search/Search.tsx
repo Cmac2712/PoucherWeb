@@ -4,24 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faClose } from '@fortawesome/free-solid-svg-icons'
 
 export const Search = () => {
-    const [open, setOpen] = useState(false)
     const { setOffset, setSearch } = usePage()
     const [searchTerm, setSearchTerm] = useState('')
 
     return (
         <>
-            <div className={`flex relative bottom-20 left-12 m-auto h-12 z-10 ${open ? 'slide-in' : 'slide-out'}`}>
-                <button
-                    className='btn btn-square rounded-r-none'
-                    onClick={
-                        e => {
-                            e.preventDefault()
-                            setOpen(false)
-                        }
-                    }
-                >
-                    <FontAwesomeIcon icon={faClose} />
-                </button>
+            <div className={`flex h-12 relative z-10`}>
                 <form
                     className='flex'
                     onSubmit={e => {
@@ -43,17 +31,12 @@ export const Search = () => {
                         value={searchTerm}
                     />
 
-                    <button
-                        className="btn btn-square"
-                    >
+                    <button className="btn btn-square">
                         <FontAwesomeIcon icon={faSearch} />
                     </button>
                 </form>
             </div>
-            <button
-                className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
-                onClick={() => setOpen(!open)}
-            >
+            <button className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12">
                 <FontAwesomeIcon icon={faSearch} />
             </button>
         </>

@@ -37,7 +37,8 @@ export const DeleteBookmark = ({
           input: {
             authorID,
             title: search,
-            description: search
+            description: search,
+            tags: search
           }
         }
       }

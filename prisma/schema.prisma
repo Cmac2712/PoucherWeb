@@ -22,15 +22,13 @@ model Bookmark {
 }
 
 model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id  Int     @id @default(autoincrement())
+  bio String?
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique @db.VarChar(255)
-  profile Profile?
+  name  String? @db.VarChar(255)
+  id    String  @id @db.VarChar
+  email String? @db.VarChar
+  tags  String? @db.VarChar
 }

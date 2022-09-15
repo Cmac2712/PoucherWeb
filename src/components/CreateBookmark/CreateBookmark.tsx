@@ -34,7 +34,6 @@ const isURL = (str: string) => {
 
 export const getBookmarkInfo = async (url: string, cb?: () => void) => {
     const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
-    //const endpoint = 'http://localhost:3001/dev/'
     const response = await axios.post(`${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`, {
         url: encodeURIComponent(url)
     })

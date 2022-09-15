@@ -7,7 +7,7 @@ export const LogoutButton = () => {
 
   return (
     <button onClick={() => logout({ returnTo: window.location.origin })}>
-      Log Out
+      <span className="mr-2">Log Out</span>
       <FontAwesomeIcon icon={faArrowRightFromBracket} />
     </button>
   );
