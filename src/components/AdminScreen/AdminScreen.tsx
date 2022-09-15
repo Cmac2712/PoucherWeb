@@ -24,7 +24,7 @@ export const AdminScreen = () => {
 
   if (isLoading) return <Loader /> 
 
-  if (!user) return <p>no user</p>
+  //if (!user) return <p>no user</p>
 
   if (!isAuthenticated) {
     return (
