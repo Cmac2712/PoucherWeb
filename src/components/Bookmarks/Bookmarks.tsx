@@ -103,7 +103,6 @@ export const Bookmarks = ({
 
         { search &&
           <div className="flex search-text p-4">
-           <p>search: </p> { search }
             <p className="mr-2">
               Search results for <em>{search}</em>
             </p>
