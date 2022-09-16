@@ -24,18 +24,22 @@ export const Pagination = () => {
                     <FontAwesomeIcon icon={faAngleLeft} />
                 </button>
 
-                {Array.from(Array(pages), (e, i) => {
-                    return (
-                        <button
-                            key={i}
-                            onClick={() => {
-                                setOffset(i * perPage)
-                            }}
-                            className={`btn btn-md ${currentPage === i + 1 ? 'btn-active' : ''}`}>
-                            {i + 1}
-                        </button>
-                    )
-                })}
+                <button className={`btn md:hidden`}>Page { currentPage  }</button> 
+
+                {
+                    Array.from(Array(pages), (e, i) => {
+                        return (
+                            <button
+                                key={i}
+                                onClick={() => {
+                                    setOffset(i * perPage)
+                                }}
+                                className={`btn btn-md hidden md:block ${currentPage === i + 1 ? 'btn-active' : ''}`}>
+                                {i + 1}
+                            </button>
+                        )
+                    })
+                }
 
                 <button
                     disabled={currentPage === pages}
