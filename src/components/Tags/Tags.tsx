@@ -33,7 +33,7 @@ const Tags = ({
 
                                 if (callback) callback()
                             }}
-                            className={`badge badge-info gap-2 mr-2`}
+                            className={`text-blue-500 underline gap-2 mr-2`}
                         >
                             { tag ? tag.split(':')[1] : '' }
                         </button>

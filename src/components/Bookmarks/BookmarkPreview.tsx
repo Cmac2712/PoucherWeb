@@ -69,8 +69,8 @@ export const BookmarkPreview = ({
                 </a>
 
                 { tags && 
-                    <div className="badges">
-                     { tags.list.map((tag, i) => <div key={i} className="badge badge-info gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
+                    <div className="flex">
+                     { tags.list.map((tag, i) => <div key={i} className="underline text-blue-500 gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
                     </div>
                 }
 

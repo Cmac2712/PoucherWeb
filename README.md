@@ -8,3 +8,4 @@
 6. Refactor Tags component to be more usable
 7. Optimise page load speed
 8. Dark/Light mode
+9. CI/CD
