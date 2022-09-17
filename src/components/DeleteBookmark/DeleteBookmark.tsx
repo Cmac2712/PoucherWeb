@@ -1,4 +1,3 @@
-import { useState, useContext } from "react"
 import { useMutation, gql } from "@apollo/client"
 import { SEARCH_BOOKMARKS } from "../Bookmarks"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,7 +25,7 @@ export const DeleteBookmark = ({
 }: Props ) => {
 
     const { perPage, offset, search } = usePage()
-    const [deleteBookmark, { loading, error, data }] = useMutation(DELETE_BOOKMARK_MUTATION, {
+    const [deleteBookmark] = useMutation(DELETE_BOOKMARK_MUTATION, {
     refetchQueries: [
       {
         query: SEARCH_BOOKMARKS,
@@ -46,14 +45,11 @@ export const DeleteBookmark = ({
   }
     )
 
-    const [deleted, setDeleted] = useState<String[]>([])
-
     return (
         <button
             className="btn btn-sm font-bold"
             onClick={async (e) => {
                 e.preventDefault()
-                setDeleted([...deleted, id])
                 deleteBookmark({
                     variables: {
                         id

@@ -37,11 +37,14 @@
     "@types/react": "^16.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
     "@vitejs/plugin-react": "^1.3.0",
     "autoprefixer": "^10.4.7",
     "body-parser": "^1.20.0",
     "concurrently": "^7.2.2",
     "daisyui": "^2.24.0",
+    "eslint": "^8.23.1",
     "expres": "^0.0.5",
     "postcss": "^8.4.14",
     "puppeteer": "^16.0.0",
@@ -50,7 +53,7 @@
     "serverless-webpack": "^5.7.1",
     "serverless-webpack-prisma": "^1.1.0",
     "tailwindcss": "^3.1.4",
-    "typescript": "^4.6.3",
+    "typescript": "^4.8.3",
     "vite": "^2.9.9"
   }
 }

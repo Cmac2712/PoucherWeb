@@ -4,7 +4,7 @@ import { DeleteBookmark } from "../DeleteBookmark"
 import { Bookmark } from "./Bookmarks"
 import { Loader } from "../Loader/Loader"
 import { useAuth0 } from "@auth0/auth0-react"
-import { displayTag } from "../../utils/tags"
+import { useModal } from '../../contexts/modal-context'
 import './Bookmarks.css'
 
 type Props = {
@@ -24,20 +24,11 @@ export const BookmarkPreview = ({
 
     const [updateMode, setUpdateMode] = useState(false)
     const [hover, setHover] = useState(false)
-    const { user, isAuthenticated, isLoading } = useAuth0()
+    const { user, isLoading } = useAuth0()
+    const { setModalOpen, modalOpen, setModalContent } = useModal()
 
     if (isLoading) return <Loader /> 
 
-    if (updateMode) return ( 
-        <UpdateBookmark
-            id={id}
-            title={title}
-            description={description}
-            setMode={setUpdateMode}
-            screenshotURL={screenshotURL}
-            tags={tags}
-        /> 
-    )
 
     return (
         <div
@@ -45,6 +36,7 @@ export const BookmarkPreview = ({
             onMouseLeave={() => setHover(false)}
             className={`bookmark-preview px-4 py-5 lg:py-3 relative w-full max-w-3xl flex flex-wrap md:flex-nowrap`}
         >
+
             { screenshotURL &&
                 <div className="bookmark-preview-image mr-0 w-24 md:h-24 max-h-24 basis-24 shrink-0 object-cover overflow-hidden text-0 mb-2">
                     <img
@@ -68,7 +60,7 @@ export const BookmarkPreview = ({
                     {url}
                 </a>
 
-                { tags && 
+                { tags && typeof tags !== 'string' && 
                     <div className="flex">
                      { tags.list.map((tag, i) => <div key={i} className="underline text-blue-500 gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
                     </div>
@@ -77,12 +69,21 @@ export const BookmarkPreview = ({
             </div>
 
             <div className={`tasks flex items-start ml-auto lg:opacity-0 basis-auto transition-opacity absolute right-4 top-4 md:static ${hover ? 'lg:opacity-100' : '' }`}>
-                <button
-                    className="btn btn-sm text-xs font-bold mr-2"
-                    onClick={() => {
-                        setUpdateMode(true)
-                    }}
-                >edit</button>
+                        <button
+                            className="btn btn-sm text-xs font-bold mr-2"
+                            onClick={() => {
+                                setModalContent(
+                                    <UpdateBookmark
+                                        id={id}
+                                        title={title}
+                                        description={description}
+                                        setMode={setUpdateMode}
+                                        screenshotURL={screenshotURL}
+                                        tags={tags}
+                                    />)
+                                setModalOpen(true)
+                            }}
+                        >edit</button>
 
                 <DeleteBookmark
                     id={id}

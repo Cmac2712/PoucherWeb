@@ -2,7 +2,10 @@ import { useQuery, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
 import { usePage } from '../../contexts/page-context'
 import { Loader } from "../Loader/Loader"
+import { useEffect } from "react"
 
+export type TagsObj = { list: string[] } | string
+  
 export interface Bookmark {
     id: number
     title: string
@@ -12,14 +15,8 @@ export interface Bookmark {
     authorID?: string
     screenshotURL?: string
     createdAt?: string
-    tags?: string[] 
+    tags: TagsObj 
 }
-
-const GET_BOOKMARKS_COUNT = gql`
-  query GetBookmarksCount($input: BookmarkInput) {
-    getBookmarksCount(input: $input)
-  }
-`
 
 const SEARCH_BOOKMARKS = gql`
   query SearchBookmarks($offset: Int, $limit: Int, $input: BookmarkInput) {
@@ -38,29 +35,6 @@ const SEARCH_BOOKMARKS = gql`
 }
 `
 
-const GET_BOOKMARKS_BY_AUTHOR = gql`
-  query GetBookmarksByAuthor(
-      $id: ID!
-      $offset: Int
-      $limit: Int
-    ) {
-    getBookmarksByAuthor(
-        id: $id
-        offset: $offset
-        limit: $limit
-      ) {
-          id
-          title
-          description
-          url
-          videoURL
-          screenshotURL
-          createdAt
-    }
-    getBookmarksCount(id: $id)
-  }
-`
-
 export interface PaginationProps {
     perPage: number
     offset: number
@@ -75,13 +49,13 @@ export const Bookmarks = ({
   authorID 
 }:Props) => {
 
-    const { perPage, offset, count, setCount, search, setSearch } = usePage()
+    const { perPage, offset, setCount, search, setSearch } = usePage()
 
-    const { loading, error, data, fetchMore } = useQuery<{
+    const { loading, error, data } = useQuery<{
         searchBookmarks: Bookmark[]
         getBookmarksCount: number
     }>(SEARCH_BOOKMARKS, {
-        onCompleted: ({getBookmarksCount}) => setCount(getBookmarksCount),
+        //onCompleted: ({getBookmarksCount}) => setCount(getBookmarksCount),
         variables: {
           offset,
           limit: perPage,
@@ -93,6 +67,12 @@ export const Bookmarks = ({
           }
         }
     })
+
+    //if (data?.getBookmarksCount) {
+        const count = data?.getBookmarksCount ? data?.getBookmarksCount : 0 
+        console.log('cound: ', count);
+        setCount(count)
+    //} 
 
     if (loading) return <Loader />
 
@@ -118,7 +98,7 @@ export const Bookmarks = ({
 
           {data?.searchBookmarks?.map((data) => {
 
-            const tagsParsed = JSON.parse(data.tags)
+            const tagsParsed = typeof data.tags === 'string' ? JSON.parse(data.tags) : data.tags
 
             return (
               <li

@@ -1,10 +1,10 @@
 import { usePage } from '../../contexts/page-context'
 import { useUser } from '../../contexts/user-context'
-import { displayTag } from '../../utils/tags'
 import { Loader } from '../Loader' 
+import { TagsObj } from '../Bookmarks'
 
 interface Props {
-    callback?: () => any
+    callback?: () => void 
 }
 
 const Tags = ({
@@ -15,7 +15,7 @@ const Tags = ({
 
     if (!data) return <Loader /> 
 
-    const tags = JSON.parse(data.createUser.tags)?.list
+    const tags:TagsObj = typeof data.createUser.tags === 'string' ? JSON.parse(data.createUser.tags) : data.createUser.tags 
 
     if (!tags) return <p>no tags</p>
 
@@ -23,7 +23,9 @@ const Tags = ({
         <div className="tags p-4 flex items-center">
             <h3 className="text-sm mr-4">Tags</h3>
             <div className="badges">
-                {tags.map((tag, i) => {
+                {
+                typeof tags === 'object' &&
+                tags.list.map((tag, i) => {
                     return (
                         <button
                             key={i}

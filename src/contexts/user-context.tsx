@@ -1,7 +1,8 @@
-import { useQuery, gql } from "@apollo/client"
-import { useState, useContext, createContext, } from "react"
+import { useQuery, gql, ApolloError } from "@apollo/client"
+import { useContext, createContext, } from "react"
 import { ReactNode } from 'react'
 import { Auth0User } from '../components/AdminScreen'
+import { TagsObj } from "../components/Bookmarks"
 
 interface UserProviderProps {
   children: ReactNode
@@ -10,13 +11,13 @@ interface UserProviderProps {
 
 type UserContextProps = {
   loading: boolean
-  error: string
+  error: ApolloError | undefined
   data: {
     createUser: {
       id: string
-      tags: string 
       email: string
       name: string
+      tags: TagsObj 
     }
   }
 } | undefined
@@ -53,7 +54,7 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
     }
   })
 
-  const value = {
+  const value:UserContextProps = {
     loading,
     error,
     data
