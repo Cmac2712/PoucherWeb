@@ -5,7 +5,8 @@ interface ModalProviderProps {
 }
 
 type ModalContextProps = {
-  setModalOpen: Dispatch<SetStateAction<boolean>>
+  openModal: () => void
+  closeModal: () => void
   modalOpen: boolean
   setModalContent: Dispatch<SetStateAction<ReactNode | false>>
   modalContent: ReactNode | undefined
@@ -28,8 +29,16 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [modalOpen, setModalOpen] = useState(false) 
   const [modalContent, setModalContent] = useState(false) 
 
+  const openModal = () => setModalOpen(true)
+
+  const closeModal = () => {
+    setModalContent(false)
+    setModalOpen(false)
+  }
+
   const value = {
-    setModalOpen,
+    openModal,
+    closeModal,
     modalOpen,
     setModalContent,
     modalContent

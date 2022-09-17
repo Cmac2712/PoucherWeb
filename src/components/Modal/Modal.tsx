@@ -2,12 +2,15 @@ import { useModal } from '../../contexts/modal-context'
 
 const Modal = () => {
     
-    const { modalOpen, modalContent, setModalOpen } = useModal()
+    const { modalOpen, modalContent, setModalContent, closeModal } = useModal()
 
     return (
         <div 
             onClick={e => {
-                if (e.target.classList.contains('modal')) setModalOpen(false) 
+
+                if (!e.target.classList.contains('modal')) return
+
+                closeModal() 
             }}
             className={`modal ${modalOpen && 'opacity-100 visible pointer-events-auto'}`}
         >

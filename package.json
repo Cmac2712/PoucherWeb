@@ -45,6 +45,7 @@
     "concurrently": "^7.2.2",
     "daisyui": "^2.24.0",
     "eslint": "^8.23.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "expres": "^0.0.5",
     "postcss": "^8.4.14",
     "puppeteer": "^16.0.0",

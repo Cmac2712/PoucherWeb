@@ -25,7 +25,7 @@ export const BookmarkPreview = ({
     const [updateMode, setUpdateMode] = useState(false)
     const [hover, setHover] = useState(false)
     const { user, isLoading } = useAuth0()
-    const { setModalOpen, modalOpen, setModalContent } = useModal()
+    const { openModal, modalOpen, setModalContent } = useModal()
 
     if (isLoading) return <Loader /> 
 
@@ -49,7 +49,7 @@ export const BookmarkPreview = ({
                 </div>
             }
 
-            <div className="bookmark-preview-info basis-auto md:pl-4">
+            <div className="bookmark-preview-info basis-full md:pl-4">
                 <h2 className="w-full font-bold text-lg mb-3 lg:mb-0">{title}</h2>
                 <p className="text-base w-full mb-3 bookmark-preview-description">{description}</p>
                 <a
@@ -62,7 +62,7 @@ export const BookmarkPreview = ({
 
                 { tags && typeof tags !== 'string' && 
                     <div className="flex">
-                     { tags.list.map((tag, i) => <div key={i} className="underline text-blue-500 gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
+                     { tags.list?.map((tag, i) => <div key={i} className="underline text-blue-500 gap-2 mr-2"> { tag ? tag?.split(':')[1] : ''} </div>) }
                     </div>
                 }
 
@@ -81,7 +81,7 @@ export const BookmarkPreview = ({
                                         screenshotURL={screenshotURL}
                                         tags={tags}
                                     />)
-                                setModalOpen(true)
+                                openModal()
                             }}
                         >edit</button>
 

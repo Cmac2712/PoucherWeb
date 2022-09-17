@@ -42,8 +42,8 @@ export const AdminScreen = () => {
   if (isAuthenticated && user) {
     return (
       <>
-        <PageProvider>
-          <UserProvider user={user}>
+        <UserProvider user={user}>
+          <PageProvider>
             <ModalProvider>
               <div className="drawer drawer-mobile">
                 <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -94,8 +94,8 @@ export const AdminScreen = () => {
               </div>
               <Modal />
             </ModalProvider>
-          </UserProvider>
-        </PageProvider>
+          </PageProvider>
+        </UserProvider>
       </>
     )
   }

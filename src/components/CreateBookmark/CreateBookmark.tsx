@@ -2,12 +2,12 @@ import axios from 'axios'
 import { useState, useContext, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Bookmark, SEARCH_BOOKMARKS } from '../Bookmarks';
+import { Bookmark } from '../Bookmarks';
 import { UPDATE_BOOKMARK_MUTATION } from '../UpdateBookmark';
 import { Loader } from '../Loader/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
-import { usePage } from '../../contexts/page-context';
+import { usePage, SEARCH_BOOKMARKS } from '../../contexts/page-context';
 import { v4 as uuidv4 } from 'uuid';
 import './CreateBookmark.css'
 

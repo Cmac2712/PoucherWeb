@@ -1,8 +1,7 @@
 import { useMutation, gql } from "@apollo/client"
-import { SEARCH_BOOKMARKS } from "../Bookmarks"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { usePage } from "../../contexts/page-context";
+import { usePage, SEARCH_BOOKMARKS } from "../../contexts/page-context";
 
 const DELETE_BOOKMARK_MUTATION = gql`
   mutation DELETE_BOOKMARK($id: ID!) {

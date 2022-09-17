@@ -6,7 +6,7 @@ import { usePage } from '../../contexts/page-context'
 export const Pagination = () => {
 
     const { perPage, offset, setOffset, count } = usePage()
-    const pages = Math.ceil(count / perPage)
+    const pages = count ? Math.ceil(count / perPage) : 1
     const currentPage = Math.floor(offset / perPage) + 1
 
     if (pages <= 1) return null

@@ -2,7 +2,6 @@ import { useQuery, gql } from "@apollo/client"
 import { BookmarkPreview } from "./BookmarkPreview"
 import { usePage } from '../../contexts/page-context'
 import { Loader } from "../Loader/Loader"
-import { useEffect } from "react"
 
 export type TagsObj = { list: string[] } | string
   
@@ -18,23 +17,6 @@ export interface Bookmark {
     tags: TagsObj 
 }
 
-const SEARCH_BOOKMARKS = gql`
-  query SearchBookmarks($offset: Int, $limit: Int, $input: BookmarkInput) {
-    searchBookmarks(offset: $offset, limit: $limit, input: $input) {
-      id
-      authorID
-      title
-      description
-      url
-      videoURL
-      screenshotURL
-      createdAt
-      tags
-    }
-    getBookmarksCount(input: $input)
-}
-`
-
 export interface PaginationProps {
     perPage: number
     offset: number
@@ -49,30 +31,7 @@ export const Bookmarks = ({
   authorID 
 }:Props) => {
 
-    const { perPage, offset, setCount, search, setSearch } = usePage()
-
-    const { loading, error, data } = useQuery<{
-        searchBookmarks: Bookmark[]
-        getBookmarksCount: number
-    }>(SEARCH_BOOKMARKS, {
-        //onCompleted: ({getBookmarksCount}) => setCount(getBookmarksCount),
-        variables: {
-          offset,
-          limit: perPage,
-          input: {
-            authorID,
-            title: search,
-            description: search,
-            tags: search
-          }
-        }
-    })
-
-    //if (data?.getBookmarksCount) {
-        const count = data?.getBookmarksCount ? data?.getBookmarksCount : 0 
-        console.log('cound: ', count);
-        setCount(count)
-    //} 
+    const { perPage, offset, count, search, setSearch, bookmarks: { data, loading, error} } = usePage()
 
     if (loading) return <Loader />
 
@@ -122,5 +81,3 @@ export const Bookmarks = ({
       </div>
   );
 }
-
-export { SEARCH_BOOKMARKS }
