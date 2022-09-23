@@ -76,6 +76,8 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
     }
   })
 
+  console.log('data: ', data)
+
   const value:UserContextProps = {
     loading,
     error,

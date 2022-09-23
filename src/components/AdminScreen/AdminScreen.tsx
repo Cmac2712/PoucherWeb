@@ -78,13 +78,15 @@ export const AdminScreen = () => {
                   >
                     <div>
                       {user &&
-                        <Profile
-                          user={user}
-                        />
+                        <>
+                          <Profile
+                            user={user}
+                          />
+                          <Tags />
+                        </>
                       }
                     </div>
 
-                    <Tags />
 
                     <div className="p-4 mt-auto">
                       <LogoutButton />

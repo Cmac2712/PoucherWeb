@@ -54,7 +54,7 @@ export const usePage = () => {
 }
 
 export const PageProvider = ({ children }: PageProviderProps) => {
-  const [perPage, setPerPage] = useState(7)
+  const [perPage, setPerPage] = useState(15)
   const [offset, setOffset] = useState(0)
   const [search, setSearch] = useState("")
   const user = useUser()
