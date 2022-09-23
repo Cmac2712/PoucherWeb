@@ -1,7 +1,20 @@
 import { defineConfig } from 'vite'
+import { VitePluginFonts } from 'vite-plugin-fonts'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()]
+  plugins: [
+    react(),
+    VitePluginFonts({
+      google: {
+        families: [
+          {
+            name: 'Inter',
+            styles: 'wght@400;600;700;800;900'
+          }
+        ],
+      }
+    })
+  ]
 })

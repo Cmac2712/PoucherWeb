@@ -6,14 +6,14 @@ export const LoginButton = () => {
   return (
     <>
       <button
-        className="btn btn-accent mr-2"
-        onClick={() => loginWithRedirect()}>
-        Log In
-      </button>
-      <button
-        className="btn btn-primary"
+        className="btn btn-outline mr-2 normal-case"
         onClick={() => loginWithRedirect()}>
         Sign Up
+      </button>
+      <button
+        className="btn btn-primary normal-case"
+        onClick={() => loginWithRedirect()}>
+        Log In
       </button>
     </>
   )

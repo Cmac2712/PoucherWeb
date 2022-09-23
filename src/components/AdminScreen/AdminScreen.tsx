@@ -1,8 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { LoginButton } from '../LoginButton';
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
 import { CreateBookmark } from "../CreateBookmark";
+import { Splash } from "../Splash"
 import { Tags } from '../Tags'
 import { Pagination } from "../Pagination";
 import { Profile } from "../Profile";
@@ -30,12 +30,7 @@ export const AdminScreen = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex column items-center justify-center h-screen gradient-brand">
-        <header className="fixed w-full flex justify-end top-0 p-2">
-          <LoginButton />
-        </header>
-        <h1 className="text-5xl font-bold text-white">Bookmarks</h1>
-      </div>
+      <Splash />
     )
   }
 
@@ -82,7 +77,6 @@ export const AdminScreen = () => {
                           <Profile
                             user={user}
                           />
-                          <Tags />
                         </>
                       }
                     </div>

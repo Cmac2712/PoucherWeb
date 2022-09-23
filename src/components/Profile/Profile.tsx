@@ -21,7 +21,7 @@ export const Profile = ({
         </div>
         <div className="text-sm">
           <h2>{given_name}</h2>
-          <p className="text-gray-100/25">{email}</p>
+          <p className="opacity-40">{email}</p>
         </div>
       </div>
     )

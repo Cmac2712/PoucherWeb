@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+    font-family: Inter, sans-serif!important;
+}
+
 @keyframes skeleton-loading {
   0% {
     /* background-color: #2B313D; */
@@ -13,8 +18,20 @@
 }
 
 .gradient-brand {
-    background-image: linear-gradient(to right, #8e2de2, #4a00e0);
+    background-image: linear-gradient(45deg, #8e2de2, #4a00e0);
+}
 
+.gradient-dark {
+    background-image: linear-gradient(to right, #222, #111);
+}
+
+.text-gradient-brand {
+  background-image: linear-gradient(to right, #8e2de2, #D827A9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: -7px; 
+  padding-right: 5px;
 }
 
 .bookmark-skeleton {
