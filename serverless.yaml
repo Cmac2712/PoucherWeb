@@ -19,20 +19,20 @@ functions:
         path: /
         method: get
         cors: true
-  video: 
-    handler: lambdas/video.videoHandler
-    events:
-    - http:
-        path: /video
-        method: get
-        cors: true
-  screenshot: 
-    handler: lambdas/screenshot.screenshotHandler
-    events:
-    - http:
-        path: /screenshot
-        method: post
-        cors: true
+  # video: 
+  #   handler: lambdas/video.videoHandler
+  #   events:
+  #   - http:
+  #       path: /video
+  #       method: get
+  #       cors: true
+  # screenshot: 
+  #   handler: lambdas/screenshot.screenshotHandler
+  #   events:
+  #   - http:
+  #       path: /screenshot
+  #       method: post
+  #       cors: true
   getBookmarkInfo: 
     handler: lambdas/getBookmarkInfo.getBookmarkInfoHandler
     events:
@@ -44,6 +44,50 @@ plugins:
   - serverless-offline
 package:
   patterns:
+    - '!.vscode/**'
+    - '!src/**'
+    - 'src/db/index.js'
+    - '!dist/**'
+    - '!/node_modules/@apollo/client/**'
+    - '!/node_modules/@auth0/auth0-react/**'
+    - '!/node_modules/@fortawesome/fontawesome-svg-core/**'
+    - '!/node_modules/@fortawesome/free-regular-svg-icons/**'
+    - '!/node_modules/@fortawesome/free-solid-svg-icons/**'
+    - '!/node_modules/@fortawesome/react-fontawesome/**'
+    - '!/node_modules/@prisma/client/**'
+    - '!/node_modules/@sparticuz/chrome-aws-lambda/**'
+    - '!/node_modules/apollo-server-lambda/**'
+    - '!/node_modules/axios/**'
+    - '!/node_modules/cors/**'
+    - '!/node_modules/react/**'
+    - '!/node_modules/react-apollo/**'
+    - '!/node_modules/react-dom/**'
+    - '!/node_modules/react-responsive/**'
+    - '!/node_modules/twitter-url-direct/**'
+
+    - '!/node_modules/@tailwindcss/typography/**'
+    - '!/node_modules/@types/react/**'
+    - '!/node_modules/@types/react-dom/**'
+    - '!/node_modules/@types/uuid/**'
+    - '!/node_modules/@typescript-eslint/eslint-plugin/**'
+    - '!/node_modules/@typescript-eslint/parser/**'
+    - '!/node_modules/@vitejs/plugin-react/**'
+    - '!/node_modules/autoprefixer/**'
+    - '!/node_modules/body-parser/**'
+    - '!/node_modules/concurrently/**'
+    - '!/node_modules/daisyui/**'
+    - '!/node_modules/eslint/**'
+    - '!/node_modules/eslint-plugin-react-hooks/**'
+    - '!/node_modules/postcss/**'
+    - '!/node_modules/serverless/**'
+    - '!/node_modules/serverless-offline/**'
+    - '!/node_modules/serverless-webpack/**'
+    - '!/node_modules/serverless-webpack-prisma/**'
+    - '!/node_modules/tailwindcss/**'
+    - '!/node_modules/typescript/**'
+    - '!/node_modules/vite/**'
+    - '!/node_modules/vite-plugin-fonts/**'
+
     - '!node_modules/.prisma/client/libquery_engine-*'
     - 'node_modules/.prisma/client/libquery_engine-rhel-*'
     - '!node_modules/prisma/libquery_engine-*'
