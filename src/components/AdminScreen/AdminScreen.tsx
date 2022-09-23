@@ -77,6 +77,7 @@ export const AdminScreen = () => {
                           <Profile
                             user={user}
                           />
+                          <Tags />
                         </>
                       }
                     </div>

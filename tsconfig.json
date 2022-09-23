@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "server", "graphql.js"],
+  "include": ["src", "server", "lambdas/graphql.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

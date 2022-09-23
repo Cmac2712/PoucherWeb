@@ -162,17 +162,3 @@ const updateTag = async function({ tag }) {
 }
 
 exports.updateTag = updateTag
-
-// exports.updateBookmark = async function(id, updates) {
-
-//   const bookmark = await prisma.bookmark.update({
-//     where: {
-//       id
-//     }, 
-//     data: {
-//       ...updates
-//     }
-//   })
-
-//   return bookmark;
-// }

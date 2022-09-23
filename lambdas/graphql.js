@@ -12,7 +12,7 @@ const {
   updateUser,
   getTags,
   updateTag
-} = require('./src/db/index.js');
+} = require('../src/db/index.js');
 
 const typeDefs = gql`
   type Bookmark {

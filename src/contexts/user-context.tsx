@@ -18,6 +18,7 @@ type UserContextProps = {
       name: string
     }
     getTags: {
+      authorID: string
       ID: string
       bookmarkID: string
       title: string
@@ -32,6 +33,7 @@ export const CREATE_USER = gql`
     }
     getTags(user: $user) {
       ID 
+      authorID
       bookmarkID
       title
     }

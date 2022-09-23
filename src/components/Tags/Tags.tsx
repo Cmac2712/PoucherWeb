@@ -10,7 +10,7 @@ const Tags = ({
     callback
 }: Props) => {
     const { setOffset, setSearch} = usePage()
-    const { data: { getTags: tags }, loading } = useUser()
+    const { data: { getTags: tags } = { getTags: [] }, loading } = useUser()
 
     if (loading) return <Loader /> 
 

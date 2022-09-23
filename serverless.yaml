@@ -9,7 +9,7 @@ provider:
   region: eu-west-2
 functions:
   graphql:
-    handler: graphql.graphqlHandler
+    handler: lambdas/graphql.graphqlHandler
     events:
     - http:
         path: /
@@ -20,21 +20,21 @@ functions:
         method: get
         cors: true
   video: 
-    handler: video.videoHandler
+    handler: lambdas/video.videoHandler
     events:
     - http:
         path: /video
         method: get
         cors: true
   screenshot: 
-    handler: screenshot.screenshotHandler
+    handler: lambdas/screenshot.screenshotHandler
     events:
     - http:
         path: /screenshot
         method: post
         cors: true
   getBookmarkInfo: 
-    handler: getBookmarkInfo.getBookmarkInfoHandler
+    handler: lambdas/getBookmarkInfo.getBookmarkInfoHandler
     events:
     - http:
         path: /getBookmarkInfo
