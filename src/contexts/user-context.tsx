@@ -2,7 +2,6 @@ import { useQuery, gql, ApolloError } from "@apollo/client"
 import { useContext, createContext, } from "react"
 import { ReactNode } from 'react'
 import { Auth0User } from '../components/AdminScreen'
-import { TagsObj } from "../components/Bookmarks"
 
 interface UserProviderProps {
   children: ReactNode
@@ -17,8 +16,12 @@ type UserContextProps = {
       id: string
       email: string
       name: string
-      tags: TagsObj 
     }
+    getTags: {
+      ID: string
+      bookmarkID: string
+      title: string
+    }[]
   }
 } | undefined
 
@@ -26,7 +29,21 @@ export const CREATE_USER = gql`
   query CreateUser($user: UserInput) {
     createUser(user: $user) {
       id
-      tags
+    }
+    getTags(user: $user) {
+      ID 
+      bookmarkID
+      title
+    }
+  }
+`
+
+export const GET_USER_TAGS = gql`
+  query GetUserTags($input: TagInput) {
+    getTags(tag: $input) {
+      id
+      bookmarkID
+      title
     }
   }
 `
@@ -50,6 +67,11 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
         id: user?.sub,
         email: user?.email,
         name: user?.given_name
+      },
+      input: {
+        user: {
+          id: user?.sub
+        }
       }
     }
   })

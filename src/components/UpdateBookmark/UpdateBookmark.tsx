@@ -33,30 +33,6 @@ export const UPDATE_BOOKMARK_MUTATION = gql`
   }
 `
 
-const mergeTags = (tags:string[], tagsObject: TagsObj ) => {
-
-  if (!tagsObject) return JSON.stringify({ list: tags })
-
-  if (!tags?.length) return JSON.stringify(tagsObject)
-
-  if (typeof tagsObject === 'string') throw new Error('Tags Object must be object')
-
-  return JSON.stringify({
-    list: [...new Set(tags.concat(tagsObject.list))]
-  })
-}
-
-const removeTags = (tags:string[], tagsObject: TagsObj) => {
-
-  if (!tags.length) return tagsObject
-
-  if (typeof tagsObject === 'string') throw new Error('Tags Object must be parsed')
-
-  return {
-    list: tagsObject.list.filter(tag => !tags.includes(tag)) 
-  }
-}
-
 const Tag = ({
   tag,
   setToDelete,
@@ -176,19 +152,14 @@ export const UpdateBookmark = ({
               className="btn font-bold uppercase mt-2"
               onClick={async () => {
 
-                const newBookmarkTags = mergeTags(formData.tags, removeTags(toDelete, tags))
-                const newUserTags = mergeTags(formData.tags, removeTags(toDelete, userTags))
-
                  const updated = await updateBookmark({
                   variables: {
                     id,
                     updates: {
-                      ...formData,
-                      tags: newBookmarkTags
+                      ...formData
                     },
                     userUpdates: {
-                      id: userData.createUser.id,
-                      tags: newUserTags 
+                      id: userData.createUser.id
                     }
                   }
                 })

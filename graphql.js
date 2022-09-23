@@ -9,7 +9,9 @@ const {
   getBookmarksCount,
   getUser,
   createUser,
-  updateUser
+  updateUser,
+  getTags,
+  updateTag
 } = require('./src/db/index.js');
 
 const typeDefs = gql`
@@ -22,14 +24,19 @@ const typeDefs = gql`
     videoURL: String
     screenshotURL: String
     createdAt: String
-    tags: String
   }
 
   type User {
     id: ID
     name: String
     email: String
-    tags: String
+  }
+
+  type Tag {
+    ID: ID!
+    authorID: ID!
+    bookmarkID: String 
+    title: String
   }
 
   input BookmarkInput {
@@ -39,17 +46,22 @@ const typeDefs = gql`
     authorID: ID
     description: String
     screenshotURL: String
-    tags: String
   }
 
   input UserInput {
     id: ID
     name: String
     email: String
-    tags: String
+  }
+
+  input TagInput {
+    id: ID
+    bookmarkID: String
+    title: String
   }
 
   type Query {
+    getTags(user: UserInput):[Tag]
     createUser(user: UserInput):User
     getUser(input: UserInput):User
     searchBookmarks(offset: Int, limit: Int, input: BookmarkInput): [Bookmark]
@@ -58,6 +70,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    updateTag(tag: TagInput):Tag
     updateUser(user: UserInput):User
     createBookmark(bookmark: BookmarkInput): Bookmark 
     updateBookmark(id: ID!, updates: BookmarkInput): Bookmark 
@@ -67,13 +80,15 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    getTags: (root, { id }) => getTags(id),
     createUser: (root, input) => createUser(input),
     getUser: (root, { input: { id } }) => getUser(id),
-    searchBookmarks: (root, { offset, limit, input: { title, description, authorID, tags } }) => searchBookmarks(offset, limit, authorID, title, description, tags),
+    searchBookmarks: (root, { offset, limit, input: { title, description, authorID } }) => searchBookmarks(offset, limit, authorID, title, description),
     getBookmarksByAuthor: (root, { id, offset, limit }) => getBookmarksByAuthor(id, offset, limit),
     getBookmarksCount: (root, { input: { authorID, title, description} }) => getBookmarksCount(authorID, title, description)
   },
   Mutation: {
+    updateTag: (root, input) => updateTag(input),
     updateUser: (root, input) => updateUser(input),
     updateBookmark: (root, { id, updates }) => updateBookmark(id, updates),
     createBookmark: (root, { bookmark }) => createBookmark({

@@ -36,7 +36,6 @@ const SEARCH_BOOKMARKS = gql`
       videoURL
       screenshotURL
       createdAt
-      tags
     }
     getBookmarksCount(input: $input)
 }
@@ -70,7 +69,6 @@ export const PageProvider = ({ children }: PageProviderProps) => {
           authorID: user.data?.createUser.id,
           title: search,
           description: search,
-          tags: search
         }
       }
   })

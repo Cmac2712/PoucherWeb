@@ -3,8 +3,6 @@ import { BookmarkPreview } from "./BookmarkPreview"
 import { usePage } from '../../contexts/page-context'
 import { Loader } from "../Loader/Loader"
 
-export type TagsObj = { list: string[] } | string
-  
 export interface Bookmark {
     id: number
     title: string
@@ -14,7 +12,6 @@ export interface Bookmark {
     authorID?: string
     screenshotURL?: string
     createdAt?: string
-    tags: TagsObj 
 }
 
 export interface PaginationProps {

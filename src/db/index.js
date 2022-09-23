@@ -12,7 +12,7 @@ const getUser = async function(id) {
 
 exports.getUser = getUser
 
-exports.createUser = async function({ user: { id, email, name, tags }}) {
+exports.createUser = async function({ user: { id, email, name }}) {
 
   const user = await getUser(id)
 
@@ -23,20 +23,18 @@ exports.createUser = async function({ user: { id, email, name, tags }}) {
       id,
       email,
       name,
-      tags
     }
   })
 }
 
-exports.updateUser = async function({ user: { id, name, email, tags } }) {
+exports.updateUser = async function({ user: { id, name, email } }) {
   return await prisma.user.update({
     where: {
       id
     },
     data: {
       name,
-      email,
-      tags
+      email
     }
   })
 }
@@ -49,8 +47,6 @@ exports.createBookmark = async function(bookmark) {
 
 exports.updateBookmark = async function(id, updates) {
 
-  console.log('bookmark updates: ', updates)
-
   const bookmark = await prisma.bookmark.update({
     where: {
       id
@@ -59,17 +55,6 @@ exports.updateBookmark = async function(id, updates) {
       ...updates
     }
   })
-
-  if (updates.tags) {
-    prisma.user.update({
-        where: {
-          id
-        },
-        data: {
-          tags: updates.tags
-        }
-      })
-  }
 
   return bookmark;
 }
@@ -124,7 +109,7 @@ exports.getBookmarksByAuthor = async function(id, skip, take) {
   return bookmarks;
 }
 
-exports.searchBookmarks = async function(skip, take, authorID, title, description, tags) {
+exports.searchBookmarks = async function(skip, take, authorID, title, description) {
   const searchBookmarks = await prisma.bookmark.findMany({
     skip, 
     take,
@@ -145,17 +130,49 @@ exports.searchBookmarks = async function(skip, take, authorID, title, descriptio
               contains: description,
               mode: 'insensitive'
             }
-        },
-        {
-            tags: {
-              contains: tags,
-              mode: 'insensitive'
-            }
         }
       ]
     } 
-    
   })
 
   return searchBookmarks;
 } 
+
+const getTags = async function(authorID) {
+  return await prisma.tags.findMany({
+    where: {
+      authorID
+    }
+  })
+}
+
+exports.getTags = getTags
+
+const updateTag = async function({ tag }) {
+  return await prisma.tags.update({
+    where: {
+      ID: tag.id 
+    },
+    data: {
+      title: tag.title,
+      bookmarkID: tag.bookmarkID,
+      authorID: tag.authorID
+    }
+  })
+}
+
+exports.updateTag = updateTag
+
+// exports.updateBookmark = async function(id, updates) {
+
+//   const bookmark = await prisma.bookmark.update({
+//     where: {
+//       id
+//     }, 
+//     data: {
+//       ...updates
+//     }
+//   })
+
+//   return bookmark;
+// }

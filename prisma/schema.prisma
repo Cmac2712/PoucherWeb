@@ -18,7 +18,6 @@ model Bookmark {
   screenshotURL String?
   authorID      String?  @db.VarChar
   id            String   @id @db.VarChar
-  tags          String?
 }
 
 model Profile {
@@ -30,5 +29,11 @@ model User {
   name  String? @db.VarChar(255)
   id    String  @id @db.VarChar
   email String? @db.VarChar
-  tags  String? @db.VarChar
+}
+
+model Tags {
+  authorID   String? @db.VarChar
+  bookmarkID String? @db.VarChar
+  ID         String  @id @db.VarChar
+  title      String? @db.VarChar
 }
