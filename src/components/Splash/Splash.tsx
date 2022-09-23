@@ -1,7 +1,7 @@
 import { LoginButton } from '../LoginButton';
 
 const Splash = () => (
-      <div className="flex column h-screen p-4">
+      <div className="flex column h-screen p-4" data-theme="coffee">
         <header className="fixed w-full flex justify-end top-4 right-4 p-2">
           <LoginButton />
         </header>
