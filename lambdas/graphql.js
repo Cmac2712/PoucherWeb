@@ -10,8 +10,10 @@ const {
   getUser,
   createUser,
   updateUser,
+  createTag,
   getTags,
-  updateTag
+  updateTag,
+  deleteTag
 } = require('../src/db/index.js');
 
 const typeDefs = gql`
@@ -55,7 +57,8 @@ const typeDefs = gql`
   }
 
   input TagInput {
-    id: ID
+    ID: ID
+    authorID: ID
     bookmarkID: String
     title: String
   }
@@ -70,6 +73,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    deleteTag(tag: TagInput):Tag
+    createTag(tag: TagInput):Tag
     updateTag(tag: TagInput):Tag
     updateUser(user: UserInput):User
     createBookmark(bookmark: BookmarkInput): Bookmark 
@@ -80,7 +85,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getTags: (root, { id }) => getTags(id),
+    getTags: (root, { user: { id }}) => getTags(id),
     createUser: (root, input) => createUser(input),
     getUser: (root, { input: { id } }) => getUser(id),
     searchBookmarks: (root, { offset, limit, input: { title, description, authorID } }) => searchBookmarks(offset, limit, authorID, title, description),
@@ -88,6 +93,8 @@ const resolvers = {
     getBookmarksCount: (root, { input: { authorID, title, description} }) => getBookmarksCount(authorID, title, description)
   },
   Mutation: {
+    createTag: (root, input) => createTag(input),
+    deleteTag: (root, input) => deleteTag(input),
     updateTag: (root, input) => updateTag(input),
     updateUser: (root, input) => updateUser(input),
     updateBookmark: (root, { id, updates }) => updateBookmark(id, updates),

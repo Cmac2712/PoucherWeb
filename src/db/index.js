@@ -138,6 +138,14 @@ exports.searchBookmarks = async function(skip, take, authorID, title, descriptio
   return searchBookmarks;
 } 
 
+const createTag = async function({ tag }) {
+  return await prisma.tags.create({
+    data: tag
+  })
+}
+
+exports.createTag = createTag
+
 const getTags = async function(authorID) {
   return await prisma.tags.findMany({
     where: {
@@ -151,7 +159,7 @@ exports.getTags = getTags
 const updateTag = async function({ tag }) {
   return await prisma.tags.update({
     where: {
-      ID: tag.id 
+      ID: tag.ID 
     },
     data: {
       title: tag.title,
@@ -162,3 +170,13 @@ const updateTag = async function({ tag }) {
 }
 
 exports.updateTag = updateTag
+
+const deleteTag = ({ tag }) => {
+  return prisma.tags.delete({
+    where: {
+      ID: tag.id
+    }
+  })
+}
+
+exports.deleteTag = deleteTag
