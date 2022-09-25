@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const { v4: uuidv4, } = require('uuid');
 
 const prisma = new PrismaClient()
 
@@ -139,8 +140,13 @@ exports.searchBookmarks = async function(skip, take, authorID, title, descriptio
 } 
 
 const createTag = async function({ tag }) {
+  const id = uuidv4()
+
   return await prisma.tags.create({
-    data: tag
+    data: {
+      ID: id,
+      ...tag
+    }
   })
 }
 

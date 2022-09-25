@@ -1,6 +1,5 @@
 import { useState, Dispatch, SetStateAction } from "react";
 import { useMutation, gql } from "@apollo/client"
-import { TagsObj } from '../Bookmarks'
 import { Bookmark } from "../Bookmarks"
 import { Loader } from '../Loader'
 import { usePage, SEARCH_BOOKMARKS } from "../../contexts/page-context"
@@ -13,12 +12,6 @@ type UpdateBookmarProps = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
 }  
 
-interface TagProps {
-  tag: string
-  setToDelete: Dispatch<SetStateAction<string[]>> 
-  toDelete: string[]
-}
-
 export const UPDATE_BOOKMARK_MUTATION = gql`
   mutation UPDATE_BOOKMARK($id: ID!, $updates: BookmarkInput, $userUpdates: UserInput) {
     updateBookmark(id: $id, updates: $updates) {
@@ -28,54 +21,25 @@ export const UPDATE_BOOKMARK_MUTATION = gql`
       id
       name
       email
-      tags
     }
   }
 `
-
-const Tag = ({
-  tag,
-  setToDelete,
-  toDelete
-}:TagProps) => {
-
-  const [hide, setHide] = useState(false)
-
-  return (
-    <div 
-      className={`badge badge-info gap-2 mr-2 ${hide ? 'hidden' : ''}`}
-    >
-      <button
-        onClick={() => {
-          setToDelete([...toDelete, tag])
-          setHide(true)
-        }}
-      >
-        <FontAwesomeIcon icon={faClose} />
-      </button>
-      { tag ? tag.split(':')[1] : '' }
-    </div>
-  )
-}
 
 export const UpdateBookmark = ({
   id,
   title,
   description,
   screenshotURL,
-  tags,
   setMode
 }: UpdateBookmarProps) => {
 
   const { offset, perPage, search } = usePage()
   const { data: userData } = useUser()
   const [toDelete, setToDelete] = useState<string[]>([])
-  const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'description'> & { tags: string[] }>({
+  const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'description'>>({
     title,
-    description,
-    tags: typeof tags === 'string' ? JSON.parse(tags).list : tags?.list
+    description
   })
-  const userTags:TagsObj = JSON.parse(userData.createUser.tags as string);
   const { closeModal } = useModal()
 
   const [updateBookmark, { loading, error }] = useMutation(UPDATE_BOOKMARK_MUTATION, {
@@ -88,8 +52,7 @@ export const UpdateBookmark = ({
             input: {
               authorID: userData.createUser.id,
               title: search,
-              description: search,
-              tags: search
+              description: search
             }
           }
         }
@@ -123,30 +86,6 @@ export const UpdateBookmark = ({
               onChange={e => setFormData({ ...formData, description: e.target.value })}
             />
           </p>
-          <p className="w-full mb-4">
-            <input
-              className="w-full bg-base-300 p-2"
-              placeholder="add tags"
-              name="tags"
-              onChange={e => {
-                setFormData({ ...formData, tags: e.target.value.split(' ').map(tag => 'tag:' + tag) })
-              }}
-            />
-          </p>
-          <div className="tags mb-2">
-            { typeof tags === 'object' && tags.list && 
-                <div className="badges flex flex-wrap">
-                  { tags.list.map((tag, i) => {
-                    return (
-                      <div key={i}>
-                        <Tag tag={tag} toDelete={toDelete} setToDelete={setToDelete } />
-                      </div>
-                    ) 
-                  })
-                  }
-                </div>
-            }
-          </div>
           <div className="tasks ml-auto">
             <button
               className="btn font-bold uppercase mt-2"

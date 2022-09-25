@@ -8,8 +8,8 @@ type ModalContextProps = {
   openModal: () => void
   closeModal: () => void
   modalOpen: boolean
-  setModalContent: Dispatch<SetStateAction<ReactNode | false>>
-  modalContent: ReactNode | undefined
+  setModalContent: Dispatch<SetStateAction<JSX.Element | boolean>>
+  modalContent: JSX.Element | boolean 
 } | undefined
 
 const ModalContext = createContext<ModalContextProps>(undefined)
@@ -27,7 +27,7 @@ export const useModal = () => {
 export const ModalProvider = ({ children }: ModalProviderProps) => {
 
   const [modalOpen, setModalOpen] = useState(false) 
-  const [modalContent, setModalContent] = useState(false) 
+  const [modalContent, setModalContent] = useState<JSX.Element | boolean>(false) 
 
   const openModal = () => setModalOpen(true)
 
@@ -36,7 +36,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     setModalOpen(false)
   }
 
-  const value = {
+  const value:ModalContextProps = {
     openModal,
     closeModal,
     modalOpen,

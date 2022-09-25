@@ -1,5 +1,4 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
-const { v4: uuidv4, } = require('uuid');
 const { 
   searchBookmarks, 
   deleteBookmark, 

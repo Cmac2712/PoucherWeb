@@ -8,7 +8,7 @@ const Modal = () => {
         <div 
             onClick={e => {
 
-                if (!e.target.classList.contains('modal')) return
+                if (!(e.target as HTMLElement).classList.contains('modal')) return
 
                 closeModal() 
             }}

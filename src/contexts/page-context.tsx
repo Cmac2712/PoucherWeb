@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client"
+import { useQuery, gql, ApolloError } from "@apollo/client"
 import { useState, useContext, createContext, SetStateAction, Dispatch} from "react"
 import { ReactNode } from 'react'
 import { Bookmark } from '../components/Bookmarks'
@@ -19,9 +19,10 @@ type PageContextProps = {
     bookmarks: {
       data: {
         searchBookmarks: Bookmark[]
-      } 
-      loading: boolean
-      error: boolean
+        getBookmarksCount: number
+      } | undefined 
+      loading: boolean | undefined
+      error: ApolloError | undefined
     } 
 } | undefined
 
@@ -73,7 +74,7 @@ export const PageProvider = ({ children }: PageProviderProps) => {
       }
   })
 
-  const value = { 
+  const value:PageContextProps = { 
     perPage, 
     setPerPage, 
     offset, 
