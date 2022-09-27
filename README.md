@@ -1,6 +1,7 @@
 # To Do
 
 Convert lambdas to ESM
+Rename all Tag references to Categories
 Unit Tests (Jest/RTL/Cypress)
 CI/CD
 More Styling (Landing page/Responsiveness)
