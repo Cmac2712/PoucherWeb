@@ -16,11 +16,8 @@ const CREATE_TAG = gql`
 `
 
 const CreateTag = () => {
-  const {
-    data: {
-      createUser: { id }
-    }
-  } = useUser()
+  const { data: { createUser: { id } } = { createUser: { id: undefined } } } =
+    useUser()
   const [createTag, { loading }] = useMutation<{
     createTag: Tag
   }>(CREATE_TAG, {
