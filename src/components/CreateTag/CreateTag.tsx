@@ -33,27 +33,35 @@ const CreateTag = () => {
     title: ''
   })
 
-  if (loading) return <Loader />
+  //if (loading) return <Loader />
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault()
 
+        setFormData({ title: '' })
+
         await createTag({
           variables: {
             input: {
               authorID: id,
-              title: formData.title
+              title: formData.title,
+              bookmarkID: JSON.stringify({ list: [] })
             }
           }
         })
       }}
     >
       <input
+        disabled={loading}
+        placeholder="Add new categories&hellip;"
+        className="input input-md rounded-r-none"
         type="text"
+        value={formData.title}
         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
       />
+      <button className="btn btn-md rounded-l-none normal-case">Add</button>
     </form>
   )
 }

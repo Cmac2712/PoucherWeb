@@ -3,7 +3,7 @@ import { usePage } from '../../contexts/page-context'
 import { Loader } from '../Loader/Loader'
 
 export interface Bookmark {
-  id: number
+  id: string
   title: string
   description: string
   url: string

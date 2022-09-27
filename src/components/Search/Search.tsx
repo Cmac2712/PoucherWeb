@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { usePage } from '../../contexts/page-context';
+import { useState } from 'react'
+import { usePage } from '../../contexts/page-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faClose } from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export const Search = () => {
   const { setOffset, setSearch } = usePage()
@@ -11,27 +11,27 @@ export const Search = () => {
     <>
       <div className={`flex h-12 relative z-10`}>
         <form
-          className='flex'
-          onSubmit={e => {
+          className="flex"
+          onSubmit={(e) => {
             e.preventDefault()
-            setSearchTerm("")
+            setSearchTerm('')
             setOffset(0)
           }}
         >
           <input
-            className="input input-bordered input-primary w-full max-w-xs rounded-none"
+            className="input w-full max-w-xs rounded-r-none"
             type="text"
             name="search"
-            autoComplete='off'
+            autoComplete="off"
             placeholder="Search&hellip;"
-            onChange={e => {
+            onChange={(e) => {
               setSearch(e.target.value)
               setSearchTerm(e.target.value)
             }}
             value={searchTerm}
           />
 
-          <button className="btn btn-square">
+          <button className="btn rounded-l-none">
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </form>

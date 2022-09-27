@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 module.exports = {
   singleQuote: true,
   tabwidth: 2,
-  trailingComma: 'none',
+  trailingComma: "none",
   printWidth: 80,
-  semi: false
+  semi: false,
 };

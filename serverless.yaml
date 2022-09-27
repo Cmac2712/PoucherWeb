@@ -12,11 +12,11 @@ functions:
     handler: lambdas/graphql.graphqlHandler
     events:
     - http:
-        path: /db
+        path: /
         method: post
         cors: true
     - http:
-        path: /db
+        path: /
         method: get
         cors: true
   # video: 

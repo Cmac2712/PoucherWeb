@@ -30,9 +30,15 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
-  letter-spacing: -7px; 
+  /* letter-spacing: -7px;  */
+  letter-spacing: -.06125em;
   padding-right: 5px;
+
 }
+
+  @media screen and (min-width: ) {
+    
+  }
 
 .bookmark-skeleton {
     display: flex;

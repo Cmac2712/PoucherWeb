@@ -156,11 +156,11 @@ export const CreateBookmark = () => {
             onChange={(e) => setFormData({ ...formData, url: e.target.value })}
             name="url"
             placeholder="https://&hellip;"
-            className="input input-bordered input-primary w-full max-w-xs rounded-none"
+            className="input input-bordered border-x-0  w-full max-w-xs rounded-none"
           />
 
           <button
-            className="btn btn-square w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
+            className="btn btn-square normal-case w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
             type="submit"
           >
             {loading || loadingInfo ? <Loader /> : 'Add'}

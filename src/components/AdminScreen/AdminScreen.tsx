@@ -37,7 +37,7 @@ export const AdminScreen = () => {
         <UserProvider user={user}>
           <PageProvider>
             <ModalProvider>
-              <div className="drawer drawer-mobile">
+              <div className="drawer drawer-mobile" data-theme="dark">
                 <input
                   id="my-drawer-2"
                   type="checkbox"
@@ -72,15 +72,13 @@ export const AdminScreen = () => {
                     htmlFor="my-drawer-2"
                     className="drawer-overlay"
                   ></label>
-                  <div className="menu d-flex flex-col overflow-y-auto w-80 text-base-content bg-base-200">
-                    <div>
-                      {user && (
-                        <>
-                          <Profile user={user} />
-                          <Tags />
-                        </>
-                      )}
-                    </div>
+                  <div className="flex flex-col overflow-y-auto w-80 text-base-content bg-base-200">
+                    {user && (
+                      <>
+                        <Profile user={user} />
+                        <Tags />
+                      </>
+                    )}
 
                     <div className="p-4 mt-auto">
                       <LogoutButton />
