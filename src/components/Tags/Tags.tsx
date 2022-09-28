@@ -17,60 +17,69 @@ interface Props {
 
 const Tags = ({ callback }: Props) => {
   const {
-    setOffset,
-    setSearch,
     setBookmarkIDs,
     bookmarks: {
       data: { getBookmarksCount: bookmarksCount } = { getBookmarksCount: 0 }
-    }
+    },
+    category,
+    setCategory
   } = usePage()
-  const { data: { getTags: tags } = { getTags: [] }, loading } = useUser()
+  const {
+    data: { getTags: tags, createUser: { id } } = {
+      getTags: [],
+      createUser: { id: 0 }
+    },
+    loading
+  } = useUser()
 
-  if (loading) return <Loader />
+  if (loading || id === 0) return <Loader />
 
   return (
-    <div className="tags pt-4">
-      {tags.length > 0 && (
+    <div className="tags pt-4" data-testid="tags-container">
+      {tags && tags.length > 0 && (
         <>
           <h3 className="text-md p-2 px-4 mr-4 mb-2 font-bold">Categories</h3>
           <ul className="p-0 mb-4">
-            <li
-              className={`flex items-center justify-between px-4`}
-              onClick={() => {
-                setBookmarkIDs(undefined)
-              }}
-            >
-              <div className="p-1 opacity-75 font-semibold">
-                <a
-                  href="#"
-                  className="hover:underline"
-                  onClick={(e) => e.preventDefault()}
-                >
+            <li className="relative">
+              <a
+                href="#"
+                className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
+                  category === 'All' ? 'bg-base-300' : ''
+                }`}
+                onClick={(e) => {
+                  setCategory('All')
+                  setBookmarkIDs(undefined)
+                  e.preventDefault()
+                }}
+              >
+                <div className="p-1 opacity-75 font-semibold">
                   All ({bookmarksCount})
-                </a>
-              </div>
+                </div>
+              </a>
             </li>
             {tags.map(({ title, bookmarkID, ID }, i) => {
               const bookmarksCount = JSON.parse(bookmarkID)?.list?.length || 0
 
               return (
-                <li
-                  key={i}
-                  className={`flex items-center justify-between px-4`}
-                  onClick={() => {
-                    setBookmarkIDs(JSON.parse(bookmarkID)?.list)
-                  }}
-                >
-                  <div className="p-1 opacity-75 font-semibold">
-                    <a
-                      href="#"
-                      className="hover:underline"
-                      onClick={(e) => e.preventDefault()}
-                    >
+                <li className="relative" key={i}>
+                  <a
+                    href="#"
+                    className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
+                      category === title ? 'bg-base-300' : ''
+                    }`}
+                    onClick={(e) => {
+                      setCategory(title)
+                      setBookmarkIDs(JSON.parse(bookmarkID)?.list)
+                      e.preventDefault()
+                    }}
+                  >
+                    <div className="p-1 opacity-75 font-semibold">
                       {title} ({bookmarksCount})
-                    </a>
+                    </div>
+                  </a>
+                  <div className="absolute right-4 top-0 bottom-0 m-auto h-6">
+                    <DeleteTag ID={ID} />
                   </div>
-                  <DeleteTag ID={ID} />
                 </li>
               )
             })}

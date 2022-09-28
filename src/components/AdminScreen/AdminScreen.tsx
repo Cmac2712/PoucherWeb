@@ -34,7 +34,7 @@ export const AdminScreen = () => {
   if (isAuthenticated && user) {
     return (
       <>
-        <UserProvider user={user}>
+        <UserProvider>
           <PageProvider>
             <ModalProvider>
               <div className="drawer drawer-mobile" data-theme="dark">

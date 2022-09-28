@@ -1,30 +1,31 @@
-import { useQuery, gql, ApolloError } from "@apollo/client"
-import { useContext, createContext, } from "react"
+import { useQuery, gql, ApolloError } from '@apollo/client'
+import { useContext, createContext } from 'react'
 import { ReactNode } from 'react'
-import { Auth0User } from '../components/AdminScreen'
+import { useAuth0 } from '@auth0/auth0-react'
 
 interface UserProviderProps {
   children: ReactNode
-  user: Auth0User
 }
 
-type UserContextProps = {
-  loading: boolean
-  error: ApolloError | undefined
-  data: {
-    createUser: {
-      id: string
-      email: string
-      name: string
+type UserContextProps =
+  | {
+      loading: boolean
+      error: ApolloError | undefined
+      data: {
+        createUser: {
+          id: string
+          email: string
+          name: string
+        }
+        getTags: {
+          authorID: string
+          ID: string
+          bookmarkID: string
+          title: string
+        }[]
+      }
     }
-    getTags: {
-      authorID: string
-      ID: string
-      bookmarkID: string
-      title: string
-    }[]
-  }
-} | undefined
+  | undefined
 
 export const CREATE_USER = gql`
   query CreateUser($user: UserInput) {
@@ -32,7 +33,7 @@ export const CREATE_USER = gql`
       id
     }
     getTags(user: $user) {
-      ID 
+      ID
       authorID
       bookmarkID
       title
@@ -62,7 +63,8 @@ export const useUser = () => {
   return context
 }
 
-export const UserProvider = ({ children, user }: UserProviderProps) => {
+export const UserProvider = ({ children }: UserProviderProps) => {
+  const { user } = useAuth0()
   const { loading, error, data } = useQuery(CREATE_USER, {
     variables: {
       user: {
@@ -78,7 +80,7 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
     }
   })
 
-  const value:UserContextProps = {
+  const value: UserContextProps = {
     loading,
     error,
     data

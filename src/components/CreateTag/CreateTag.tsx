@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Loader } from '../Loader'
 import { useMutation, gql } from '@apollo/client'
 import { useUser } from '../../contexts/user-context'
 import { Tag } from '../Tags'

@@ -23,6 +23,8 @@ type PageContextProps =
       count: number | undefined
       search: string
       setSearch: Dispatch<SetStateAction<string>>
+      setCategory: Dispatch<SetStateAction<string>>
+      category: string
       setBookmarkIDs: Dispatch<SetStateAction<string[] | undefined>>
       bookmarks: {
         data:
@@ -70,6 +72,7 @@ export const PageProvider = ({ children }: PageProviderProps) => {
   const [offset, setOffset] = useState(0)
   const [search, setSearch] = useState('')
   const [bookmarkIDs, setBookmarkIDs] = useState<string[] | undefined>()
+  const [category, setCategory] = useState('All')
   const user = useUser()
   const { loading, error, data } = useQuery<{
     searchBookmarks: Bookmark[]
@@ -96,7 +99,9 @@ export const PageProvider = ({ children }: PageProviderProps) => {
     bookmarks: { data, loading, error },
     search,
     setSearch,
-    setBookmarkIDs
+    setBookmarkIDs,
+    category,
+    setCategory
   }
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>

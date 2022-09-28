@@ -23,7 +23,8 @@ export const Bookmarks = () => {
   const {
     search,
     setSearch,
-    bookmarks: { data, loading, error }
+    bookmarks: { data, loading, error },
+    category
   } = usePage()
 
   if (loading) return <Loader />
@@ -32,6 +33,7 @@ export const Bookmarks = () => {
 
   return (
     <div className="flex flex-wrap items-start">
+      {/* DISPLAY CURRENT SEARCH TERM */}
       {search && (
         <div className="flex search-text p-4">
           <p className="mr-2">

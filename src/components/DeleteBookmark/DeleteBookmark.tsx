@@ -21,22 +21,9 @@ interface Props {
 export const DeleteBookmark = ({ id, authorID }: Props) => {
   const { perPage, offset, search } = usePage()
   const [deleteBookmark] = useMutation(DELETE_BOOKMARK_MUTATION, {
-    refetchQueries: [
-      {
-        query: SEARCH_BOOKMARKS,
-        variables: {
-          id: authorID,
-          offset,
-          limit: perPage,
-          input: {
-            authorID,
-            title: search,
-            description: search,
-            tags: search
-          }
-        }
-      }
-    ]
+    update(cache) {
+      cache.evict({ fieldName: 'searchBookmarks' })
+    }
   })
 
   return (

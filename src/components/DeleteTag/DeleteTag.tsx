@@ -1,6 +1,6 @@
 import { useMutation, gql } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const DELETE_TAG_MUTATION = gql`
   mutation DeleteTag($tag: TagInput!) {
@@ -24,7 +24,8 @@ const DeleteTag = ({ ID }: Props) => {
 
   return (
     <button
-      className="opacity-5 hover:opacity-75 ease-in duration-100"
+      data-testid={`delete-tag`}
+      className="text-red-300"
       onClick={() =>
         deleteTag({
           variables: {
@@ -35,7 +36,7 @@ const DeleteTag = ({ ID }: Props) => {
         })
       }
     >
-      <FontAwesomeIcon icon={faTrashCan} />
+      <FontAwesomeIcon icon={faTimes} />
     </button>
   )
 }

@@ -138,7 +138,7 @@ export const CreateBookmark = () => {
             createBookmark({
               variables: {
                 bookmark: {
-                  id,
+                  id: id,
                   title: info.title,
                   description: info.description,
                   authorID: user?.sub,
