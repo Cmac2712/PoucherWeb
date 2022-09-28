@@ -36,28 +36,29 @@ const Tags = ({ callback }: Props) => {
 
   return (
     <div className="tags pt-4" data-testid="tags-container">
-      {tags && tags.length > 0 && (
-        <>
-          <h3 className="text-md p-2 px-4 mr-4 mb-2 font-bold">Categories</h3>
-          <ul className="p-0 mb-4">
-            <li className="relative">
-              <a
-                href="#"
-                className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
-                  category === 'All' ? 'bg-base-300' : ''
-                }`}
-                onClick={(e) => {
-                  setCategory('All')
-                  setBookmarkIDs(undefined)
-                  e.preventDefault()
-                }}
-              >
-                <div className="p-1 opacity-75 font-semibold">
-                  All ({bookmarksCount})
-                </div>
-              </a>
-            </li>
-            {tags.map(({ title, bookmarkID, ID }, i) => {
+      <>
+        <h3 className="text-md p-2 px-4 mr-4 mb-2 font-bold">Categories</h3>
+        <ul className="p-0 mb-4">
+          <li className="relative">
+            <a
+              href="#"
+              className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
+                category === 'All' ? 'bg-base-300' : ''
+              }`}
+              onClick={(e) => {
+                setCategory('All')
+                setBookmarkIDs(undefined)
+                e.preventDefault()
+              }}
+            >
+              <div className="p-1 opacity-75 font-semibold">
+                All ({bookmarksCount})
+              </div>
+            </a>
+          </li>
+          {tags &&
+            tags.length > 0 &&
+            tags.map(({ title, bookmarkID, ID }, i) => {
               const bookmarksCount = JSON.parse(bookmarkID)?.list?.length || 0
 
               return (
@@ -83,9 +84,8 @@ const Tags = ({ callback }: Props) => {
                 </li>
               )
             })}
-          </ul>
-        </>
-      )}
+        </ul>
+      </>
       <div className="px-4">
         <CreateTag />
       </div>
