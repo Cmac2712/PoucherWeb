@@ -78,13 +78,13 @@ export const getVideo = async (url: string) => {
 }
 
 export const CreateBookmark = () => {
-  const { offset, perPage, search } = usePage()
+  const { offset, perPage, search, count } = usePage()
   const { user } = useAuth0()
   const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
     title: '',
     url: ''
   })
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(count && count > 0 ? false : true)
   const [loadingInfo, setLoadingInfo] = useState(false)
   const [createBookmark, { loading }] = useMutation<{
     createBookmark: Bookmark

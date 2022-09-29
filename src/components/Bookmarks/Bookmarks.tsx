@@ -23,8 +23,7 @@ export const Bookmarks = () => {
   const {
     search,
     setSearch,
-    bookmarks: { data, loading, error },
-    category
+    bookmarks: { data, loading, error }
   } = usePage()
 
   if (loading) return <Loader />
@@ -49,16 +48,22 @@ export const Bookmarks = () => {
       )}
 
       <ul className="basis-full">
-        {data?.searchBookmarks?.map((data) => {
-          return (
-            <li
-              className="basis-full border-base-300 border-t first:border-0"
-              key={data.id}
-            >
-              <BookmarkPreview data={data} />
-            </li>
-          )
-        })}
+        {data?.searchBookmarks.length ? (
+          data?.searchBookmarks?.map((data) => {
+            return (
+              <li
+                className="basis-full border-base-300 border-t first:border-0"
+                key={data.id}
+              >
+                <BookmarkPreview data={data} />
+              </li>
+            )
+          })
+        ) : (
+          <div className="flex justify-center w-full h-screen">
+            <p className="mt-10">You haven't added any bookmarks yet.</p>
+          </div>
+        )}
       </ul>
     </div>
   )
