@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { useMutation, gql } from '@apollo/client'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Bookmark } from '../Bookmarks'
@@ -63,18 +63,6 @@ export const getScreenshot = async (url: string) => {
     console.error(e)
     return false
   }
-}
-
-export const getVideo = async (url: string) => {
-  const endpoint =
-    import.meta.env.MODE === 'production'
-      ? import.meta.env.VITE_SERVER_ENDPOINT
-      : 'http://localhost:3001/dev/'
-  const response = await axios.get(
-    `${endpoint}video?name=${encodeURIComponent(url)}`
-  )
-
-  return response.data.body.download[1].url
 }
 
 export const CreateBookmark = () => {

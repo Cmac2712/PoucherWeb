@@ -17,6 +17,20 @@ interface Props {
 
 const AddTag = ({ ID }: Props) => {
   const { data: { getTags: tags } = { getTags: [] } } = useUser()
+  const currentTags = () =>
+    tags.map((tag) => {
+      const hasTag = JSON.parse(tag.bookmarkID)?.list.find(
+        (bookmarkID: string) => bookmarkID === ID
+      )
+
+      if (!hasTag) return
+
+      return (
+        <p key={tag.ID} className="pr-2">
+          {tag?.title}
+        </p>
+      )
+    })
   const [updateTag, { loading, error }] = useMutation(UPDATE_TAG, {
     update(cache) {
       cache.evict({ fieldName: 'createUser' })
@@ -50,25 +64,8 @@ const AddTag = ({ ID }: Props) => {
     <form onSubmit={handleSubmit} action="">
       <div className="tags flex">
         {/* List tags for current bookmark */}
-        {tags.map((tag) => {
-          const hasTag = JSON.parse(tag.bookmarkID)?.list.find(
-            (bookmarkID: string) => bookmarkID === ID
-          )
-
-          if (!hasTag) return
-
-          return (
-            <p key={tag.ID} className="pr-2">
-              {tag?.title}
-            </p>
-          )
-        })}
+        {currentTags()}
       </div>
-      {/* <input
-        onChange={(e) => setFormData({ newTag: e.target.value })}
-        className="input input-primary input-sm"
-        type="text"
-      /> */}
 
       {tags && (
         <>
@@ -79,8 +76,9 @@ const AddTag = ({ ID }: Props) => {
             onChange={(e) => {
               setFormData({ newTag: e.target.value })
             }}
+            defaultValue={'--'}
           >
-            <option value="--" disabled selected>
+            <option value="--" disabled>
               Choose a category
             </option>
             {tags.map((tag) => {

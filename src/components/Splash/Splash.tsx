@@ -1,16 +1,16 @@
 import { LoginButton } from '../LoginButton'
 
 const Splash = () => (
-  <div className="flex column h-screen p-4" data-theme="coffee">
-    <header className="fixed w-full flex justify-end top-4 right-4 p-2">
+  <div className="flex flex-col h-screen p-4 min-w-[320px]">
+    <header className="w-full z-10 flex justify-end top-4 right-4 p-2">
       <LoginButton />
     </header>
 
-    <div className="intro ml-11 mt-32">
+    <div className="intro md:ml-11 mt-32 relative z-10">
       <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white text-gradient-brand ">
         Poucher.io
       </h1>
-      <p className="text-grey-900 mt-4">All your stuff in one place.</p>
+      <p className="text-gray-100 mt-4">All your stuff in one place.</p>
     </div>
     <svg
       className="absolute left-0 right-0 bottom-0 fill-base-300 col-start-1 row-start-1 h-auto w-full"
