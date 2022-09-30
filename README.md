@@ -1,23 +1,15 @@
-# To Do
+# Poucher.io 
 
-Write an acutal README
+Poucher.io is a full-stack cloud application to keep all your bookmarks in one place.
 
-Convert lambdas to ESM
+Built with:
 
-Rename all Tag references to Categories
+- React
+- Vite
+- Apollo server/client
+- Tailwind
+- Vitest + RTL + Cypress
+- AWS Lambda/S3/CloudFront/RDS
+- Serverless Framework
 
-Unit Tests (Jest/RTL/Cypress)
-
-CI/CD
-
-More Styling (Landing page/Responsiveness)
-
-Refactor Lambda bundle
-
-Tags hints dropdown
-
-Refactor Tags component to be more usable
-
-Optimise page load speed
-
-Dark/Light mode
+[Try Poucher.io here](https://bookmark-app-seven.vercel.app/)
