@@ -4,9 +4,9 @@ import {
   useContext,
   createContext,
   SetStateAction,
-  Dispatch
+  Dispatch,
+  ReactNode
 } from 'react'
-import { ReactNode } from 'react'
 import { Bookmark } from '../components/Bookmarks'
 import { useUser } from '../contexts/user-context'
 
