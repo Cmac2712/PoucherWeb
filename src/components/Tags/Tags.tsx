@@ -3,6 +3,9 @@ import { useUser } from '../../contexts/user-context'
 import { Loader } from '../Loader'
 import { CreateTag } from '../CreateTag'
 import { DeleteTag } from '../DeleteTag'
+import { useModal } from '../../contexts/modal-context'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 export type Tag = {
   ID: string
@@ -31,6 +34,7 @@ const Tags = ({ callback }: Props) => {
     },
     loading
   } = useUser()
+  const { openModal, setModalContent } = useModal()
 
   if (loading || id === 0) return <Loader />
 
@@ -79,7 +83,16 @@ const Tags = ({ callback }: Props) => {
                     </div>
                   </a>
                   <div className="absolute right-4 top-0 bottom-0 m-auto h-6">
-                    <DeleteTag ID={ID} />
+                    <button
+                      onClick={() => {
+                        setModalContent(<DeleteTag ID={ID} tagName={title} />)
+                        openModal()
+                      }}
+                    >
+                      <span className="opacity-40 fs-small">
+                        <FontAwesomeIcon icon={faTrashCan} />
+                      </span>
+                    </button>
                   </div>
                 </li>
               )
