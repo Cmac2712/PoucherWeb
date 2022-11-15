@@ -1,14 +1,9 @@
 {
-  "name": "bookmarks",
+  "name": "PoucherWeb",
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start:server": "node server.js",
     "start": "vite",
-    "prisma:pull": "prisma db pull",
-    "prisma:generate": "prisma generate",
-    "deploy": "serverless deploy",
-    "dev:server": "serverless offline --verbose --httpPort 3001",
     "test": "vitest"
   },
   "dependencies": {
