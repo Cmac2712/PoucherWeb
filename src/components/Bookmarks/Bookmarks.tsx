@@ -1,5 +1,6 @@
 import { BookmarkPreview } from './BookmarkPreview'
 import { usePage } from '../../contexts/page-context'
+import { usePageStore } from '../../store/page-store'
 import { Loader } from '../Loader/Loader'
 
 export interface Bookmark {
@@ -25,6 +26,10 @@ export const Bookmarks = () => {
     setSearch,
     bookmarks: { data, loading, error }
   } = usePage()
+
+  const page = usePageStore()
+
+  console.log('====> ', page)
 
   if (loading) return <Loader />
 
