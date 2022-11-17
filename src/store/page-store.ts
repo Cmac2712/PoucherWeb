@@ -1,33 +1,4 @@
 import create from 'zustand'
-import { client } from '../main'
-import { gql } from '@apollo/client'
-
-const SEARCH_BOOKMARKS = gql`
-  query SearchBookmarks($offset: Int, $limit: Int, $input: BookmarkInput) {
-    searchBookmarks(offset: $offset, limit: $limit, input: $input) {
-      id
-      authorID
-      title
-      description
-      url
-      videoURL
-      screenshotURL
-      createdAt
-    }
-    getBookmarksCount(input: $input)
-  }
-`
-
-/**
- * GET THIS TO WORK
- */
-console.log(
-  '------> ',
-  await client.query({
-    query: SEARCH_BOOKMARKS,
-    variables: { offset: 0, limit: 10, input: { title: 'test' } }
-  })
-)
 
 interface PageState {
   perPage: number
@@ -39,6 +10,8 @@ interface PageState {
   setSearch: (search: string) => void
   category: string
   setCategory: (category: string) => void
+  bookmarkIDs: string[]
+  setBookmarkIDs: (ids: string[]) => void
 }
 
 const usePageStore = create<PageState>((set) => ({
@@ -47,12 +20,11 @@ const usePageStore = create<PageState>((set) => ({
   offset: 0,
   setOffset: (offset) => set({ offset }),
   count: 0,
-  //bookmarks: {},
-  // count: data?.getBookmarksCount,
-  // bookmarks: { data, loading, error },
+  bookmarks: {},
   search: '',
   setSearch: (search) => set({ search }),
-  //setBookmarkIDs: (bookmarkIDs) => set({ bookmarkIDs }),
+  bookmarkIDs: [],
+  setBookmarkIDs: (bookmarkIDs) => set({ bookmarkIDs }),
   category: 'All',
   setCategory: (category) => set({ category })
 }))
