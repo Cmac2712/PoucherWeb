@@ -1,7 +1,6 @@
 import { useMutation, gql } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import { usePage, SEARCH_BOOKMARKS } from '../../contexts/page-context'
 
 const DELETE_BOOKMARK_MUTATION = gql`
   mutation DELETE_BOOKMARK($id: ID!) {
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export const DeleteBookmark = ({ id, authorID }: Props) => {
-  const { perPage, offset, search } = usePage()
   const [deleteBookmark] = useMutation(DELETE_BOOKMARK_MUTATION, {
     update(cache) {
       cache.evict({ fieldName: 'searchBookmarks' })

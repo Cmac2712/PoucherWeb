@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import { usePage } from '../../contexts/page-context'
+import { usePageStore } from '../../store/page-store'
 
 export const Pagination = () => {
-  const { perPage, offset, setOffset, count } = usePage()
+  const perPage = usePageStore((state) => state.perPage)
+  const offset = usePageStore((state) => state.offset)
+  const setOffset = usePageStore((state) => state.setOffset)
+  const count = usePageStore((state) => state.count)
   const pages = count ? Math.ceil(count / perPage) : 1
   const currentPage = Math.floor(offset / perPage) + 1
 

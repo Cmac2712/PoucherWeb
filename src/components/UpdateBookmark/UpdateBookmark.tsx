@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useMutation, gql } from '@apollo/client'
 import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader'
-import { usePage, SEARCH_BOOKMARKS } from '../../contexts/page-context'
 import { useUser } from '../../contexts/user-context'
 import { useModal } from '../../contexts/modal-context'
 import { AddTag } from './AddTag'
+import { SEARCH_BOOKMARKS } from '../Search'
+import { usePageStore } from '../../store/page-store'
 
 type UpdateBookmarkProps = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
@@ -33,7 +34,10 @@ export const UpdateBookmark = ({
   title,
   description
 }: UpdateBookmarkProps) => {
-  const { offset, perPage, search } = usePage()
+  const offset = usePageStore((state) => state.offset)
+  const perPage = usePageStore((state) => state.perPage)
+  const search = usePageStore((state) => state.search)
+
   const { data: userData } = useUser()
   const [formData, setFormData] = useState<
     Pick<Bookmark, 'title' | 'description'>
