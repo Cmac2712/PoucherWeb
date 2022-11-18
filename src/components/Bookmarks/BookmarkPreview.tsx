@@ -4,7 +4,7 @@ import { DeleteBookmark } from '../DeleteBookmark'
 import { Bookmark } from './Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useModal } from '../../contexts/modal-context'
+import { useModalStore } from '../../store/modal-store'
 import './Bookmarks.css'
 
 type Props = {
@@ -17,7 +17,7 @@ export const BookmarkPreview = ({
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
   const { user, isLoading } = useAuth0()
-  const { openModal, setModalContent } = useModal()
+  const { openModal, setModalContent } = useModalStore()
 
   if (isLoading) return <Loader />
 

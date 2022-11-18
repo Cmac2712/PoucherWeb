@@ -3,7 +3,7 @@ import { useUser } from '../../contexts/user-context'
 import { Loader } from '../Loader'
 import { CreateTag } from '../CreateTag'
 import { DeleteTag } from '../DeleteTag'
-import { useModal } from '../../contexts/modal-context'
+import { useModalStore } from '../../store/modal-store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
@@ -31,7 +31,8 @@ const Tags = ({ callback }: Props) => {
     },
     loading
   } = useUser()
-  const { openModal, setModalContent } = useModal()
+  const openModal = useModalStore((state) => state.openModal)
+  const setModalContent = useModalStore((state) => state.setModalContent)
 
   if (loading || id === 0) return <Loader />
 

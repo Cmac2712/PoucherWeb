@@ -17,7 +17,7 @@ interface Props {
   authorID?: string
 }
 
-export const DeleteBookmark = ({ id, authorID }: Props) => {
+export const DeleteBookmark = ({ id }: Props) => {
   const [deleteBookmark] = useMutation(DELETE_BOOKMARK_MUTATION, {
     update(cache) {
       cache.evict({ fieldName: 'searchBookmarks' })
