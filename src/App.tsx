@@ -2,7 +2,6 @@ import './app.css'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { AdminScreen } from './components/AdminScreen/AdminScreen'
 import { StrictMode } from 'react'
-import { usePageStore } from './store/page-store'
 import ReactGA from 'react-ga4'
 
 ReactGA.initialize('G-7W2Y583PM9')

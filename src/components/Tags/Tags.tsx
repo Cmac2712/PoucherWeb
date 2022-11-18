@@ -1,4 +1,4 @@
-import { usePage } from '../../contexts/page-context'
+import { usePageStore } from '../../store/page-store'
 import { useUser } from '../../contexts/user-context'
 import { Loader } from '../Loader'
 import { CreateTag } from '../CreateTag'
@@ -19,14 +19,11 @@ interface Props {
 }
 
 const Tags = ({ callback }: Props) => {
-  const {
-    setBookmarkIDs,
-    bookmarks: {
-      data: { getBookmarksCount: bookmarksCount } = { getBookmarksCount: 0 }
-    },
-    category,
-    setCategory
-  } = usePage()
+  const setBookmarkIDs = usePageStore((state) => state.setBookmarkIDs)
+  const category = usePageStore((state) => state.category)
+  const count = usePageStore((state) => state.count)
+  const setCategory = usePageStore((state) => state.setCategory)
+
   const {
     data: { getTags: tags, createUser: { id } } = {
       getTags: [],
@@ -55,9 +52,7 @@ const Tags = ({ callback }: Props) => {
                 e.preventDefault()
               }}
             >
-              <div className="p-1 opacity-75 font-semibold">
-                All ({bookmarksCount})
-              </div>
+              <div className="p-1 opacity-75 font-semibold">All ({count})</div>
             </a>
           </li>
           {tags &&

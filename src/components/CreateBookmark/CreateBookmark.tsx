@@ -1,12 +1,13 @@
 import axios from 'axios'
-import { useState, memo } from 'react'
+import { useState } from 'react'
 import { useMutation, gql } from '@apollo/client'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
-import { usePage, SEARCH_BOOKMARKS } from '../../contexts/page-context'
+import { usePageStore } from '../../store/page-store'
+import { SEARCH_BOOKMARKS } from '../Search'
 import { v4 as uuidv4 } from 'uuid'
 import './CreateBookmark.css'
 
@@ -66,7 +67,11 @@ export const getScreenshot = async (url: string) => {
 }
 
 export const CreateBookmark = () => {
-  const { offset, perPage, search, count } = usePage()
+  const offset = usePageStore((state) => state.offset)
+  const perPage = usePageStore((state) => state.perPage)
+  const search = usePageStore((state) => state.search)
+  const count = usePageStore((state) => state.count)
+
   const { user } = useAuth0()
   const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
     title: '',

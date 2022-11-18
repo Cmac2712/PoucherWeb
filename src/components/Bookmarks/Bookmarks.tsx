@@ -1,7 +1,9 @@
 import { BookmarkPreview } from './BookmarkPreview'
-import { usePage } from '../../contexts/page-context'
+import { useUser } from '../../contexts/user-context'
 import { usePageStore } from '../../store/page-store'
 import { Loader } from '../Loader/Loader'
+import { useQuery } from '@apollo/client'
+import { SEARCH_BOOKMARKS } from '../Search'
 
 export interface Bookmark {
   id: string
@@ -21,15 +23,35 @@ export interface PaginationProps {
 }
 
 export const Bookmarks = () => {
-  const {
-    search,
-    setSearch,
-    bookmarks: { data, loading, error }
-  } = usePage()
+  const search = usePageStore((state) => state.search)
+  const setSearch = usePageStore((state) => state.setSearch)
+  const offset = usePageStore((state) => state.offset)
+  const perPage = usePageStore((state) => state.perPage)
+  const bookmarkIDs = usePageStore((state) => state.bookmarkIDs)
+  const bookmarks = usePageStore((state) => state.bookmarks)
+  const setCount = usePageStore((state) => state.setCount)
+  const setBookmarks = usePageStore((state) => state.setBookmarks)
+  const user = useUser()
 
-  const page = usePageStore()
-
-  console.log('====> ', page)
+  const { loading, error } = useQuery<{
+    searchBookmarks: Bookmark[]
+    getBookmarksCount: number
+  }>(SEARCH_BOOKMARKS, {
+    variables: {
+      offset,
+      limit: perPage,
+      input: {
+        id: JSON.stringify(bookmarkIDs),
+        authorID: user.data?.createUser.id,
+        title: search,
+        description: search
+      }
+    },
+    onCompleted: (data) => {
+      setCount(data.getBookmarksCount)
+      setBookmarks(data.searchBookmarks)
+    }
+  })
 
   if (loading) return <Loader />
 
@@ -53,8 +75,8 @@ export const Bookmarks = () => {
       )}
 
       <ul className="basis-full">
-        {data?.searchBookmarks.length ? (
-          data?.searchBookmarks?.map((data) => {
+        {bookmarks.length ? (
+          bookmarks.map((data) => {
             return (
               <li
                 className="basis-full border-base-300 border-t first:border-0"
