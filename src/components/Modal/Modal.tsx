@@ -1,24 +1,23 @@
-import { useModal } from '../../contexts/modal-context'
+//import { useModal } from '../../contexts/modal-context'
+import { useModalStore } from '../../store/modal-store'
 
 const Modal = () => {
-    
-    const { modalOpen, modalContent, setModalContent, closeModal } = useModal()
+  const { modalOpen, modalContent, closeModal } = useModalStore()
 
-    return (
-        <div 
-            onClick={e => {
+  return (
+    <div
+      onClick={(e) => {
+        if (!(e.target as HTMLElement).classList.contains('modal')) return
 
-                if (!(e.target as HTMLElement).classList.contains('modal')) return
-
-                closeModal() 
-            }}
-            className={`modal ${modalOpen && 'opacity-100 visible pointer-events-auto'}`}
-        >
-            <div className="modal-box">
-                { modalContent }
-            </div>
-        </div>
-    )
+        closeModal()
+      }}
+      className={`modal ${
+        modalOpen && 'opacity-100 visible pointer-events-auto'
+      }`}
+    >
+      <div className="modal-box">{modalContent}</div>
+    </div>
+  )
 }
 
 export { Modal }

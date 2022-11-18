@@ -1,5 +1,5 @@
 import { useMutation, gql } from '@apollo/client'
-import { useModal } from '../../contexts/modal-context'
+import { useModalStore } from '../../store/modal-store'
 
 const DELETE_TAG_MUTATION = gql`
   mutation DeleteTag($tag: TagInput!) {
@@ -21,7 +21,7 @@ const DeleteTag = ({ ID, tagName }: Props) => {
       cache.evict({ fieldName: 'createUser' })
     }
   })
-  const { closeModal } = useModal()
+  const closeModal = useModalStore((store) => store.closeModal)
 
   return (
     <div>
