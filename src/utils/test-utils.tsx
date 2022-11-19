@@ -1,6 +1,4 @@
 import { UserProvider, useUser } from '../contexts/user-context'
-import { PageProvider } from '../contexts/page-context'
-import { ModalProvider } from '../contexts/modal-context'
 import { StrictMode } from 'react'
 import { MockedProvider } from '@apollo/client/testing'
 import { ReactElement } from 'react'
@@ -37,11 +35,7 @@ const AllTheProviders = ({ children }: Props) => {
           clientId={'321'}
           redirectUri={'https://localhost:3000/'}
         >
-          <UserProvider>
-            <PageProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </PageProvider>
-          </UserProvider>
+          <UserProvider>{children}</UserProvider>
         </Auth0Provider>
       </MockedProvider>
     </StrictMode>
