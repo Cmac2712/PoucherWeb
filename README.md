@@ -15,3 +15,13 @@ Built with:
 - Serverless Framework
 
 [Try Poucher.io here](https://poucher.io)
+
+## Getting Started
+
+Install dependencies:
+
+``yarn``
+
+Start/Dev
+
+``yarn start``

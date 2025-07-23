@@ -20,7 +20,7 @@
     "axios": "^0.27.2",
     "browserless": "^9.6.12",
     "cors": "^2.8.5",
-    "graphql": "^16.5.0",
+    "graphql": "16.6.0",
     "html-get": "^2.9.23",
     "metascraper": "^5.31.1",
     "metascraper-description": "^5.31.1",

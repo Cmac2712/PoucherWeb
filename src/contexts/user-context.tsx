@@ -80,6 +80,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   })
 
+  console.log('id: ', user?.sub)
+
   const value: UserContextProps = {
     loading,
     error,
