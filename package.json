@@ -7,7 +7,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
+    "@tanstack/react-query": "^5.62.0",
     "@auth0/auth0-react": "^1.10.2",
     "@aws-sdk/client-s3": "^3.142.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -16,11 +16,9 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^4.0.0",
     "@sparticuz/chrome-aws-lambda": "^15.5.0",
-    "apollo-server-lambda": "^3.10.0",
     "axios": "^0.27.2",
     "browserless": "^9.6.12",
     "cors": "^2.8.5",
-    "graphql": "16.6.0",
     "html-get": "^2.9.23",
     "metascraper": "^5.31.1",
     "metascraper-description": "^5.31.1",
@@ -30,7 +28,6 @@
     "node-fetch": "^2.6.7",
     "puppeteer-core": "^16.0.0",
     "react": "^18.0.0",
-    "react-apollo": "^3.1.5",
     "react-dom": "^18.0.0",
     "react-ga4": "^1.4.1",
     "react-responsive": "^9.0.0",

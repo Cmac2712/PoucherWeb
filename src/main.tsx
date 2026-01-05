@@ -1,22 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import './index.css'
 
-const cache = new InMemoryCache()
-
-const client = new ApolloClient({
-  uri: `${import.meta.env.VITE_SERVER_ENDPOINT}db`,
-  cache
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60,
+      retry: 1
+    }
+  }
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <App />
-    </ApolloProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 )
-
-export { client }

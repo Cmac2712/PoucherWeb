@@ -1,16 +1,6 @@
-import { useMutation, gql } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-
-const DELETE_BOOKMARK_MUTATION = gql`
-  mutation DELETE_BOOKMARK($id: ID!) {
-    deleteBookmark(id: $id) {
-      id
-      title
-      url
-    }
-  }
-`
+import { useDeleteBookmark } from '../../api/hooks'
 
 interface Props {
   id?: string
@@ -18,27 +8,19 @@ interface Props {
 }
 
 export const DeleteBookmark = ({ id }: Props) => {
-  const [deleteBookmark] = useMutation(DELETE_BOOKMARK_MUTATION, {
-    update(cache) {
-      cache.evict({ fieldName: 'searchBookmarks' })
-    }
-  })
+  const deleteBookmarkMutation = useDeleteBookmark()
 
   return (
     <button
       className="btn btn-sm font-bold"
       onClick={async (e) => {
         e.preventDefault()
-        deleteBookmark({
-          variables: {
-            id
-          }
-        })
+        if (id) {
+          deleteBookmarkMutation.mutate(id)
+        }
       }}
     >
       <FontAwesomeIcon icon={faTrashCan} />
     </button>
   )
 }
-
-export { DELETE_BOOKMARK_MUTATION }

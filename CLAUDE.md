@@ -27,17 +27,26 @@ PoucherWeb is a bookmark management application with a React frontend and server
 
 ### Frontend Stack
 - **React 18** with TypeScript and Vite
-- **Apollo Client** for GraphQL data fetching (configured in `src/main.tsx`)
+- **React Query** (@tanstack/react-query) for data fetching (configured in `src/main.tsx`)
 - **Auth0** for authentication (wrapped at app root in `src/App.tsx`)
 - **Zustand** for client state (stores in `src/store/`)
 - **Tailwind CSS** with DaisyUI components
+
+### API Layer
+- **API client** (`src/api/client.ts`) - fetch wrapper for REST calls
+- **Types** (`src/api/types.ts`) - TypeScript interfaces for User, Bookmark, Tag
+- **Hooks** (`src/api/hooks.ts`) - React Query hooks for all data operations:
+  - `useUserInit` - initialize user session and fetch tags
+  - `useSearchBookmarks` - search/list bookmarks with pagination
+  - `useCreateBookmark`, `useUpdateBookmark`, `useDeleteBookmark`
+  - `useCreateTag`, `useUpdateTag`, `useDeleteTag`
 
 ### State Management
 - **Zustand stores** (`src/store/`):
   - `page-store.ts` - pagination, search, bookmarks list, category filtering
   - `modal-store.ts` - modal open/close state and content
 - **React Context** (`src/contexts/`):
-  - `user-context.tsx` - user data and tags from Auth0/GraphQL
+  - `user-context.tsx` - user data and tags (uses `useUserInit` hook)
 
 ### Component Structure
 Components live in `src/components/` with each component in its own directory containing:
@@ -50,11 +59,11 @@ Components live in `src/components/` with each component in its own directory co
 ### Testing
 - **Vitest** with jsdom environment
 - **React Testing Library** for component tests
-- Test utilities in `src/utils/test-utils.tsx` provide wrapped render with mocked providers (Auth0, Apollo MockedProvider, UserProvider)
+- Test utilities in `src/utils/test-utils.tsx` provide wrapped render with mocked providers (Auth0, QueryClientProvider, UserProvider)
 - Mock data defined in `src/test/testData.ts`
 
 ### Environment Variables
 App uses Vite's `import.meta.env` for:
 - `VITE_AUTH0_DOMAIN` - Auth0 domain
 - `VITE_AUTH0_CLIENT_ID` - Auth0 client ID
-- `VITE_SERVER_ENDPOINT` - GraphQL API endpoint
+- `VITE_SERVER_ENDPOINT` - REST API base URL

@@ -1,7 +1,7 @@
-import { useQuery, gql, ApolloError } from '@apollo/client'
-import { useContext, createContext } from 'react'
-import { ReactNode } from 'react'
+import { useContext, createContext, ReactNode } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useUserInit } from '../api/hooks'
+import type { User, Tag } from '../api/types'
 
 interface UserProviderProps {
   children: ReactNode
@@ -10,46 +10,15 @@ interface UserProviderProps {
 type UserContextProps =
   | {
       loading: boolean
-      error: ApolloError | undefined
-      data: {
-        createUser: {
-          id: string
-          email: string
-          name: string
-        }
-        getTags: {
-          authorID: string
-          ID: string
-          bookmarkID: string
-          title: string
-        }[]
-      }
+      error: Error | null
+      data:
+        | {
+            user: User
+            tags: Tag[]
+          }
+        | undefined
     }
   | undefined
-
-export const CREATE_USER = gql`
-  query CreateUser($user: UserInput) {
-    createUser(user: $user) {
-      id
-    }
-    getTags(user: $user) {
-      ID
-      authorID
-      bookmarkID
-      title
-    }
-  }
-`
-
-export const GET_USER_TAGS = gql`
-  query GetUserTags($input: TagInput) {
-    getTags(tag: $input) {
-      id
-      bookmarkID
-      title
-    }
-  }
-`
 
 const UserContext = createContext<UserContextProps>(undefined)
 
@@ -65,27 +34,22 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const { user } = useAuth0()
-  const { loading, error, data } = useQuery(CREATE_USER, {
-    variables: {
-      user: {
-        id: user?.sub,
-        email: user?.email,
-        name: user?.given_name
-      },
-      input: {
-        user: {
-          id: user?.sub
-        }
-      }
-    }
+
+  const { data, isLoading, error } = useUserInit({
+    id: user?.sub,
+    email: user?.email,
+    name: user?.given_name
   })
 
-  console.log('id: ', user?.sub)
-
   const value: UserContextProps = {
-    loading,
-    error,
-    data
+    loading: isLoading,
+    error: error as Error | null,
+    data: data
+      ? {
+          user: data.user,
+          tags: data.tags
+        }
+      : undefined
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

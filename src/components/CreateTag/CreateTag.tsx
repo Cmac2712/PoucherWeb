@@ -1,35 +1,16 @@
 import { useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
 import { useUser } from '../../contexts/user-context'
-import { Tag } from '../Tags'
-
-const CREATE_TAG = gql`
-  mutation CREATE_TAG($input: TagInput) {
-    createTag(tag: $input) {
-      ID
-      bookmarkID
-      title
-      authorID
-    }
-  }
-`
+import { useCreateTag } from '../../api/hooks'
 
 const CreateTag = () => {
-  const { data: { createUser: { id } } = { createUser: { id: undefined } } } =
-    useUser()
-  const [createTag, { loading }] = useMutation<{
-    createTag: Tag
-  }>(CREATE_TAG, {
-    // https://github.com/apollographql/apollo-client/issues/5419#issuecomment-1242511457
-    update(cache) {
-      cache.evict({ fieldName: 'createUser' })
-    }
-  })
+  const { data } = useUser()
+  const userId = data?.user.id
+
+  const createTagMutation = useCreateTag()
+
   const [formData, setFormData] = useState({
     title: ''
   })
-
-  //if (loading) return <Loader />
 
   return (
     <form
@@ -38,19 +19,15 @@ const CreateTag = () => {
 
         setFormData({ title: '' })
 
-        await createTag({
-          variables: {
-            input: {
-              authorID: id,
-              title: formData.title,
-              bookmarkID: JSON.stringify({ list: [] })
-            }
-          }
+        await createTagMutation.mutateAsync({
+          authorID: userId,
+          title: formData.title,
+          bookmarkID: JSON.stringify({ list: [] })
         })
       }}
     >
       <input
-        disabled={loading}
+        disabled={createTagMutation.isPending}
         placeholder="Add new categories&hellip;"
         className="input input-md rounded-r-none"
         type="text"

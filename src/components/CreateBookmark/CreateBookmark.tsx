@@ -1,27 +1,15 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
 import { usePageStore } from '../../store/page-store'
-import { SEARCH_BOOKMARKS } from '../Search'
+import { useCreateBookmark } from '../../api/hooks'
 import { v4 as uuidv4 } from 'uuid'
 import './CreateBookmark.css'
 
-const CREATE_BOOKMARK_MUTATION = gql`
-  mutation CREATE_BOOKMARK($bookmark: BookmarkInput) {
-    createBookmark(bookmark: $bookmark) {
-      id
-      title
-      description
-      url
-      videoURL
-    }
-  }
-`
 const isURL = (str: string) => {
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
@@ -67,9 +55,6 @@ export const getScreenshot = async (url: string) => {
 }
 
 export const CreateBookmark = () => {
-  const offset = usePageStore((state) => state.offset)
-  const perPage = usePageStore((state) => state.perPage)
-  const search = usePageStore((state) => state.search)
   const count = usePageStore((state) => state.count)
 
   const { user } = useAuth0()
@@ -79,24 +64,8 @@ export const CreateBookmark = () => {
   })
   const [open, setOpen] = useState(count && count > 0 ? false : true)
   const [loadingInfo, setLoadingInfo] = useState(false)
-  const [createBookmark, { loading }] = useMutation<{
-    createBookmark: Bookmark
-  }>(CREATE_BOOKMARK_MUTATION, {
-    refetchQueries: [
-      {
-        query: SEARCH_BOOKMARKS,
-        variables: {
-          offset,
-          limit: perPage,
-          input: {
-            authorID: user?.sub,
-            title: search,
-            description: search
-          }
-        }
-      }
-    ]
-  })
+
+  const createBookmarkMutation = useCreateBookmark()
 
   return (
     <>
@@ -128,22 +97,18 @@ export const CreateBookmark = () => {
               setOpen(false)
             })
 
-            createBookmark({
-              variables: {
-                bookmark: {
-                  id: id,
-                  title: info.title,
-                  description: info.description,
-                  authorID: user?.sub,
-                  url: formData.url,
-                  screenshotURL: info.image
-                }
-              }
+            createBookmarkMutation.mutate({
+              id: id,
+              title: info.title,
+              description: info.description,
+              authorID: user?.sub,
+              url: formData.url,
+              screenshotURL: info.image
             })
           }}
         >
           <input
-            disabled={loading || loadingInfo}
+            disabled={createBookmarkMutation.isPending || loadingInfo}
             type="text"
             value={formData.url}
             onChange={(e) => setFormData({ ...formData, url: e.target.value })}
@@ -156,7 +121,7 @@ export const CreateBookmark = () => {
             className="btn btn-square normal-case w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
             type="submit"
           >
-            {loading || loadingInfo ? <Loader /> : 'Add'}
+            {createBookmarkMutation.isPending || loadingInfo ? <Loader /> : 'Add'}
           </button>
         </form>
       </div>
