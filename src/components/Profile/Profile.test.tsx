@@ -13,14 +13,12 @@ test('Profile', async () => {
 
   // Profile picture has alt text
   expect(screen.getByTestId('profile-picture').getAttribute('alt')).toBe(
-    appState.user.given_name
+    appState.user.name
   )
 
   // Email is displayed
   expect(screen.getByTestId('email').innerHTML).toBe(appState.user.email)
 
   // Name is displayed
-  expect(screen.getByTestId('given_name').innerHTML).toBe(
-    appState.user.given_name
-  )
+  expect(screen.getByTestId('given_name').innerHTML).toBe(appState.user.name)
 })

@@ -3,7 +3,7 @@ import { UpdateBookmark } from '../UpdateBookmark'
 import { DeleteBookmark } from '../DeleteBookmark'
 import { Bookmark } from './Bookmarks'
 import { Loader } from '../Loader/Loader'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useCognitoAuth } from '../../contexts/auth-context'
 import { useModalStore } from '../../store/modal-store'
 import './Bookmarks.css'
 
@@ -16,7 +16,7 @@ export const BookmarkPreview = ({
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
-  const { user, isLoading } = useAuth0()
+  const { user, isLoading } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
 
   if (isLoading) return <Loader />

@@ -1,4 +1,4 @@
-import { useAuth0 } from '@auth0/auth0-react'
+import { useCognitoAuth, CognitoAuthUser } from '../../contexts/auth-context'
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
 import { CreateBookmark } from '../CreateBookmark'
@@ -13,15 +13,10 @@ import { Search } from '../Search'
 import { Modal } from '../Modal'
 import { UserProvider } from '../../contexts/user-context'
 
-export interface Auth0User {
-  sub: string
-  email: string
-  given_name: string
-  picture: string
-}
+export type { CognitoAuthUser }
 
 export const AdminScreen = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0<Auth0User>()
+  const { user, isAuthenticated, isLoading } = useCognitoAuth()
 
   if (isLoading) return <Loader />
 

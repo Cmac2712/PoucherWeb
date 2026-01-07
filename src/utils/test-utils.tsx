@@ -1,10 +1,10 @@
 import { UserProvider } from '../contexts/user-context'
+import { CognitoAuthProvider } from '../contexts/auth-context'
 import { StrictMode, ReactElement } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, RenderOptions } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { vi } from 'vitest'
-import { Auth0Provider } from '@auth0/auth0-react'
 import { appState } from '../test/testData'
 
 // Create a new QueryClient for each test
@@ -22,17 +22,29 @@ interface Props {
   children: ReactElement
 }
 
-vi.mock('@auth0/auth0-react', () => ({
-  Auth0Provider: ({ children }: Props) => children,
-  withAuthenticationRequired: (component: unknown) => component,
-  useAuth0: () => {
-    return {
-      isLoading: false,
-      user: appState.user,
-      isAuthenticated: true,
-      loginWithRedirect: vi.fn()
-    }
-  }
+// Mock amazon-cognito-identity-js
+vi.mock('amazon-cognito-identity-js', () => ({
+  CognitoUserPool: vi.fn().mockImplementation(() => ({
+    getCurrentUser: () => null
+  })),
+  CognitoUser: vi.fn(),
+  AuthenticationDetails: vi.fn(),
+  CognitoUserAttribute: vi.fn()
+}))
+
+// Mock the auth context to provide test user
+vi.mock('../contexts/auth-context', () => ({
+  CognitoAuthProvider: ({ children }: Props) => children,
+  useCognitoAuth: () => ({
+    user: appState.user,
+    isAuthenticated: true,
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+    signUp: vi.fn(),
+    confirmSignUp: vi.fn(),
+    getAccessToken: vi.fn().mockResolvedValue('mock-token')
+  })
 }))
 
 const AllTheProviders = ({ children }: Props) => {
@@ -41,13 +53,9 @@ const AllTheProviders = ({ children }: Props) => {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <Auth0Provider
-          domain={'http://localhost:3000/'}
-          clientId={'321'}
-          redirectUri={'https://localhost:3000/'}
-        >
+        <CognitoAuthProvider>
           <UserProvider>{children}</UserProvider>
-        </Auth0Provider>
+        </CognitoAuthProvider>
       </QueryClientProvider>
     </StrictMode>
   )

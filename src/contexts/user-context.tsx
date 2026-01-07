@@ -1,5 +1,5 @@
 import { useContext, createContext, ReactNode } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useCognitoAuth } from './auth-context'
 import { useUserInit } from '../api/hooks'
 import type { User, Tag } from '../api/types'
 
@@ -33,12 +33,12 @@ export const useUser = () => {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const { user } = useAuth0()
+  const { user } = useCognitoAuth()
 
   const { data, isLoading, error } = useUserInit({
     id: user?.sub,
     email: user?.email,
-    name: user?.given_name
+    name: user?.name
   })
 
   const value: UserContextProps = {
