@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "scripts": {
     "start": "vite",
-    "test": "vitest"
+    "start:mock": "VITE_ENABLE_MSW=true vite",
+    "test": "vitest",
+    "msw:init": "msw init public/ --save"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.62.0",
     "@auth0/auth0-react": "^1.10.2",
     "@aws-sdk/client-s3": "^3.142.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -16,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^4.0.0",
     "@sparticuz/chrome-aws-lambda": "^15.5.0",
+    "@tanstack/react-query": "^5.62.0",
     "axios": "^0.27.2",
     "browserless": "^9.6.12",
     "cors": "^2.8.5",
@@ -53,6 +55,7 @@
     "eslint": "^8.23.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^20.0.0",
+    "msw": "^2.12.7",
     "postcss": "^8.4.14",
     "prettier": "2.7.1",
     "puppeteer": "^16.0.0",
@@ -65,5 +68,10 @@
     "vite": "^2.9.9",
     "vite-plugin-fonts": "^0.6.0",
     "vitest": "^0.23.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

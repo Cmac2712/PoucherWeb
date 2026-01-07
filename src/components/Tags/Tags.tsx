@@ -24,17 +24,13 @@ const Tags = ({ callback }: Props) => {
   const count = usePageStore((state) => state.count)
   const setCategory = usePageStore((state) => state.setCategory)
 
-  const {
-    data: { getTags: tags, createUser: { id } } = {
-      getTags: [],
-      createUser: { id: 0 }
-    },
-    loading
-  } = useUser()
+  const { data, loading } = useUser()
+  const tags = data?.tags ?? []
+  const id = data?.user?.id
   const openModal = useModalStore((state) => state.openModal)
   const setModalContent = useModalStore((state) => state.setModalContent)
 
-  if (loading || id === 0) return <Loader />
+  if (loading || !id) return <Loader />
 
   return (
     <div className="tags pt-4" data-testid="tags-container">
