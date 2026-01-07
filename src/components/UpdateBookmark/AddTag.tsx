@@ -1,22 +1,15 @@
-import { useMutation, gql } from '@apollo/client'
 import { useState } from 'react'
 import { useUser } from '../../contexts/user-context'
-
-const UPDATE_TAG = gql`
-  mutation UpdateTag($tag: TagInput!) {
-    updateTag(tag: $tag) {
-      ID
-      bookmarkID
-    }
-  }
-`
+import { useUpdateTag } from '../../api/hooks'
 
 interface Props {
   ID: string
 }
 
 const AddTag = ({ ID }: Props) => {
-  const { data: { getTags: tags } = { getTags: [] } } = useUser()
+  const { data } = useUser()
+  const tags = data?.tags || []
+
   const currentTags = () =>
     tags.map((tag) => {
       const hasTag = JSON.parse(tag.bookmarkID)?.list.find(
@@ -31,14 +24,13 @@ const AddTag = ({ ID }: Props) => {
         </p>
       )
     })
-  const [updateTag, { loading, error }] = useMutation(UPDATE_TAG, {
-    update(cache) {
-      cache.evict({ fieldName: 'createUser' })
-    }
-  })
+
+  const updateTagMutation = useUpdateTag()
+
   const [formData, setFormData] = useState({
     newTag: ''
   })
+
   const handleSubmit = () => {
     const found = tags.find((tag) => tag.ID === formData.newTag)
 
@@ -47,12 +39,10 @@ const AddTag = ({ ID }: Props) => {
 
       tagList.list.push(ID)
 
-      updateTag({
-        variables: {
-          tag: {
-            ID: found.ID,
-            bookmarkID: JSON.stringify(tagList)
-          }
+      updateTagMutation.mutate({
+        id: found.ID,
+        updates: {
+          bookmarkID: JSON.stringify(tagList)
         }
       })
 

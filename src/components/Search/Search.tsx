@@ -2,23 +2,6 @@ import { useState } from 'react'
 import { usePageStore } from '../../store/page-store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { gql } from '@apollo/client'
-
-const SEARCH_BOOKMARKS = gql`
-  query SearchBookmarks($offset: Int, $limit: Int, $input: BookmarkInput) {
-    searchBookmarks(offset: $offset, limit: $limit, input: $input) {
-      id
-      authorID
-      title
-      description
-      url
-      videoURL
-      screenshotURL
-      createdAt
-    }
-    getBookmarksCount(input: $input)
-  }
-`
 
 export const Search = () => {
   const setSearch = usePageStore((state) => state.setSearch)
@@ -61,5 +44,3 @@ export const Search = () => {
     </>
   )
 }
-
-export { SEARCH_BOOKMARKS }

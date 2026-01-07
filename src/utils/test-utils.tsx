@@ -1,21 +1,30 @@
-import { UserProvider, useUser } from '../contexts/user-context'
-import { StrictMode } from 'react'
-import { MockedProvider } from '@apollo/client/testing'
-import { ReactElement } from 'react'
+import { UserProvider } from '../contexts/user-context'
+import { StrictMode, ReactElement } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, RenderOptions } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-//import { Auth0Provider } from '@auth0/auth0-react'
-import { mocks, appState } from '../test/testData'
 import { vi } from 'vitest'
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
+import { Auth0Provider } from '@auth0/auth0-react'
+import { appState } from '../test/testData'
+
+// Create a new QueryClient for each test
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: 0
+      }
+    }
+  })
 
 interface Props {
   children: ReactElement
 }
 
 vi.mock('@auth0/auth0-react', () => ({
-  Auth0Provider: ({ children }) => children,
-  withAuthenticationRequired: (component, _) => component,
+  Auth0Provider: ({ children }: Props) => children,
+  withAuthenticationRequired: (component: unknown) => component,
   useAuth0: () => {
     return {
       isLoading: false,
@@ -27,9 +36,11 @@ vi.mock('@auth0/auth0-react', () => ({
 }))
 
 const AllTheProviders = ({ children }: Props) => {
+  const queryClient = createTestQueryClient()
+
   return (
     <StrictMode>
-      <MockedProvider mocks={mocks}>
+      <QueryClientProvider client={queryClient}>
         <Auth0Provider
           domain={'http://localhost:3000/'}
           clientId={'321'}
@@ -37,7 +48,7 @@ const AllTheProviders = ({ children }: Props) => {
         >
           <UserProvider>{children}</UserProvider>
         </Auth0Provider>
-      </MockedProvider>
+      </QueryClientProvider>
     </StrictMode>
   )
 }

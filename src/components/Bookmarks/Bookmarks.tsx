@@ -1,9 +1,9 @@
+import { useEffect } from 'react'
 import { BookmarkPreview } from './BookmarkPreview'
 import { useUser } from '../../contexts/user-context'
 import { usePageStore } from '../../store/page-store'
 import { Loader } from '../Loader/Loader'
-import { useQuery } from '@apollo/client'
-import { SEARCH_BOOKMARKS } from '../Search'
+import { useSearchBookmarks } from '../../api/hooks'
 
 export interface Bookmark {
   id: string
@@ -33,27 +33,23 @@ export const Bookmarks = () => {
   const setBookmarks = usePageStore((state) => state.setBookmarks)
   const user = useUser()
 
-  const { loading, error } = useQuery<{
-    searchBookmarks: Bookmark[]
-    getBookmarksCount: number
-  }>(SEARCH_BOOKMARKS, {
-    variables: {
-      offset,
-      limit: perPage,
-      input: {
-        id: JSON.stringify(bookmarkIDs),
-        authorID: user.data?.createUser.id,
-        title: search,
-        description: search
-      }
-    },
-    onCompleted: (data) => {
-      setCount(data.getBookmarksCount)
-      setBookmarks(data.searchBookmarks)
-    }
+  const { data, isLoading, error } = useSearchBookmarks({
+    offset,
+    limit: perPage,
+    ids: bookmarkIDs ? JSON.stringify(bookmarkIDs) : undefined,
+    authorID: user.data?.user.id,
+    title: search,
+    description: search
   })
 
-  if (loading) return <Loader />
+  useEffect(() => {
+    if (data) {
+      setCount(data.count)
+      setBookmarks(data.bookmarks)
+    }
+  }, [data, setCount, setBookmarks])
+
+  if (isLoading) return <Loader />
 
   if (error) return <p>{JSON.stringify(error)}</p>
 

@@ -1,43 +1,20 @@
 import { useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
 import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader'
 import { useUser } from '../../contexts/user-context'
 import { AddTag } from './AddTag'
-import { SEARCH_BOOKMARKS } from '../Search'
-import { usePageStore } from '../../store/page-store'
 import { useModalStore } from '../../store/modal-store'
+import { useUpdateBookmark, useUpdateUser } from '../../api/hooks'
 
 type UpdateBookmarkProps = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
 }
-
-export const UPDATE_BOOKMARK_MUTATION = gql`
-  mutation UPDATE_BOOKMARK(
-    $id: ID!
-    $updates: BookmarkInput
-    $userUpdates: UserInput
-  ) {
-    updateBookmark(id: $id, updates: $updates) {
-      title
-    }
-    updateUser(user: $userUpdates) {
-      id
-      name
-      email
-    }
-  }
-`
 
 export const UpdateBookmark = ({
   id,
   title,
   description
 }: UpdateBookmarkProps) => {
-  const offset = usePageStore((state) => state.offset)
-  const perPage = usePageStore((state) => state.perPage)
-  const search = usePageStore((state) => state.search)
-
   const { data: userData } = useUser()
   const [formData, setFormData] = useState<
     Pick<Bookmark, 'title' | 'description'>
@@ -47,29 +24,15 @@ export const UpdateBookmark = ({
   })
   const closeModal = useModalStore((state) => state.closeModal)
 
-  const [updateBookmark, { loading, error }] = useMutation(
-    UPDATE_BOOKMARK_MUTATION,
-    {
-      refetchQueries: [
-        {
-          query: SEARCH_BOOKMARKS,
-          variables: {
-            offset,
-            limit: perPage,
-            input: {
-              authorID: userData.createUser.id,
-              title: search,
-              description: search
-            }
-          }
-        }
-      ]
-    }
-  )
+  const updateBookmarkMutation = useUpdateBookmark()
+  const updateUserMutation = useUpdateUser()
 
-  if (loading) return <Loader />
+  const isPending = updateBookmarkMutation.isPending || updateUserMutation.isPending
+  const isError = updateBookmarkMutation.isError || updateUserMutation.isError
 
-  if (error) return <p>Error :(</p>
+  if (isPending) return <Loader />
+
+  if (isError) return <p>Error :(</p>
 
   return (
     <div
@@ -104,17 +67,17 @@ export const UpdateBookmark = ({
           <button
             className="btn font-bold uppercase mt-2"
             onClick={async () => {
-              await updateBookmark({
-                variables: {
-                  id,
-                  updates: {
-                    ...formData
-                  },
-                  userUpdates: {
-                    id: userData.createUser.id
-                  }
-                }
+              await updateBookmarkMutation.mutateAsync({
+                id,
+                updates: formData
               })
+
+              if (userData?.user.id) {
+                await updateUserMutation.mutateAsync({
+                  id: userData.user.id,
+                  updates: {}
+                })
+              }
 
               closeModal()
             }}

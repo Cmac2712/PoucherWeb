@@ -1,14 +1,5 @@
-import { useMutation, gql } from '@apollo/client'
 import { useModalStore } from '../../store/modal-store'
-
-const DELETE_TAG_MUTATION = gql`
-  mutation DeleteTag($tag: TagInput!) {
-    deleteTag(tag: $tag) {
-      ID
-      title
-    }
-  }
-`
+import { useDeleteTag } from '../../api/hooks'
 
 interface Props {
   ID: string
@@ -16,11 +7,7 @@ interface Props {
 }
 
 const DeleteTag = ({ ID, tagName }: Props) => {
-  const [deleteTag] = useMutation(DELETE_TAG_MUTATION, {
-    update(cache) {
-      cache.evict({ fieldName: 'createUser' })
-    }
-  })
+  const deleteTagMutation = useDeleteTag()
   const closeModal = useModalStore((store) => store.closeModal)
 
   return (
@@ -31,13 +18,7 @@ const DeleteTag = ({ ID, tagName }: Props) => {
           data-testid={`delete-tag`}
           className="btn btn-primary mr-4"
           onClick={() => {
-            deleteTag({
-              variables: {
-                tag: {
-                  ID
-                }
-              }
-            })
+            deleteTagMutation.mutate(ID)
             closeModal()
           }}
         >
