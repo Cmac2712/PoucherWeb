@@ -24,8 +24,7 @@ export function useUserInit(userData: {
 }) {
   return useQuery({
     queryKey: queryKeys.userInit(userData.id || ''),
-    queryFn: () =>
-      apiClient.post<InitResponse>('api/auth/init', userData),
+    queryFn: () => apiClient.post<InitResponse>('api/auth/init', userData),
     enabled: !!userData.id,
     staleTime: 5 * 60 * 1000
   })

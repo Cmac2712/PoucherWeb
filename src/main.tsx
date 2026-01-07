@@ -13,10 +13,20 @@ const queryClient = new QueryClient({
   }
 })
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </React.StrictMode>
-)
+async function enableMocking() {
+  if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MSW === 'true') {
+    const { worker } = await import('./mocks/browser')
+    return worker.start({ onUnhandledRequest: 'bypass' })
+  }
+  return Promise.resolve()
+}
+
+enableMocking().then(() => {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </React.StrictMode>
+  )
+})
