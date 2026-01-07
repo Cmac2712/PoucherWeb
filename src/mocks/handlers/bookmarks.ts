@@ -25,23 +25,26 @@ export const bookmarkHandlers = [
   }),
 
   // POST /api/bookmarks - Create bookmark
-  http.post<never, Partial<Bookmark>>('*/api/bookmarks', async ({ request }) => {
-    const body = await request.json()
+  http.post<never, Partial<Bookmark>>(
+    '*/api/bookmarks',
+    async ({ request }) => {
+      const body = await request.json()
 
-    const newBookmark: Bookmark = {
-      id: crypto.randomUUID(),
-      title: body.title || '',
-      description: body.description || '',
-      url: body.url || '',
-      videoURL: body.videoURL,
-      authorID: body.authorID,
-      screenshotURL: body.screenshotURL,
-      createdAt: Date.now().toString()
+      const newBookmark: Bookmark = {
+        id: crypto.randomUUID(),
+        title: body.title || '',
+        description: body.description || '',
+        url: body.url || '',
+        videoURL: body.videoURL,
+        authorID: body.authorID,
+        screenshotURL: body.screenshotURL,
+        createdAt: Date.now().toString()
+      }
+
+      db.bookmarks.push(newBookmark)
+      return HttpResponse.json({ bookmark: newBookmark }, { status: 201 })
     }
-
-    db.bookmarks.push(newBookmark)
-    return HttpResponse.json({ bookmark: newBookmark }, { status: 201 })
-  }),
+  ),
 
   // PUT /api/bookmarks/:id - Update bookmark
   http.put<{ id: string }, Partial<Bookmark>>(
@@ -52,7 +55,10 @@ export const bookmarkHandlers = [
 
       const bookmarkIndex = db.bookmarks.findIndex((b) => b.id === id)
       if (bookmarkIndex === -1) {
-        return HttpResponse.json({ error: 'Bookmark not found' }, { status: 404 })
+        return HttpResponse.json(
+          { error: 'Bookmark not found' },
+          { status: 404 }
+        )
       }
 
       db.bookmarks[bookmarkIndex] = {
