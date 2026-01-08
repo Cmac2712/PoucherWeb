@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import { usePageStore } from '../../store/page-store'
+import { Button } from '../ui/button'
+import { cn } from '../../lib/utils'
 
 export const Pagination = () => {
   const perPage = usePageStore((state) => state.perPage)
@@ -15,44 +17,52 @@ export const Pagination = () => {
 
   return (
     <div className="flex basis-full max-w-3xl">
-      <div className="btn-group flex-nowrap">
-        <button
+      <div className="flex flex-nowrap gap-1">
+        <Button
+          size="sm"
+          variant="outline"
           disabled={currentPage === 1}
           onClick={() => {
             setOffset(offset - perPage)
           }}
-          className="btn btn-md"
         >
           <FontAwesomeIcon icon={faAngleLeft} />
-        </button>
+        </Button>
 
-        <button className={`btn md:hidden`}>Page {currentPage}</button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="md:hidden"
+        >
+          Page {currentPage}
+        </Button>
 
         {Array.from(Array(pages), (e, i) => {
           return (
-            <button
+            <Button
               key={i}
+              size="sm"
+              variant={currentPage === i + 1 ? "default" : "outline"}
               onClick={() => {
                 setOffset(i * perPage)
               }}
-              className={`btn btn-md hidden md:block ${
-                currentPage === i + 1 ? 'btn-active' : ''
-              }`}
+              className="hidden md:block"
             >
               {i + 1}
-            </button>
+            </Button>
           )
         })}
 
-        <button
+        <Button
+          size="sm"
+          variant="outline"
           disabled={currentPage === pages}
           onClick={() => {
             setOffset(offset + perPage)
           }}
-          className="btn btn-md"
         >
           <FontAwesomeIcon icon={faAngleRight} />
-        </button>
+        </Button>
       </div>
     </div>
   )

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { usePageStore } from '../../store/page-store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 
 export const Search = () => {
   const setSearch = usePageStore((state) => state.setSearch)
@@ -20,12 +22,12 @@ export const Search = () => {
             setOffset(0)
           }}
         >
-          <input
-            className="input w-full max-w-xs rounded-r-none"
+          <Input
+            className="w-full max-w-xs rounded-r-none"
             type="text"
             name="search"
             autoComplete="off"
-            placeholder="Search&hellip;"
+            placeholder="Search…"
             onChange={(e) => {
               setSearch(e.target.value)
               setSearchTerm(e.target.value)
@@ -33,14 +35,14 @@ export const Search = () => {
             value={searchTerm}
           />
 
-          <button className="btn rounded-l-none">
+          <Button className="rounded-l-none">
             <FontAwesomeIcon icon={faSearch} />
-          </button>
+          </Button>
         </form>
       </div>
-      <button className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12">
+      <Button size="icon" className="px-4 absolute top-0 bottom-0 m-auto right-4 h-12">
         <FontAwesomeIcon icon={faSearch} />
-      </button>
+      </Button>
     </>
   )
 }

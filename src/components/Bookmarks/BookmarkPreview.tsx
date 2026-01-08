@@ -5,6 +5,7 @@ import { Bookmark } from './Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useModalStore } from '../../store/modal-store'
+import { Button } from '../ui/button'
 import './Bookmarks.css'
 
 type Props = {
@@ -58,8 +59,10 @@ export const BookmarkPreview = ({
           hover ? 'lg:opacity-100' : ''
         }`}
       >
-        <button
-          className="btn btn-sm text-xs font-bold mr-2"
+        <Button
+          size="sm"
+          variant="secondary"
+          className="text-xs font-bold mr-2"
           onClick={() => {
             setModalContent(
               <UpdateBookmark
@@ -74,7 +77,7 @@ export const BookmarkPreview = ({
           }}
         >
           edit
-        </button>
+        </Button>
 
         <DeleteBookmark id={id} authorID={user?.sub} />
       </div>

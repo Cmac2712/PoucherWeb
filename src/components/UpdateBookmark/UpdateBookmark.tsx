@@ -5,6 +5,8 @@ import { useUser } from '../../contexts/user-context'
 import { AddTag } from './AddTag'
 import { useModalStore } from '../../store/modal-store'
 import { useUpdateBookmark, useUpdateUser } from '../../api/hooks'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 
 type UpdateBookmarkProps = Omit<Bookmark, 'url'> & {
   setMode: (val: boolean) => void
@@ -40,8 +42,8 @@ export const UpdateBookmark = ({
     >
       <div className="bookmark-preview-info basis-full">
         <h2 className="text-xl w-full">
-          <input
-            className="input input-primary w-full mb-2 p-2"
+          <Input
+            className="w-full mb-2"
             type="text"
             placeholder="new title"
             name="title"
@@ -53,7 +55,7 @@ export const UpdateBookmark = ({
         </h2>
         <p className="w-full">
           <textarea
-            className="textarea textarea-primary w-full"
+            className="flex min-h-[80px] w-full rounded-md border border-forest-700 bg-background-dark px-3 py-2 text-sm text-foreground shadow-sm placeholder:text-foreground-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-forest-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="new description"
             name="description"
             defaultValue={formData.description}
@@ -64,8 +66,8 @@ export const UpdateBookmark = ({
         </p>
         <AddTag ID={id} />
         <div className="tasks ml-auto">
-          <button
-            className="btn font-bold uppercase mt-2"
+          <Button
+            className="font-bold uppercase mt-2"
             onClick={async () => {
               await updateBookmarkMutation.mutateAsync({
                 id,
@@ -83,7 +85,7 @@ export const UpdateBookmark = ({
             }}
           >
             Save
-          </button>
+          </Button>
         </div>
       </div>
     </div>
