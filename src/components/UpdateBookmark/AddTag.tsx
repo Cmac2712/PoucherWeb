@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useUser } from '../../contexts/user-context'
 import { useUpdateTag } from '../../api/hooks'
+import { Button } from '../ui/button'
 
 interface Props {
   ID: string
@@ -62,7 +63,7 @@ const AddTag = ({ ID }: Props) => {
           <select
             id={ID}
             name="choose-category"
-            className="input input-primary mr-2"
+            className="flex h-9 w-full rounded-md border border-forest-700 bg-background-dark px-3 py-1 text-sm text-foreground shadow-sm mr-2"
             onChange={(e) => {
               setFormData({ newTag: e.target.value })
             }}
@@ -79,15 +80,14 @@ const AddTag = ({ ID }: Props) => {
               )
             })}
           </select>
-          <button
-            className="btn"
+          <Button
             onClick={(e) => {
               e.preventDefault()
               handleSubmit()
             }}
           >
             Add
-          </button>
+          </Button>
         </>
       )}
     </form>

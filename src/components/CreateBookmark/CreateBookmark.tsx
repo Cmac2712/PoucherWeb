@@ -8,6 +8,8 @@ import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
 import { usePageStore } from '../../store/page-store'
 import { useCreateBookmark } from '../../api/hooks'
 import { v4 as uuidv4 } from 'uuid'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import './CreateBookmark.css'
 
 const isURL = (str: string) => {
@@ -74,15 +76,17 @@ export const CreateBookmark = () => {
           open ? 'slide-in' : 'slide-out'
         }`}
       >
-        <button
-          className="btn btn-square rounded-r-none"
+        <Button
+          size="icon"
+          variant="outline"
+          className="rounded-r-none"
           onClick={(e) => {
             e.preventDefault()
             setOpen(false)
           }}
         >
           <FontAwesomeIcon icon={faClose} />
-        </button>
+        </Button>
         <form
           className="flex"
           onSubmit={async (e) => {
@@ -107,27 +111,28 @@ export const CreateBookmark = () => {
             })
           }}
         >
-          <input
+          <Input
             disabled={createBookmarkMutation.isPending || loadingInfo}
             type="text"
             value={formData.url}
             onChange={(e) => setFormData({ ...formData, url: e.target.value })}
             name="url"
-            placeholder="https://&hellip;"
-            className="input input-bordered border-x-0  w-full max-w-xs rounded-none"
+            placeholder="https://…"
+            className="border-x-0 w-full max-w-xs rounded-none"
           />
 
-          <button
-            className="btn btn-square normal-case w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
+          <Button
+            className="normal-case w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
             type="submit"
           >
             {createBookmarkMutation.isPending || loadingInfo ? <Loader /> : 'Add'}
-          </button>
+          </Button>
         </form>
       </div>
 
-      <button
-        className="btn btn-square px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
+      <Button
+        size="icon"
+        className="px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
         onClick={() => {
           setOpen(!open)
           navigator.clipboard.readText().then((clip) => {
@@ -141,7 +146,7 @@ export const CreateBookmark = () => {
         }}
       >
         <FontAwesomeIcon icon={faPlus} />
-      </button>
+      </Button>
     </>
   )
 }

@@ -1,22 +1,15 @@
-//import { useModal } from '../../contexts/modal-context'
 import { useModalStore } from '../../store/modal-store'
+import { Dialog, DialogContent } from '../ui/dialog'
 
 const Modal = () => {
   const { modalOpen, modalContent, closeModal } = useModalStore()
 
   return (
-    <div
-      onClick={(e) => {
-        if (!(e.target as HTMLElement).classList.contains('modal')) return
-
-        closeModal()
-      }}
-      className={`modal ${
-        modalOpen && 'opacity-100 visible pointer-events-auto'
-      }`}
-    >
-      <div className="modal-box">{modalContent}</div>
-    </div>
+    <Dialog open={modalOpen} onOpenChange={(open) => !open && closeModal()}>
+      <DialogContent>
+        {modalContent}
+      </DialogContent>
+    </Dialog>
   )
 }
 
