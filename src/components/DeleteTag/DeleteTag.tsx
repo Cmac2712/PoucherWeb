@@ -1,5 +1,6 @@
 import { useModalStore } from '../../store/modal-store'
 import { useDeleteTag } from '../../api/hooks'
+import { Button } from '../ui/button'
 
 interface Props {
   ID: string
@@ -12,26 +13,26 @@ const DeleteTag = ({ ID, tagName }: Props) => {
 
   return (
     <div>
-      <p className="text-center bold mb-4">{`Are you sure you want to delete the ${tagName} category?`}</p>
-      <div className="flex justify-center">
-        <button
+      <p className="text-center bold mb-4 text-foreground">{`Are you sure you want to delete the ${tagName} category?`}</p>
+      <div className="flex justify-center gap-4">
+        <Button
           data-testid={`delete-tag`}
-          className="btn btn-primary mr-4"
+          variant="destructive"
           onClick={() => {
             deleteTagMutation.mutate(ID)
             closeModal()
           }}
         >
           Yes
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outline"
           onClick={() => {
             closeModal()
           }}
-          className="btn"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </div>
   )

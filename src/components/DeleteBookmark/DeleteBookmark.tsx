@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { useDeleteBookmark } from '../../api/hooks'
+import { Button } from '../ui/button'
 
 interface Props {
   id?: string
@@ -11,8 +12,10 @@ export const DeleteBookmark = ({ id }: Props) => {
   const deleteBookmarkMutation = useDeleteBookmark()
 
   return (
-    <button
-      className="btn btn-sm font-bold"
+    <Button
+      size="sm"
+      variant="destructive"
+      className="font-bold"
       onClick={async (e) => {
         e.preventDefault()
         if (id) {
@@ -21,6 +24,6 @@ export const DeleteBookmark = ({ id }: Props) => {
       }}
     >
       <FontAwesomeIcon icon={faTrashCan} />
-    </button>
+    </Button>
   )
 }

@@ -1,6 +1,7 @@
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { Button } from '../ui/button'
 
 export const LogoutButton = () => {
   const { logout } = useCognitoAuth()

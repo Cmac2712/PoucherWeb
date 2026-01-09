@@ -35,13 +35,13 @@ const Tags = ({ callback }: Props) => {
   return (
     <div className="tags pt-4" data-testid="tags-container">
       <>
-        <h3 className="text-md p-2 px-4 mr-4 mb-2 font-bold">Categories</h3>
+        <h3 className="text-md p-2 px-4 mr-4 mb-2 font-bold text-foreground">Categories</h3>
         <ul className="p-0 mb-4">
           <li className="relative">
             <a
               href="#"
-              className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
-                category === 'All' ? 'bg-base-300' : ''
+              className={`flex items-center justify-between py-2 px-2 hover:bg-background-darker transition-all ${
+                category === 'All' ? 'bg-background-darker' : ''
               }`}
               onClick={(e) => {
                 setCategory('All')
@@ -49,7 +49,7 @@ const Tags = ({ callback }: Props) => {
                 e.preventDefault()
               }}
             >
-              <div className="p-1 opacity-75 font-semibold">All ({count})</div>
+              <div className="p-1 opacity-75 font-semibold text-foreground">All ({count})</div>
             </a>
           </li>
           {tags &&
@@ -61,8 +61,8 @@ const Tags = ({ callback }: Props) => {
                 <li className="relative" key={i}>
                   <a
                     href="#"
-                    className={`flex items-center justify-between py-2 px-2 hover:bg-base-300 transition-all ${
-                      category === title ? 'bg-base-300' : ''
+                    className={`flex items-center justify-between py-2 px-2 hover:bg-background-darker transition-all ${
+                      category === title ? 'bg-background-darker' : ''
                     }`}
                     onClick={(e) => {
                       setCategory(title)
@@ -70,20 +70,19 @@ const Tags = ({ callback }: Props) => {
                       e.preventDefault()
                     }}
                   >
-                    <div className="p-1 opacity-75 font-semibold">
+                    <div className="p-1 opacity-75 font-semibold text-foreground">
                       {title} ({bookmarksCount})
                     </div>
                   </a>
                   <div className="absolute right-4 top-0 bottom-0 m-auto h-6">
                     <button
+                      className="opacity-40 hover:opacity-100 transition-opacity text-foreground-muted"
                       onClick={() => {
                         setModalContent(<DeleteTag ID={ID} tagName={title} />)
                         openModal()
                       }}
                     >
-                      <span className="opacity-40 fs-small">
-                        <FontAwesomeIcon icon={faTrashCan} />
-                      </span>
+                      <FontAwesomeIcon icon={faTrashCan} />
                     </button>
                   </div>
                 </li>

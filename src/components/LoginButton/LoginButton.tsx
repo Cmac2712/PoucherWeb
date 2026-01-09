@@ -36,7 +36,7 @@ export const LoginButton = () => {
         onClick={() => setShowForm(true)}
       >
         Log In
-      </button>
+      </Button>
     </>
   )
 }

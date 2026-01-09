@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useUser } from '../../contexts/user-context'
 import { useCreateTag } from '../../api/hooks'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 
 const CreateTag = () => {
   const { data } = useUser()
@@ -14,6 +16,7 @@ const CreateTag = () => {
 
   return (
     <form
+      className="flex"
       onSubmit={async (e) => {
         e.preventDefault()
 
@@ -26,15 +29,15 @@ const CreateTag = () => {
         })
       }}
     >
-      <input
+      <Input
         disabled={createTagMutation.isPending}
-        placeholder="Add new categories&hellip;"
-        className="input input-md rounded-r-none"
+        placeholder="Add new categories…"
+        className="rounded-r-none"
         type="text"
         value={formData.title}
         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
       />
-      <button className="btn btn-md rounded-l-none normal-case">Add</button>
+      <Button className="rounded-l-none normal-case">Add</Button>
     </form>
   )
 }
