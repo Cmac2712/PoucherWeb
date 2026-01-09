@@ -41,7 +41,7 @@ export const mockBookmarksResponse = {
   bookmarks: [
     {
       id: 'd720a278-5050-4b91-9edd-1e3510722f70',
-      authorID: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+      authorID: 'google-oauth2|115113493319166107491',
       title: '@levelsio (Pieter Levels)',
       description:
         'A few years ago I sold all my stuff to explore the world, created 12 startups in 12 months and since then have been building companies as an indie maker: my most famous being Nomad List and Remote OK',

@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "scripts": {
     "start": "vite",
+    "build": "vite build",
     "start:mock": "VITE_ENABLE_MSW=true vite",
     "test": "vitest",
     "msw:init": "msw init public/ --save"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.10.2",
     "@aws-sdk/client-s3": "^3.142.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-regular-svg-icons": "^6.1.2",
@@ -33,7 +35,6 @@
     "react-dom": "^18.0.0",
     "react-ga4": "^1.4.1",
     "react-responsive": "^9.0.0",
-    "twitter-url-direct": "^1.0.4",
     "uuid": "^8.3.2",
     "zustand": "^4.1.4"
   },
