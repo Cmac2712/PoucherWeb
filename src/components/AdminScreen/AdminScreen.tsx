@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useCognitoAuth, CognitoAuthUser } from '../../contexts/auth-context'
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
@@ -19,6 +20,7 @@ export type { CognitoAuthUser }
 
 export const AdminScreen = () => {
   const { user, isAuthenticated, isLoading } = useCognitoAuth()
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   if (isLoading) return <Loader />
 
