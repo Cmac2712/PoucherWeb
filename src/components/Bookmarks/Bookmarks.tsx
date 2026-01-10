@@ -4,6 +4,8 @@ import { useUser } from '../../contexts/user-context'
 import { usePageStore } from '../../store/page-store'
 import { Loader } from '../Loader/Loader'
 import { useSearchBookmarks } from '../../api/hooks'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
 
 export interface Bookmark {
   id: string
@@ -54,40 +56,38 @@ export const Bookmarks = () => {
   if (error) return <p>{JSON.stringify(error)}</p>
 
   return (
-    <div className="flex flex-wrap items-start">
-      {/* DISPLAY CURRENT SEARCH TERM */}
+    <div>
+      {/* Search results indicator */}
       {search && (
-        <div className="flex search-text p-4">
-          <p className="mr-2">
-            Search results for <em>{search}</em>
+        <div className="flex items-center gap-2 mb-6 text-foreground-muted">
+          <p>
+            Showing results for <span className="text-foreground font-medium">"{search}"</span>
           </p>
           <button
             onClick={() => setSearch('')}
-            className="text-blue-500 underline"
+            className="text-forest-400 hover:text-forest-300 transition-colors flex items-center gap-1"
           >
-            clear search
+            <FontAwesomeIcon icon={faClose} className="text-xs" />
+            clear
           </button>
         </div>
       )}
 
-      <ul className="basis-full">
-        {bookmarks.length ? (
-          bookmarks.map((data) => {
-            return (
-              <li
-                className="basis-full border-base-300 border-t first:border-0"
-                key={data.id}
-              >
-                <BookmarkPreview data={data} />
-              </li>
-            )
-          })
-        ) : (
-          <div className="flex justify-center w-full h-screen">
-            <p className="mt-10">You haven't added any bookmarks yet.</p>
-          </div>
-        )}
-      </ul>
+      {/* Bookmarks grid */}
+      {bookmarks.length ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {bookmarks.map((data) => (
+            <BookmarkPreview key={data.id} data={data} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <p className="text-foreground-muted text-lg">No bookmarks yet</p>
+          <p className="text-foreground-muted text-sm mt-2">
+            Click "Add Bookmark" to save your first link
+          </p>
+        </div>
+      )}
     </div>
   )
 }

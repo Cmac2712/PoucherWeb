@@ -6,31 +6,37 @@ interface Props {
 
 export const Profile = ({ user: { name, email, picture } }: Props) => {
   return (
-    <div className="profile bg-base-300 p-4 flex items-center">
-      <div className="avatar mr-4">
-        <div className="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+    <div className="p-6 border-b border-gray-200">
+      <div className="flex items-center gap-4">
+        {/* Avatar */}
+        <div className="shrink-0">
           {picture ? (
             <img
               src={picture}
               alt={name}
               referrerPolicy="no-referrer"
+              className="w-12 h-12 rounded-full object-cover ring-2 ring-forest-500"
               data-testid="profile-picture"
             />
           ) : (
             <div
-              className="w-12 h-12 bg-primary flex items-center justify-center text-primary-content text-xl font-bold"
+              className="w-12 h-12 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 text-lg font-bold"
               data-testid="profile-picture"
             >
               {name?.charAt(0).toUpperCase() || 'U'}
             </div>
           )}
         </div>
-      </div>
-      <div className="text-sm">
-        <h2 data-testid="given_name">{name}</h2>
-        <p data-testid="email" className="opacity-40">
-          {email}
-        </p>
+
+        {/* Info */}
+        <div className="min-w-0">
+          <h2 data-testid="given_name" className="font-semibold text-foreground truncate">
+            {name}
+          </h2>
+          <p data-testid="email" className="text-sm text-foreground-muted truncate">
+            {email}
+          </p>
+        </div>
       </div>
     </div>
   )

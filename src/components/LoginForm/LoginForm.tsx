@@ -79,20 +79,20 @@ export const LoginForm = () => {
   if (mode === 'confirm') {
     return (
       <div className="w-full max-w-sm">
-        <div className="bg-background-dark border border-forest-800 rounded-xl p-8 shadow-2xl">
+        <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-forest-900 mb-4">
-              <FontAwesomeIcon icon={faEnvelope} className="text-forest-400 text-2xl" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-forest-100 mb-4">
+              <FontAwesomeIcon icon={faEnvelope} className="text-forest-600 text-2xl" />
             </div>
             <h2 className="text-2xl font-bold text-foreground">Check Your Email</h2>
             <p className="text-foreground-muted text-sm mt-2">
               We sent a confirmation code to<br />
-              <span className="text-forest-400">{email}</span>
+              <span className="text-forest-600">{email}</span>
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-950 border border-red-800 text-red-200 rounded-lg px-4 py-3 mb-4 text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">
               {error}
             </div>
           )}
@@ -142,7 +142,7 @@ export const LoginForm = () => {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-background-dark border border-forest-800 rounded-xl p-8 shadow-2xl">
+      <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-foreground">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
@@ -155,7 +155,7 @@ export const LoginForm = () => {
         </div>
 
         {error && (
-          <div className="bg-red-950 border border-red-800 text-red-200 rounded-lg px-4 py-3 mb-4 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">
             {error}
           </div>
         )}
@@ -254,10 +254,10 @@ export const LoginForm = () => {
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-forest-800"></div>
+            <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background-dark px-2 text-foreground-muted">or</span>
+            <span className="bg-white px-2 text-foreground-muted">or</span>
           </div>
         </div>
 
@@ -266,7 +266,7 @@ export const LoginForm = () => {
             <>
               Don't have an account?{' '}
               <button
-                className="text-forest-400 hover:text-forest-300 font-medium transition-colors"
+                className="text-forest-600 hover:text-forest-700 font-medium transition-colors"
                 onClick={() => switchMode('signup')}
               >
                 Sign up
@@ -276,7 +276,7 @@ export const LoginForm = () => {
             <>
               Already have an account?{' '}
               <button
-                className="text-forest-400 hover:text-forest-300 font-medium transition-colors"
+                className="text-forest-600 hover:text-forest-700 font-medium transition-colors"
                 onClick={() => switchMode('login')}
               >
                 Sign in
