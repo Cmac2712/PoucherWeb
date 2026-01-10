@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useCognitoAuth } from '../../contexts/auth-context'
 import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -59,7 +59,7 @@ export const getScreenshot = async (url: string) => {
 export const CreateBookmark = () => {
   const count = usePageStore((state) => state.count)
 
-  const { user } = useAuth0()
+  const { user } = useCognitoAuth()
   const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
     title: '',
     url: ''

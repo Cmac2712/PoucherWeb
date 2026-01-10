@@ -1,5 +1,5 @@
 import './app.css'
-import { Auth0Provider } from '@auth0/auth0-react'
+import { CognitoAuthProvider } from './contexts/auth-context'
 import { AdminScreen } from './components/AdminScreen/AdminScreen'
 import { StrictMode } from 'react'
 import ReactGA from 'react-ga4'
@@ -10,13 +10,9 @@ ReactGA.send('pageview')
 function App() {
   return (
     <StrictMode>
-      <Auth0Provider
-        domain={import.meta.env.VITE_AUTH0_DOMAIN}
-        clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-        redirectUri={window.location.origin}
-      >
+      <CognitoAuthProvider>
         <AdminScreen />
-      </Auth0Provider>
+      </CognitoAuthProvider>
     </StrictMode>
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useCognitoAuth, CognitoAuthUser } from '../../contexts/auth-context'
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
 import { CreateBookmark } from '../CreateBookmark'
@@ -16,15 +16,10 @@ import { UserProvider } from '../../contexts/user-context'
 import { Drawer } from '../ui/drawer'
 import { Button } from '../ui/button'
 
-export interface Auth0User {
-  sub: string
-  email: string
-  given_name: string
-  picture: string
-}
+export type { CognitoAuthUser }
 
 export const AdminScreen = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0<Auth0User>()
+  const { user, isAuthenticated, isLoading } = useCognitoAuth()
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   if (isLoading) return <Loader />

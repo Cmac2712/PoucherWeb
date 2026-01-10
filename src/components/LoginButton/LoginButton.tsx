@@ -1,24 +1,42 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from '../ui/button'
+// LoginButton is deprecated - use LoginForm instead
+// Kept for backwards compatibility but redirects to login form
+
+import { useState } from 'react'
+import { LoginForm } from '../LoginForm'
 
 export const LoginButton = () => {
-  const { loginWithRedirect } = useAuth0();
+  const [showForm, setShowForm] = useState(false)
+
+  if (showForm) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="relative">
+          <button
+            className="absolute -top-2 -right-2 btn btn-circle btn-sm"
+            onClick={() => setShowForm(false)}
+          >
+            ✕
+          </button>
+          <LoginForm />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
-      <Button
-        variant="outline"
-        className="mr-2 normal-case"
-        onClick={() => loginWithRedirect()}>
+      <button
+        className="btn btn-outline mr-2 normal-case"
+        onClick={() => setShowForm(true)}
+      >
         Sign Up
-      </Button>
-      <Button
-        variant="default"
-        className="normal-case"
-        onClick={() => loginWithRedirect()}>
+      </button>
+      <button
+        className="btn btn-primary normal-case"
+        onClick={() => setShowForm(true)}
+      >
         Log In
       </Button>
     </>
   )
-
-};
+}
