@@ -5,12 +5,10 @@ import { Bookmark } from '../Bookmarks'
 import { Loader } from '../Loader/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
-import { usePageStore } from '../../store/page-store'
 import { useCreateBookmark } from '../../api/hooks'
 import { v4 as uuidv4 } from 'uuid'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import './CreateBookmark.css'
 
 const isURL = (str: string) => {
   const pattern = new RegExp(
@@ -57,96 +55,87 @@ export const getScreenshot = async (url: string) => {
 }
 
 export const CreateBookmark = () => {
-  const count = usePageStore((state) => state.count)
-
   const { user } = useCognitoAuth()
   const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({
     title: '',
     url: ''
   })
-  const [open, setOpen] = useState(count && count > 0 ? false : true)
+  const [open, setOpen] = useState(false)
   const [loadingInfo, setLoadingInfo] = useState(false)
 
   const createBookmarkMutation = useCreateBookmark()
 
+  const handleOpen = () => {
+    setOpen(true)
+    navigator.clipboard.readText().then((clip) => {
+      if (!isURL(clip)) return
+      setFormData({
+        ...formData,
+        url: clip
+      })
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setFormData({ title: '', url: '' })
+    setLoadingInfo(true)
+
+    const id = uuidv4()
+    const info = await getBookmarkInfo(formData.url, () => {
+      setLoadingInfo(false)
+      setOpen(false)
+    })
+
+    createBookmarkMutation.mutate({
+      id: id,
+      title: info.title,
+      description: info.description,
+      authorID: user?.sub,
+      url: formData.url,
+      screenshotURL: info.image
+    })
+  }
+
+  if (!open) {
+    return (
+      <Button onClick={handleOpen} className="gap-2">
+        <FontAwesomeIcon icon={faPlus} />
+        <span className="hidden sm:inline">Add Bookmark</span>
+      </Button>
+    )
+  }
+
   return (
-    <>
-      <div
-        className={`flex relative bottom-20 m-auto h-12 z-10 ${
-          open ? 'slide-in' : 'slide-out'
-        }`}
-      >
-        <Button
-          size="icon"
-          variant="outline"
-          className="rounded-r-none"
-          onClick={(e) => {
-            e.preventDefault()
-            setOpen(false)
-          }}
-        >
-          <FontAwesomeIcon icon={faClose} />
-        </Button>
-        <form
-          className="flex"
-          onSubmit={async (e) => {
-            e.preventDefault()
-
-            setFormData({ title: '', url: '' })
-            setLoadingInfo(true)
-
-            const id = uuidv4()
-            const info = await getBookmarkInfo(formData.url, () => {
-              setLoadingInfo(false)
-              setOpen(false)
-            })
-
-            createBookmarkMutation.mutate({
-              id: id,
-              title: info.title,
-              description: info.description,
-              authorID: user?.sub,
-              url: formData.url,
-              screenshotURL: info.image
-            })
-          }}
-        >
-          <Input
-            disabled={createBookmarkMutation.isPending || loadingInfo}
-            type="text"
-            value={formData.url}
-            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-            name="url"
-            placeholder="https://…"
-            className="border-x-0 w-full max-w-xs rounded-none"
-          />
-
-          <Button
-            className="normal-case w-28 flex-grow-0 flex-auto px-4 rounded-l-none"
-            type="submit"
-          >
-            {createBookmarkMutation.isPending || loadingInfo ? <Loader /> : 'Add'}
-          </Button>
-        </form>
-      </div>
-
+    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      <Input
+        disabled={createBookmarkMutation.isPending || loadingInfo}
+        type="text"
+        value={formData.url}
+        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+        name="url"
+        placeholder="https://..."
+        className="w-48 sm:w-64"
+        autoFocus
+      />
       <Button
+        type="submit"
+        disabled={createBookmarkMutation.isPending || loadingInfo || !formData.url}
+      >
+        {createBookmarkMutation.isPending || loadingInfo ? <Loader /> : 'Add'}
+      </Button>
+      <Button
+        type="button"
         size="icon"
-        className="px-4 absolute top-0 bottom-0 m-auto right-4 h-12"
+        variant="ghost"
         onClick={() => {
-          setOpen(!open)
-          navigator.clipboard.readText().then((clip) => {
-            if (!isURL(clip)) return
-
-            setFormData({
-              ...formData,
-              url: clip
-            })
-          })
+          setOpen(false)
+          setFormData({ title: '', url: '' })
         }}
       >
-        <FontAwesomeIcon icon={faPlus} />
+        <FontAwesomeIcon icon={faClose} />
       </Button>
-    </>
+    </form>
   )
 }

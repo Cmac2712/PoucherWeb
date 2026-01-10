@@ -2,14 +2,22 @@ import { useState } from 'react'
 import { UpdateBookmark } from '../UpdateBookmark'
 import { DeleteBookmark } from '../DeleteBookmark'
 import { Bookmark } from './Bookmarks'
-import { Loader } from '../Loader/Loader'
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { useModalStore } from '../../store/modal-store'
 import { Button } from '../ui/button'
-import './Bookmarks.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
   data: Bookmark
+}
+
+const getDomain = (url: string) => {
+  try {
+    return new URL(url).hostname.replace('www.', '')
+  } catch {
+    return url
+  }
 }
 
 export const BookmarkPreview = ({
@@ -17,70 +25,87 @@ export const BookmarkPreview = ({
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
-  const { user, isLoading } = useCognitoAuth()
+  const { user } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
 
-  if (isLoading) return <Loader />
-
   return (
-    <div
+    <article
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className={`bookmark-preview px-4 py-5 lg:py-3 relative w-full max-w-3xl flex flex-wrap md:flex-nowrap`}
+      className="group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 hover:border-forest-300 hover:shadow-lg hover:-translate-y-1"
     >
-      {screenshotURL && (
-        <div className="bookmark-preview-image mr-0 w-24 md:h-24 max-h-24 basis-24 shrink-0 object-cover overflow-hidden text-0 mb-2">
-          <img
-            className="rounded"
-            width="100%"
-            height="100%"
-            src={screenshotURL}
-            alt=""
-          />
+      {/* Image */}
+      <a href={url} target="_blank" rel="noopener noreferrer" className="block">
+        <div className="aspect-video bg-gray-100 overflow-hidden">
+          {screenshotURL ? (
+            <img
+              src={screenshotURL}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
+              <FontAwesomeIcon icon={faGlobe} className="text-4xl" />
+            </div>
+          )}
         </div>
-      )}
+      </a>
 
-      <div className="bookmark-preview-info basis-full md:pl-4">
-        <h2 className="w-full font-bold text-lg mb-3 lg:mb-0">{title}</h2>
-        <p className="text-base w-full mb-3 bookmark-preview-description">
-          {description}
+      {/* Content */}
+      <div className="p-4">
+        {/* Domain */}
+        <p className="text-xs text-foreground-muted mb-2 truncate">
+          {getDomain(url)}
         </p>
-        <a
-          className="inline-block text-xs text-blue-500 mb-2"
-          href={url}
-          target="_blank"
-        >
-          {url}
-        </a>
-      </div>
 
-      <div
-        className={`tasks flex items-start ml-auto lg:opacity-0 basis-auto transition-opacity absolute right-4 top-4 md:static ${
-          hover ? 'lg:opacity-100' : ''
-        }`}
-      >
-        <Button
-          size="sm"
-          variant="secondary"
-          className="text-xs font-bold mr-2"
-          onClick={() => {
-            setModalContent(
-              <UpdateBookmark
-                id={id}
-                title={title}
-                description={description}
-                setMode={setUpdateMode}
-                screenshotURL={screenshotURL}
-              />
-            )
-            openModal()
-          }}
-        >
-          edit
-        </Button>
+        {/* Title */}
+        <h3 className="font-semibold text-foreground mb-2 line-clamp-2 leading-tight">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-forest-600 transition-colors"
+          >
+            {title || 'Untitled'}
+          </a>
+        </h3>
 
-        <DeleteBookmark id={id} authorID={user?.sub} />
+        {/* Description */}
+        {description && (
+          <p className="text-sm text-foreground-muted line-clamp-2 mb-4">
+            {description}
+          </p>
+        )}
+
+        {/* Actions */}
+        <div
+          className={`flex items-center gap-2 pt-3 border-t border-gray-100 transition-opacity duration-200 ${
+            hover ? 'opacity-100' : 'opacity-0 sm:opacity-0'
+          } opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
+        >
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-xs"
+            onClick={() => {
+              setModalContent(
+                <UpdateBookmark
+                  id={id}
+                  title={title}
+                  description={description}
+                  setMode={setUpdateMode}
+                  screenshotURL={screenshotURL}
+                />
+              )
+              openModal()
+            }}
+          >
+            Edit
+          </Button>
+
+          <DeleteBookmark id={id} authorID={user?.sub} />
+        </div>
       </div>
-    </div>
+    </article>
   )
 }

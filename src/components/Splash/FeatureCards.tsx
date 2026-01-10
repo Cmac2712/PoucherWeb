@@ -36,11 +36,11 @@ export const FeatureCards = () => (
     {features.map((feature) => (
       <div
         key={feature.title}
-        className="p-4 rounded-lg bg-background-dark border border-forest-800 hover:border-forest-600 transition-colors"
+        className="p-4 rounded-lg bg-white border border-gray-200 hover:border-forest-300 hover:shadow-md transition-all"
       >
         <FontAwesomeIcon
           icon={feature.icon}
-          className="text-forest-400 text-2xl mb-3"
+          className="text-forest-500 text-2xl mb-3"
         />
         <h3 className="text-foreground font-semibold mb-1">{feature.title}</h3>
         <p className="text-foreground-muted text-sm">{feature.description}</p>

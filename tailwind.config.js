@@ -7,19 +7,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Forest Green - Primary
+        // Forest Green - Accent color
         forest: {
           50: '#f0fdf4',
           100: '#dcfce7',
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#16a34a', // Main forest green
-          600: '#15803d',
-          700: '#166534',
-          800: '#14532d',
-          900: '#052e16',
-          950: '#022c22',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+          950: '#052e16',
         },
         // Gold - Secondary/Accent
         gold: {
@@ -28,30 +28,30 @@ module.exports = {
           200: '#fde68a',
           300: '#fcd34d',
           400: '#fbbf24',
-          500: '#f59e0b', // Main gold
+          500: '#f59e0b',
           600: '#d97706',
           700: '#b45309',
           800: '#92400e',
           900: '#78350f',
           950: '#451a03',
         },
-        // Background colors with natural tones
+        // Light gray backgrounds
         background: {
-          DEFAULT: '#0f1e16', // Dark forest background
-          light: '#f8faf9',
-          dark: '#1a2e23',
-          darker: '#0f1e16',
-          darkest: '#080f0d',
+          DEFAULT: '#ffffff',
+          light: '#ffffff',
+          dark: '#f9fafb',    // gray-50
+          darker: '#f3f4f6',  // gray-100
+          darkest: '#e5e7eb', // gray-200
         },
-        // Border colors
+        // Border colors - light grays
         border: {
-          DEFAULT: '#166534',
-          light: '#86efac',
+          DEFAULT: '#e5e7eb', // gray-200
+          light: '#f3f4f6',   // gray-100
         },
-        // Text colors
+        // Text colors - dark grays
         foreground: {
-          DEFAULT: '#dcfce7',
-          muted: '#86efac',
+          DEFAULT: '#111827', // gray-900
+          muted: '#6b7280',   // gray-500
         },
       },
       borderRadius: {

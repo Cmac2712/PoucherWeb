@@ -44,35 +44,52 @@ export const AdminScreen = () => {
                   </>
                 )}
 
-                <div className="p-4 mt-auto">
+                <div className="p-4 mt-auto border-t border-gray-200">
                   <LogoutButton />
                 </div>
               </div>
             }
           >
-            <div className="pt-24 mb-20 flex flex-col relative min-h-screen">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setDrawerOpen(!drawerOpen)}
-                className="fixed z-50 left-5 top-5 lg:hidden"
-              >
-                <FontAwesomeIcon icon={faBars} />
-              </Button>
+            <div className="flex flex-col min-h-screen">
+              {/* Header */}
+              <header className="sticky top-0 z-20 bg-white border-b border-gray-200 shadow-sm">
+                <div className="flex items-center gap-4 px-4 lg:px-6 py-4">
+                  {/* Mobile menu button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDrawerOpen(!drawerOpen)}
+                    className="lg:hidden shrink-0"
+                  >
+                    <FontAwesomeIcon icon={faBars} />
+                  </Button>
 
-              <header className="fixed flex justify-end z-20 top-0 right-0 left-0 lg:left-80 p-4 px-4 bg-background-dark border-b border-forest-800">
-                <Search />
+                  {/* Logo */}
+                  <span className="hidden sm:block text-lg font-bold text-forest-600 shrink-0">
+                    Poucher.io
+                  </span>
+
+                  {/* Search - grows to fill space */}
+                  <div className="flex-1 max-w-xl">
+                    <Search />
+                  </div>
+
+                  {/* Create bookmark button */}
+                  <div className="shrink-0">
+                    <CreateBookmark />
+                  </div>
+                </div>
               </header>
 
-              <Bookmarks />
+              {/* Main content */}
+              <main className="flex-1 p-4 lg:p-6">
+                <Bookmarks />
+              </main>
 
-              <footer className="fixed flex flex-row justify-between bottom-0 left-0 lg:left-80 right-0 bg-background-darker p-4 w-100 border-t-2 border-forest-800">
-                <div className="relative z-20 h-12">
+              {/* Footer */}
+              <footer className="sticky bottom-0 z-20 bg-white border-t border-gray-200 py-4">
+                <div className="flex justify-center">
                   <Pagination />
-                </div>
-                <div className="absolute right-20 z-10"></div>
-                <div className="absolute right-4">
-                  <CreateBookmark />
                 </div>
               </footer>
             </div>
