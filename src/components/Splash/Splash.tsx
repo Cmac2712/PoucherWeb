@@ -1,25 +1,34 @@
 import { LoginForm } from '../LoginForm'
+import { FeatureCards } from './FeatureCards'
 
 const Splash = () => (
-  <div className="flex flex-col h-screen p-4 min-w-[320px]">
-    <div className="intro md:ml-11 mt-16 relative z-10">
-      <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white text-gradient-brand ">
-        Poucher.io
-      </h1>
-      <p className="text-gray-100 mt-4 mb-8">All your stuff in one place.</p>
+  <div className="min-h-screen flex flex-col lg:flex-row">
+    {/* Left: Hero + Features */}
+    <div className="flex-1 flex flex-col justify-center p-8 lg:p-16 relative overflow-hidden bg-gradient-to-br from-forest-950 to-background">
+      {/* Dot pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `radial-gradient(circle, #4ade80 1px, transparent 1px)`,
+          backgroundSize: '24px 24px'
+        }}
+      />
+      <div className="relative z-10">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white text-gradient-brand">
+          Poucher.io
+        </h1>
+        <p className="text-foreground-muted text-lg mt-4 max-w-md">
+          All your stuff in one place. Save, organize, and find your bookmarks with ease.
+        </p>
 
+        <FeatureCards />
+      </div>
+    </div>
+
+    {/* Right: Login Form */}
+    <div className="flex-1 flex items-center justify-center p-8 bg-background-darker lg:border-l lg:border-forest-800">
       <LoginForm />
     </div>
-    <svg
-      className="absolute left-0 right-0 bottom-0 fill-base-300 col-start-1 row-start-1 h-auto w-full"
-      width="1600"
-      height="595"
-      viewBox="0 0 1600 595"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M0 338L53.3 349.2C106.7 360.3 213.3 382.7 320 393.8C426.7 405 533.3 405 640 359.3C746.7 313.7 853.3 222.3 960 189.2C1066.7 156 1173.3 181 1280 159.2C1386.7 137.3 1493.3 68.7 1546.7 34.3L1600 0V595H1546.7C1493.3 595 1386.7 595 1280 595C1173.3 595 1066.7 595 960 595C853.3 595 746.7 595 640 595C533.3 595 426.7 595 320 595C213.3 595 106.7 595 53.3 595H0V338Z"></path>
-    </svg>
   </div>
 )
 

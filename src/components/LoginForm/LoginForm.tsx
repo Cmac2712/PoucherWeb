@@ -1,5 +1,17 @@
 import { useState } from 'react'
 import { useCognitoAuth } from '../../contexts/auth-context'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faEnvelope,
+  faLock,
+  faUser,
+  faEye,
+  faEyeSlash,
+  faKey,
+  faArrowLeft
+} from '@fortawesome/free-solid-svg-icons'
 
 type AuthMode = 'login' | 'signup' | 'confirm'
 
@@ -12,6 +24,7 @@ export const LoginForm = () => {
   const [confirmCode, setConfirmCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,167 +71,219 @@ export const LoginForm = () => {
     }
   }
 
+  const switchMode = (newMode: AuthMode) => {
+    setMode(newMode)
+    setError(null)
+  }
+
   if (mode === 'confirm') {
     return (
-      <div className="card w-96 bg-base-200 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title">Confirm Your Email</h2>
-          <p className="text-sm opacity-70">
-            We sent a confirmation code to {email}
-          </p>
+      <div className="w-full max-w-sm">
+        <div className="bg-background-dark border border-forest-800 rounded-xl p-8 shadow-2xl">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-forest-900 mb-4">
+              <FontAwesomeIcon icon={faEnvelope} className="text-forest-400 text-2xl" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">Check Your Email</h2>
+            <p className="text-foreground-muted text-sm mt-2">
+              We sent a confirmation code to<br />
+              <span className="text-forest-400">{email}</span>
+            </p>
+          </div>
 
           {error && (
-            <div className="alert alert-error text-sm">
-              <span>{error}</span>
+            <div className="bg-red-950 border border-red-800 text-red-200 rounded-lg px-4 py-3 mb-4 text-sm">
+              {error}
             </div>
           )}
 
-          <form onSubmit={handleConfirm}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Confirmation Code</span>
+          <form onSubmit={handleConfirm} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground-muted mb-2">
+                Confirmation Code
               </label>
-              <input
-                type="text"
-                placeholder="Enter code"
-                className="input input-bordered"
-                value={confirmCode}
-                onChange={(e) => setConfirmCode(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <FontAwesomeIcon
+                  icon={faKey}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted"
+                />
+                <Input
+                  type="text"
+                  placeholder="Enter 6-digit code"
+                  value={confirmCode}
+                  onChange={(e) => setConfirmCode(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-control mt-6">
-              <button
-                type="submit"
-                className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Confirming...' : 'Confirm'}
-              </button>
-            </div>
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Verifying...' : 'Verify Email'}
+            </Button>
           </form>
 
-          <div className="text-center mt-4">
-            <button
-              className="link link-hover text-sm"
-              onClick={() => setMode('login')}
-            >
-              Back to login
-            </button>
-          </div>
+          <button
+            className="flex items-center justify-center gap-2 w-full mt-6 text-sm text-foreground-muted hover:text-foreground transition-colors"
+            onClick={() => switchMode('login')}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+            Back to login
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="card w-96 bg-base-200 shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title">
-          {mode === 'login' ? 'Welcome Back' : 'Create Account'}
-        </h2>
+    <div className="w-full max-w-sm">
+      <div className="bg-background-dark border border-forest-800 rounded-xl p-8 shadow-2xl">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-foreground">
+            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+          </h2>
+          <p className="text-foreground-muted text-sm mt-1">
+            {mode === 'login'
+              ? 'Sign in to access your bookmarks'
+              : 'Start organizing your bookmarks today'}
+          </p>
+        </div>
 
         {error && (
-          <div className="alert alert-error text-sm">
-            <span>{error}</span>
+          <div className="bg-red-950 border border-red-800 text-red-200 rounded-lg px-4 py-3 mb-4 text-sm">
+            {error}
           </div>
         )}
 
-        <form onSubmit={mode === 'login' ? handleLogin : handleSignUp}>
+        <form onSubmit={mode === 'login' ? handleLogin : handleSignUp} className="space-y-4">
           {mode === 'signup' && (
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Name</span>
+            <div>
+              <label className="block text-sm font-medium text-foreground-muted mb-2">
+                Name
               </label>
-              <input
-                type="text"
-                placeholder="Your name"
-                className="input input-bordered"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted"
+                />
+                <Input
+                  type="text"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
             </div>
           )}
 
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Email</span>
+          <div>
+            <label className="block text-sm font-medium text-foreground-muted mb-2">
+              Email
             </label>
-            <input
-              type="email"
-              placeholder="email@example.com"
-              className="input input-bordered"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted"
+              />
+              <Input
+                type="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+                required
+              />
+            </div>
           </div>
 
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Password</span>
+          <div>
+            <label className="block text-sm font-medium text-foreground-muted mb-2">
+              Password
             </label>
-            <input
-              type="password"
-              placeholder="********"
-              className="input input-bordered"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-            />
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faLock}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted"
+              />
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10 pr-10"
+                required
+                minLength={8}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors"
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
+            {mode === 'signup' && (
+              <p className="text-xs text-foreground-muted mt-1">
+                Minimum 8 characters
+              </p>
+            )}
           </div>
 
-          <div className="form-control mt-6">
-            <button
-              type="submit"
-              className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading}
-            >
-              {isLoading
-                ? mode === 'login'
-                  ? 'Logging in...'
-                  : 'Signing up...'
-                : mode === 'login'
-                  ? 'Log In'
-                  : 'Sign Up'}
-            </button>
-          </div>
+          <Button
+            type="submit"
+            className="w-full"
+            size="lg"
+            disabled={isLoading}
+          >
+            {isLoading
+              ? mode === 'login'
+                ? 'Signing in...'
+                : 'Creating account...'
+              : mode === 'login'
+                ? 'Sign In'
+                : 'Create Account'}
+          </Button>
         </form>
 
-        <div className="divider">OR</div>
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-forest-800"></div>
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background-dark px-2 text-foreground-muted">or</span>
+          </div>
+        </div>
 
-        <div className="text-center">
+        <p className="text-center text-sm text-foreground-muted">
           {mode === 'login' ? (
-            <p className="text-sm">
+            <>
               Don't have an account?{' '}
               <button
-                className="link link-primary"
-                onClick={() => {
-                  setMode('signup')
-                  setError(null)
-                }}
+                className="text-forest-400 hover:text-forest-300 font-medium transition-colors"
+                onClick={() => switchMode('signup')}
               >
                 Sign up
               </button>
-            </p>
+            </>
           ) : (
-            <p className="text-sm">
+            <>
               Already have an account?{' '}
               <button
-                className="link link-primary"
-                onClick={() => {
-                  setMode('login')
-                  setError(null)
-                }}
+                className="text-forest-400 hover:text-forest-300 font-medium transition-colors"
+                onClick={() => switchMode('login')}
               >
-                Log in
+                Sign in
               </button>
-            </p>
+            </>
           )}
-        </div>
+        </p>
       </div>
     </div>
   )
