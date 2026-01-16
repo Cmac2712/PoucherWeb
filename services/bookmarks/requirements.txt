@@ -1,0 +1,2 @@
+# Bookmarks service dependencies
+# Inherits from shared/requirements.txt

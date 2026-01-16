@@ -1,0 +1,2 @@
+# Users service dependencies
+# Inherits from shared/requirements.txt

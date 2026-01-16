@@ -1,0 +1,7 @@
+# Screenshot service dependencies
+boto3>=1.28.0,<2.0.0
+
+# For Playwright-based screenshots (requires Lambda layer):
+# playwright>=1.40.0
+
+# Inherits from shared/requirements.txt
