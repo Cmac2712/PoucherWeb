@@ -22,11 +22,11 @@ export const Drawer: React.FC<DrawerProps> = ({ children, sidebar, open = false,
   }
 
   return (
-    <div className="relative flex h-screen w-full overflow-hidden bg-gray-50">
+    <div className="relative flex h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-950">
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-80 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static",
+          "fixed inset-y-0 left-0 z-40 w-80 transform bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -42,7 +42,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children, sidebar, open = false,
       )}
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto bg-gray-50">
+      <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-950">
         {children}
       </main>
     </div>

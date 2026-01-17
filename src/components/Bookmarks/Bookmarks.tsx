@@ -59,9 +59,9 @@ export const Bookmarks = () => {
     <div>
       {/* Search results indicator */}
       {search && (
-        <div className="flex items-center gap-2 mb-6 text-foreground-muted">
+        <div className="flex items-center gap-2 mb-6 text-foreground-muted dark:text-gray-400">
           <p>
-            Showing results for <span className="text-foreground font-medium">"{search}"</span>
+            Showing results for <span className="text-foreground dark:text-gray-100 font-medium">"{search}"</span>
           </p>
           <button
             onClick={() => setSearch('')}
@@ -82,8 +82,8 @@ export const Bookmarks = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <p className="text-foreground-muted text-lg">No bookmarks yet</p>
-          <p className="text-foreground-muted text-sm mt-2">
+          <p className="text-foreground-muted dark:text-gray-400 text-lg">No bookmarks yet</p>
+          <p className="text-foreground-muted dark:text-gray-400 text-sm mt-2">
             Click "Add Bookmark" to save your first link
           </p>
         </div>

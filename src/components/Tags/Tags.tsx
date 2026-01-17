@@ -35,7 +35,7 @@ const Tags = ({ callback }: Props) => {
   return (
     <div className="flex-1 overflow-y-auto" data-testid="tags-container">
       {/* Section header */}
-      <h3 className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-foreground-muted">
+      <h3 className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-foreground-muted dark:text-gray-400">
         Categories
       </h3>
 
@@ -46,8 +46,8 @@ const Tags = ({ callback }: Props) => {
           <button
             className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
               category === 'All'
-                ? 'bg-forest-50 text-forest-700'
-                : 'text-foreground-muted hover:bg-gray-100 hover:text-foreground'
+                ? 'bg-forest-50 dark:bg-forest-900/50 text-forest-700 dark:text-forest-300'
+                : 'text-foreground-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground dark:hover:text-gray-100'
             }`}
             onClick={() => {
               setCategory('All')
@@ -57,12 +57,12 @@ const Tags = ({ callback }: Props) => {
             <span className="flex items-center gap-2">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  category === 'All' ? 'bg-forest-500' : 'bg-gray-300'
+                  category === 'All' ? 'bg-forest-500' : 'bg-gray-300 dark:bg-gray-600'
                 }`}
               />
               All
             </span>
-            <span className="text-xs text-foreground-muted">{count}</span>
+            <span className="text-xs text-foreground-muted dark:text-gray-400">{count}</span>
           </button>
         </li>
 
@@ -76,8 +76,8 @@ const Tags = ({ callback }: Props) => {
               <button
                 className={`w-full flex items-center justify-between px-3 py-2 pr-10 rounded-md text-sm transition-colors ${
                   isActive
-                    ? 'bg-forest-50 text-forest-700'
-                    : 'text-foreground-muted hover:bg-gray-100 hover:text-foreground'
+                    ? 'bg-forest-50 dark:bg-forest-900/50 text-forest-700 dark:text-forest-300'
+                    : 'text-foreground-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground dark:hover:text-gray-100'
                 }`}
                 onClick={() => {
                   setCategory(title)
@@ -87,15 +87,15 @@ const Tags = ({ callback }: Props) => {
                 <span className="flex items-center gap-2">
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      isActive ? 'bg-forest-500' : 'bg-gray-300'
+                      isActive ? 'bg-forest-500' : 'bg-gray-300 dark:bg-gray-600'
                     }`}
                   />
                   <span className="truncate">{title}</span>
                 </span>
-                <span className="text-xs text-foreground-muted">{bookmarksCount}</span>
+                <span className="text-xs text-foreground-muted dark:text-gray-400">{bookmarksCount}</span>
               </button>
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-foreground-muted hover:text-red-500 p-1"
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-foreground-muted dark:text-gray-400 hover:text-red-500 p-1"
                 onClick={() => {
                   setModalContent(<DeleteTag ID={ID} tagName={title} />)
                   openModal()
