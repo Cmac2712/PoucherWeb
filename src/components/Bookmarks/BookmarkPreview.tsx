@@ -32,11 +32,11 @@ export const BookmarkPreview = ({
     <article
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 hover:border-forest-300 hover:shadow-lg hover:-translate-y-1"
+      className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200 hover:border-forest-300 dark:hover:border-forest-600 hover:shadow-lg hover:-translate-y-1"
     >
       {/* Image */}
       <a href={url} target="_blank" rel="noopener noreferrer" className="block">
-        <div className="aspect-video bg-gray-100 overflow-hidden">
+        <div className="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
           {screenshotURL ? (
             <img
               src={screenshotURL}
@@ -44,7 +44,7 @@ export const BookmarkPreview = ({
               className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
               <FontAwesomeIcon icon={faGlobe} className="text-4xl" />
             </div>
           )}
@@ -54,17 +54,17 @@ export const BookmarkPreview = ({
       {/* Content */}
       <div className="p-4">
         {/* Domain */}
-        <p className="text-xs text-foreground-muted mb-2 truncate">
+        <p className="text-xs text-foreground-muted dark:text-gray-400 mb-2 truncate">
           {getDomain(url)}
         </p>
 
         {/* Title */}
-        <h3 className="font-semibold text-foreground mb-2 line-clamp-2 leading-tight">
+        <h3 className="font-semibold text-foreground dark:text-gray-100 mb-2 line-clamp-2 leading-tight">
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-forest-600 transition-colors"
+            className="hover:text-forest-600 dark:hover:text-forest-400 transition-colors"
           >
             {title || 'Untitled'}
           </a>
@@ -72,14 +72,14 @@ export const BookmarkPreview = ({
 
         {/* Description */}
         {description && (
-          <p className="text-sm text-foreground-muted line-clamp-2 mb-4">
+          <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-4">
             {description}
           </p>
         )}
 
         {/* Actions */}
         <div
-          className={`flex items-center gap-2 pt-3 border-t border-gray-100 transition-opacity duration-200 ${
+          className={`flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${
             hover ? 'opacity-100' : 'opacity-0 sm:opacity-0'
           } opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
         >

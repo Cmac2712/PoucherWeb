@@ -6,7 +6,7 @@ interface Props {
 
 export const Profile = ({ user: { name, email, picture } }: Props) => {
   return (
-    <div className="p-6 border-b border-gray-200">
+    <div className="p-6 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center gap-4">
         {/* Avatar */}
         <div className="shrink-0">
@@ -20,7 +20,7 @@ export const Profile = ({ user: { name, email, picture } }: Props) => {
             />
           ) : (
             <div
-              className="w-12 h-12 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 text-lg font-bold"
+              className="w-12 h-12 rounded-full bg-forest-100 dark:bg-forest-900 flex items-center justify-center text-forest-700 dark:text-forest-300 text-lg font-bold"
               data-testid="profile-picture"
             >
               {name?.charAt(0).toUpperCase() || 'U'}
@@ -30,10 +30,10 @@ export const Profile = ({ user: { name, email, picture } }: Props) => {
 
         {/* Info */}
         <div className="min-w-0">
-          <h2 data-testid="given_name" className="font-semibold text-foreground truncate">
+          <h2 data-testid="given_name" className="font-semibold text-foreground dark:text-gray-100 truncate">
             {name}
           </h2>
-          <p data-testid="email" className="text-sm text-foreground-muted truncate">
+          <p data-testid="email" className="text-sm text-foreground-muted dark:text-gray-400 truncate">
             {email}
           </p>
         </div>
