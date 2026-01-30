@@ -76,10 +76,7 @@ terraform apply
 Create a deployment package for the Lambda functions:
 
 ```bash
-cd services
-pip install -r requirements.txt -t package/
-cp -r shared auth bookmarks tags users screenshot package/
-cd package && zip -r ../lambda.zip .
+./services/scripts/build_lambda.sh
 ```
 
 ### 3. Deploy Infrastructure

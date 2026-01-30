@@ -28,4 +28,8 @@ dist-ssr
 .netlify
 .serverless/
 
-services/packages
+services/package
+
+# Ignore large binaries
+*.zip
+**/.terraform/

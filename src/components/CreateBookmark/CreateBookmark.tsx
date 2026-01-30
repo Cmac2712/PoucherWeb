@@ -23,20 +23,6 @@ const isURL = (str: string) => {
   return !!pattern.test(str)
 }
 
-export const getBookmarkInfo = async (url: string, cb?: () => void) => {
-  const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
-  const response = await axios.post(
-    `${endpoint}getBookmarkInfo?url=${encodeURIComponent(url)}`,
-    {
-      url: encodeURIComponent(url)
-    }
-  )
-
-  if (typeof cb !== 'undefined') cb()
-
-  return response.data.page
-}
-
 export const getScreenshot = async (url: string) => {
   try {
     const endpoint = import.meta.env.VITE_SERVER_ENDPOINT
@@ -83,18 +69,12 @@ export const CreateBookmark = () => {
     setLoadingInfo(true)
 
     const id = uuidv4()
-    const info = await getBookmarkInfo(formData.url, () => {
-      setLoadingInfo(false)
-      setOpen(false)
-    })
 
     createBookmarkMutation.mutate({
       id: id,
-      title: info.title,
-      description: info.description,
+      title: formData.url,
       authorID: user?.sub,
       url: formData.url,
-      screenshotURL: info.image
     })
   }
 

@@ -23,8 +23,14 @@ from shared.utils.response import options_response
 
 def handler(event, context):
     """Main Lambda handler - routes to appropriate function."""
-    http_method = event.get("httpMethod", "")
-    path = event.get("path", "")
+    if "httpMethod" in event:
+        http_method = event.get("httpMethod", "")
+        path = event.get("path", "")
+    else:
+        request_context = event.get("requestContext", {})
+        http_info = request_context.get("http", {})
+        http_method = http_info.get("method", "")
+        path = event.get("rawPath", "")
 
     # Handle CORS preflight
     if http_method == "OPTIONS":
