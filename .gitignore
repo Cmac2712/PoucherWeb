@@ -27,3 +27,9 @@ dist-ssr
 .env
 .netlify
 .serverless/
+
+services/package
+
+# Ignore large binaries
+*.zip
+**/.terraform/

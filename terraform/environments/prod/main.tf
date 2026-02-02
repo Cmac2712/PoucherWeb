@@ -1,6 +1,11 @@
 # Production Environment
 # Ties together all modules to deploy the complete infrastructure
 
+# Data sources for secrets
+data "aws_secretsmanager_secret_version" "db_password" {
+  secret_id = module.rds.db_password_secret_arn
+}
+
 terraform {
   required_version = ">= 1.0"
 
@@ -84,7 +89,7 @@ module "lambda" {
   project_name            = var.project_name
   vpc_id                  = module.vpc.vpc_id
   subnet_ids              = module.vpc.private_subnet_ids
-  database_url            = "postgresql://${module.rds.db_username}:PASSWORD@${module.rds.db_endpoint}/${module.rds.db_name}"
+  database_url            = "postgresql://${module.rds.db_username}:${jsondecode(data.aws_secretsmanager_secret_version.db_password.secret_string).password}@${module.rds.db_endpoint}/${module.rds.db_name}?sslmode=require"
   db_secret_arn           = module.rds.db_password_secret_arn
   cognito_user_pool_id    = module.cognito.user_pool_id
   cognito_client_id       = module.cognito.client_id
@@ -99,7 +104,7 @@ module "api_gateway" {
   source = "../../modules/api-gateway"
 
   project_name          = var.project_name
-  stage_name            = "prod"
+  stage_name            = "$default"
   lambda_invoke_arns    = module.lambda.function_invoke_arns
   lambda_function_names = module.lambda.function_names
   cors_allow_origins    = var.cors_allowed_origins

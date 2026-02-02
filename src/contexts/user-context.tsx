@@ -41,6 +41,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     name: user?.name
   })
 
+  console.log('data: ', data)
+
   const value: UserContextProps = {
     loading: isLoading,
     error: error as Error | null,

@@ -18,15 +18,27 @@ from shared.utils.response import options_response
 
 def handler(event, context):
     """Main Lambda handler - routes to appropriate function."""
-    http_method = event.get("httpMethod", "")
-    path = event.get("path", "")
+    # Support both API Gateway REST API (v1) and HTTP API (v2) formats
+    if "httpMethod" in event:
+        # v1 format (REST API)
+        http_method = event.get("httpMethod", "")
+        path = event.get("path", "")
+    else:
+        # v2 format (HTTP API)
+        request_context = event.get("requestContext", {})
+        http_info = request_context.get("http", {})
+        http_method = http_info.get("method", "")
+        path = event.get("rawPath", "")
+    
+    # Debug logging
+    print(f"DEBUG: method={http_method}, path={path}")
 
     # Handle CORS preflight
     if http_method == "OPTIONS":
         return options_response()
 
-    # Route requests
-    if http_method == "POST" and path == "/api/auth/init":
+    # Route requests (handle both with and without stage prefix)
+    if http_method == "POST" and path.endswith("/api/auth/init"):
         return init(event, context)
 
     return error("Not found", status=404)
@@ -100,4 +112,7 @@ def init(event, context):
             })
 
     except Exception as e:
+        import traceback
+        print(f"ERROR: {str(e)}")
+        print(traceback.format_exc())
         return error(f"Database error: {str(e)}")

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import Column, String, Text, ForeignKey, DateTime, UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -45,6 +45,10 @@ class Bookmark(Base):
     url = Column(Text, nullable=False)
     video_url = Column(Text, nullable=True)
     screenshot_url = Column(Text, nullable=True)
+    metadata = Column(JSONB, nullable=True)
+    metadata_status = Column(String(32), nullable=False, default="ready")
+    metadata_error = Column(Text, nullable=True)
+    metadata_updated_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
@@ -61,6 +65,12 @@ class Bookmark(Base):
             "url": self.url,
             "videoURL": self.video_url,
             "screenshotURL": self.screenshot_url,
+            "metadata": self.metadata or {},
+            "metadataStatus": self.metadata_status,
+            "metadataError": self.metadata_error,
+            "metadataUpdatedAt": self.metadata_updated_at.isoformat()
+            if self.metadata_updated_at
+            else None,
             "createdAt": self.created_at.isoformat() if self.created_at else None,
         }
         if include_tags:

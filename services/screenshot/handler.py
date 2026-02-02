@@ -46,8 +46,13 @@ def handler(event, context):
     if "Records" in event:
         return handle_sqs_event(event, context)
 
-    # HTTP event
-    http_method = event.get("httpMethod", "")
+    # HTTP event (support API Gateway v1 and v2)
+    if "httpMethod" in event:
+        http_method = event.get("httpMethod", "")
+    else:
+        request_context = event.get("requestContext", {})
+        http_info = request_context.get("http", {})
+        http_method = http_info.get("method", "")
 
     if http_method == "OPTIONS":
         return options_response()

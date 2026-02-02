@@ -3,6 +3,11 @@
 
 data "aws_region" "current" {}
 
+# Normalize stage name for tag values (API Gateway requires tag chars subset)
+locals {
+  stage_tag = var.stage_name == "$default" ? "default" : var.stage_name
+}
+
 # HTTP API
 resource "aws_apigatewayv2_api" "main" {
   name          = "${var.project_name}-api"
@@ -51,7 +56,7 @@ resource "aws_apigatewayv2_stage" "main" {
   }
 
   tags = {
-    Name = "${var.project_name}-api-${var.stage_name}"
+    Name = "${var.project_name}-api-${local.stage_tag}"
   }
 }
 

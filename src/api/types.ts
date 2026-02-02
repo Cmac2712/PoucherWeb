@@ -12,6 +12,10 @@ export interface Bookmark {
   videoURL?: string
   authorID?: string
   screenshotURL?: string
+  metadata?: Record<string, unknown>
+  metadataStatus?: 'pending' | 'ready' | 'failed'
+  metadataError?: string | null
+  metadataUpdatedAt?: string | null
   createdAt?: string
 }
 
