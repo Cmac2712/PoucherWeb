@@ -43,7 +43,11 @@ export function useSearchBookmarks(params: BookmarkSearchParams) {
         limit: String(params.limit || 15),
         ...(params.ids && { ids: params.ids })
       }),
-    enabled: !!params.authorID
+    enabled: !!params.authorID,
+    refetchInterval: (data) =>
+      data?.bookmarks?.some((bookmark) => bookmark.metadataStatus === 'pending')
+        ? 5000
+        : false
   })
 }
 

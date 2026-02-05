@@ -43,3 +43,18 @@ output "screenshot_queue_arn" {
   description = "ARN of the screenshot SQS queue"
   value       = aws_sqs_queue.screenshot.arn
 }
+
+output "bookmark_metadata_queue_url" {
+  description = "URL of the bookmark metadata SQS queue"
+  value       = aws_sqs_queue.bookmark_metadata.url
+}
+
+output "bookmark_metadata_queue_arn" {
+  description = "ARN of the bookmark metadata SQS queue"
+  value       = aws_sqs_queue.bookmark_metadata.arn
+}
+
+output "bookmark_metadata_dlq_arn" {
+  description = "ARN of the bookmark metadata DLQ"
+  value       = aws_sqs_queue.bookmark_metadata_dlq.arn
+}

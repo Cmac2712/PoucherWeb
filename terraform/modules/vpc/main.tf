@@ -5,6 +5,8 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_region" "current" {}
+
 locals {
   azs = slice(data.aws_availability_zones.available.names, 0, var.az_count)
 }
@@ -124,4 +126,73 @@ resource "aws_route_table_association" "private" {
   count          = var.az_count
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
+}
+
+# Security group for VPC interface endpoints
+resource "aws_security_group" "vpc_endpoints" {
+  count       = var.enable_ssm_endpoints ? 1 : 0
+  name        = "${var.project_name}-vpc-endpoints-sg"
+  description = "Security group for VPC interface endpoints"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-vpc-endpoints-sg"
+  }
+}
+
+# VPC Interface Endpoints for SSM
+resource "aws_vpc_endpoint" "ssm" {
+  count               = var.enable_ssm_endpoints ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ssm"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+
+  tags = {
+    Name = "${var.project_name}-ssm-endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  count               = var.enable_ssm_endpoints ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+
+  tags = {
+    Name = "${var.project_name}-ssmmessages-endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  count               = var.enable_ssm_endpoints ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+
+  tags = {
+    Name = "${var.project_name}-ec2messages-endpoint"
+  }
 }

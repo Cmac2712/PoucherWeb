@@ -21,7 +21,7 @@ const getDomain = (url: string) => {
 }
 
 export const BookmarkPreview = ({
-  data: { id, url, title, description, screenshotURL }
+  data: { id, url, title, description, screenshotURL, metadataStatus }
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
@@ -54,9 +54,21 @@ export const BookmarkPreview = ({
       {/* Content */}
       <div className="p-4">
         {/* Domain */}
-        <p className="text-xs text-foreground-muted dark:text-gray-400 mb-2 truncate">
-          {getDomain(url)}
-        </p>
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <p className="text-xs text-foreground-muted dark:text-gray-400 truncate">
+            {getDomain(url)}
+          </p>
+          {metadataStatus === 'pending' && (
+            <span className="text-[10px] uppercase tracking-wide text-amber-600 dark:text-amber-400">
+              Fetching metadata
+            </span>
+          )}
+          {metadataStatus === 'failed' && (
+            <span className="text-[10px] uppercase tracking-wide text-red-600 dark:text-red-400">
+              Metadata failed
+            </span>
+          )}
+        </div>
 
         {/* Title */}
         <h3 className="font-semibold text-foreground dark:text-gray-100 mb-2 line-clamp-2 leading-tight">

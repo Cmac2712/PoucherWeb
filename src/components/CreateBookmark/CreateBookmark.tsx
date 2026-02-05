@@ -2,7 +2,6 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { Bookmark } from '../Bookmarks'
-import { Loader } from '../Loader/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose } from '@fortawesome/free-solid-svg-icons'
 import { useCreateBookmark } from '../../api/hooks'
@@ -47,7 +46,6 @@ export const CreateBookmark = () => {
     url: ''
   })
   const [open, setOpen] = useState(false)
-  const [loadingInfo, setLoadingInfo] = useState(false)
 
   const createBookmarkMutation = useCreateBookmark()
 
@@ -66,7 +64,6 @@ export const CreateBookmark = () => {
     e.preventDefault()
 
     setFormData({ title: '', url: '' })
-    setLoadingInfo(true)
 
     const id = uuidv4()
 
@@ -76,6 +73,7 @@ export const CreateBookmark = () => {
       authorID: user?.sub,
       url: formData.url,
     })
+    setOpen(false)
   }
 
   if (!open) {
@@ -90,7 +88,7 @@ export const CreateBookmark = () => {
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2">
       <Input
-        disabled={createBookmarkMutation.isPending || loadingInfo}
+        disabled={createBookmarkMutation.isPending}
         type="text"
         value={formData.url}
         onChange={(e) => setFormData({ ...formData, url: e.target.value })}
@@ -101,9 +99,9 @@ export const CreateBookmark = () => {
       />
       <Button
         type="submit"
-        disabled={createBookmarkMutation.isPending || loadingInfo || !formData.url}
+        disabled={createBookmarkMutation.isPending || !formData.url}
       >
-        {createBookmarkMutation.isPending || loadingInfo ? <Loader /> : 'Add'}
+        {createBookmarkMutation.isPending ? 'Adding...' : 'Add'}
       </Button>
       <Button
         type="button"

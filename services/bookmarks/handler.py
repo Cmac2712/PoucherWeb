@@ -11,6 +11,7 @@ import json
 import re
 import sys
 import os
+import boto3
 from uuid import UUID
 
 # Add shared module to path for Lambda
@@ -20,6 +21,10 @@ from shared.db import get_session, User, Bookmark, Tag, BookmarkTag
 from shared.utils import validate_token, success, error, bad_request, unauthorized, not_found
 from shared.utils.auth import AuthError
 from shared.utils.response import options_response
+
+
+SQS_METADATA_QUEUE_URL = os.environ.get("METADATA_QUEUE_URL")
+_sqs_client = boto3.client("sqs") if SQS_METADATA_QUEUE_URL else None
 
 
 def handler(event, context):
@@ -169,10 +174,15 @@ def create(event, context):
     title = body.get("title", "").strip()
     url = body.get("url", "").strip()
 
-    if not title or not url:
-        return bad_request("title and url are required")
+    if not url:
+        return bad_request("url is required")
+
+    if not title:
+        title = url
 
     try:
+        bookmark_id = None
+        bookmark_url = None
         with get_session() as db:
             user = _get_user_by_cognito_sub(db, token_user["sub"])
             if not user:
@@ -184,9 +194,12 @@ def create(event, context):
                 url=url,
                 description=body.get("description", ""),
                 video_url=body.get("videoURL"),
+                metadata_status="pending",
             )
             db.add(bookmark)
             db.flush()  # Get the bookmark ID
+            bookmark_id = str(bookmark.id)
+            bookmark_url = bookmark.url
 
             # Associate with tags if provided
             tag_ids = body.get("tagIds", [])
@@ -206,7 +219,21 @@ def create(event, context):
                     except ValueError:
                         pass  # Invalid UUID, skip
 
-            return success({"bookmark": bookmark.to_dict()}, status=201)
+            response = success({"bookmark": bookmark.to_dict()}, status=201)
+
+        if _sqs_client and bookmark_id and bookmark_url:
+            try:
+                _sqs_client.send_message(
+                    QueueUrl=SQS_METADATA_QUEUE_URL,
+                    MessageBody=json.dumps({
+                        "bookmarkId": bookmark_id,
+                        "url": bookmark_url,
+                    })
+                )
+            except Exception:
+                pass
+
+        return response
 
     except Exception as e:
         return error(f"Database error: {str(e)}")

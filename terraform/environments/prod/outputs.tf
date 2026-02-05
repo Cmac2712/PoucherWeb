@@ -28,6 +28,11 @@ output "db_endpoint" {
   value       = module.rds.db_endpoint
 }
 
+output "rds_security_group_id" {
+  description = "RDS security group ID"
+  value       = module.rds.security_group_id
+}
+
 output "db_secret_arn" {
   description = "ARN of the database credentials secret"
   value       = module.rds.db_password_secret_arn
@@ -46,6 +51,21 @@ output "screenshots_bucket_url" {
 output "vpc_id" {
   description = "VPC ID"
   value       = module.vpc.vpc_id
+}
+
+output "public_subnet_ids" {
+  description = "Public subnet IDs"
+  value       = module.vpc.public_subnet_ids
+}
+
+output "private_subnet_ids" {
+  description = "Private subnet IDs"
+  value       = module.vpc.private_subnet_ids
+}
+
+output "ssm_bastion_instance_id" {
+  description = "SSM bastion instance ID"
+  value       = module.ssm_bastion.instance_id
 }
 
 output "lambda_functions" {

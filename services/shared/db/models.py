@@ -45,7 +45,7 @@ class Bookmark(Base):
     url = Column(Text, nullable=False)
     video_url = Column(Text, nullable=True)
     screenshot_url = Column(Text, nullable=True)
-    metadata = Column(JSONB, nullable=True)
+    metadata_json = Column("metadata", JSONB, nullable=True)
     metadata_status = Column(String(32), nullable=False, default="ready")
     metadata_error = Column(Text, nullable=True)
     metadata_updated_at = Column(DateTime(timezone=True), nullable=True)
@@ -65,7 +65,7 @@ class Bookmark(Base):
             "url": self.url,
             "videoURL": self.video_url,
             "screenshotURL": self.screenshot_url,
-            "metadata": self.metadata or {},
+            "metadata": self.metadata_json or {},
             "metadataStatus": self.metadata_status,
             "metadataError": self.metadata_error,
             "metadataUpdatedAt": self.metadata_updated_at.isoformat()

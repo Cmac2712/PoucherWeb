@@ -29,6 +29,9 @@ dist-ssr
 .serverless/
 
 services/package
+services/.venv
+**/__pycache__/
+*.pyc
 
 # Ignore large binaries
 *.zip
