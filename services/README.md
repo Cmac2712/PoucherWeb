@@ -14,7 +14,9 @@ services/
 ├── tags/                # CRUD /api/tags
 ├── users/               # PUT /api/users/:id
 ├── screenshot/          # Async screenshot worker
-└── migrations/          # SQL migrations
+├── metadata/            # Async metadata worker
+├── alembic/             # Alembic migrations
+└── migrations/          # SQL migrations (legacy)
 ```
 
 ## Setup
@@ -41,8 +43,11 @@ cp .env.example .env
 # Create PostgreSQL database
 createdb poucher
 
-# Run migrations
+# Run initial schema (legacy SQL)
 psql -d poucher -f migrations/001_initial_schema.sql
+
+# Apply Alembic migrations for incremental changes
+alembic -c alembic.ini upgrade head
 ```
 
 ## Development

@@ -20,3 +20,9 @@ variable "enable_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "enable_ssm_endpoints" {
+  description = "Create VPC interface endpoints for SSM"
+  type        = bool
+  default     = true
+}

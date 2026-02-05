@@ -17,7 +17,7 @@ python3 -m pip install \
   -r requirements-prod.txt \
   -t package/
 
-cp -r shared auth bookmarks tags users screenshot package/
+cp -r shared auth bookmarks tags users screenshot metadata package/
 
 (
   cd package

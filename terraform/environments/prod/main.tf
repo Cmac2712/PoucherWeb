@@ -41,6 +41,7 @@ module "vpc" {
   vpc_cidr           = var.vpc_cidr
   az_count           = 2
   enable_nat_gateway = true
+  enable_ssm_endpoints = true
 }
 
 # RDS
@@ -51,7 +52,7 @@ module "rds" {
   vpc_id                  = module.vpc.vpc_id
   vpc_cidr                = module.vpc.vpc_cidr
   subnet_ids              = module.vpc.private_subnet_ids
-  allowed_security_groups = [module.lambda.security_group_id]
+  allowed_security_groups = [module.lambda.security_group_id, module.ssm_bastion.security_group_id]
 
   instance_class              = var.db_instance_class
   allocated_storage           = var.db_allocated_storage
@@ -97,6 +98,16 @@ module "lambda" {
   screenshots_bucket_arn  = module.s3.bucket_arn
   lambda_package_path     = var.lambda_package_path
   log_retention_days      = 14
+}
+
+# SSM Bastion (for private DB access via Session Manager)
+module "ssm_bastion" {
+  source = "../../modules/ssm-bastion"
+
+  project_name = var.project_name
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnet_ids
+  s3_bucket_arn = module.s3.bucket_arn
 }
 
 # API Gateway

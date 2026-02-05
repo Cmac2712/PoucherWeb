@@ -65,7 +65,10 @@ resource "aws_iam_role_policy" "lambda_custom" {
           "sqs:DeleteMessage",
           "sqs:GetQueueAttributes"
         ]
-        Resource = aws_sqs_queue.screenshot.arn
+        Resource = [
+          aws_sqs_queue.screenshot.arn,
+          aws_sqs_queue.bookmark_metadata.arn
+        ]
       }
     ]
   })
@@ -101,6 +104,33 @@ resource "aws_sqs_queue" "screenshot" {
   }
 }
 
+# SQS Queue for bookmark metadata processing (with DLQ)
+resource "aws_sqs_queue" "bookmark_metadata_dlq" {
+  name                       = "${var.project_name}-bookmark-metadata-dlq"
+  message_retention_seconds  = 1209600
+  receive_wait_time_seconds  = 10
+
+  tags = {
+    Name = "${var.project_name}-bookmark-metadata-dlq"
+  }
+}
+
+resource "aws_sqs_queue" "bookmark_metadata" {
+  name                       = "${var.project_name}-bookmark-metadata-queue"
+  visibility_timeout_seconds = 60
+  message_retention_seconds  = 86400
+  receive_wait_time_seconds  = 10
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.bookmark_metadata_dlq.arn
+    maxReceiveCount     = 3
+  })
+
+  tags = {
+    Name = "${var.project_name}-bookmark-metadata-queue"
+  }
+}
+
 # Common environment variables
 locals {
   common_environment = {
@@ -109,6 +139,7 @@ locals {
     COGNITO_USER_POOL_ID = var.cognito_user_pool_id
     COGNITO_CLIENT_ID    = var.cognito_client_id
     SCREENSHOT_BUCKET    = var.screenshots_bucket_name
+    METADATA_QUEUE_URL   = aws_sqs_queue.bookmark_metadata.url
     AWS_REGION_NAME      = data.aws_region.current.name
   }
 
@@ -142,6 +173,12 @@ locals {
       description = "Screenshot capture service"
       timeout     = 60
       memory      = 512
+    }
+    metadata = {
+      handler     = "metadata.handler.handler"
+      description = "Bookmark metadata fetch worker"
+      timeout     = 15
+      memory      = 256
     }
   }
 }
@@ -188,6 +225,14 @@ resource "aws_cloudwatch_log_group" "lambda" {
 resource "aws_lambda_event_source_mapping" "screenshot_sqs" {
   event_source_arn = aws_sqs_queue.screenshot.arn
   function_name    = aws_lambda_function.functions["screenshot"].arn
+  batch_size       = 1
+  enabled          = true
+}
+
+# SQS trigger for metadata Lambda
+resource "aws_lambda_event_source_mapping" "bookmark_metadata_sqs" {
+  event_source_arn = aws_sqs_queue.bookmark_metadata.arn
+  function_name    = aws_lambda_function.functions["metadata"].arn
   batch_size       = 1
   enabled          = true
 }
