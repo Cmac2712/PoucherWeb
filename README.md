@@ -7,6 +7,7 @@ A modern, full-stack bookmark management application that helps you save, organi
 ## Features
 
 ### Bookmark Management
+
 - **Smart Bookmark Creation**: Add bookmarks with automatic metadata extraction (title, description, and screenshots)
 - **Clipboard Integration**: Automatically detects URLs in your clipboard when creating bookmarks
 - **Rich Preview Cards**: View bookmarks with thumbnails, titles, and descriptions
@@ -15,12 +16,14 @@ A modern, full-stack bookmark management application that helps you save, organi
 - **Pagination**: Navigate large collections with responsive pagination controls
 
 ### Organization & Filtering
+
 - **Tag-Based Categories**: Organize bookmarks with custom tags
 - **Category Filtering**: Filter bookmarks by tag or view all at once
 - **Bookmark Counts**: See how many bookmarks are in each category
 - **Tag Management**: Create, update, and delete tags with confirmation dialogs
 
 ### User Experience
+
 - **Modern UI**: Clean, dark-themed interface built with Tailwind CSS and DaisyUI
 - **Fully Responsive**: Drawer navigation that adapts to mobile and desktop
 - **Secure Authentication**: Sign in with Auth0 OAuth
@@ -28,6 +31,7 @@ A modern, full-stack bookmark management application that helps you save, organi
 - **Analytics**: Integrated with Google Analytics 4 for usage insights
 
 ### Advanced Features
+
 - **Automatic Screenshots**: Backend generates page screenshots using headless Chrome
 - **Video Support**: Embedded video preview for video URLs
 - **Real-time Updates**: Optimistic UI updates with React Query
@@ -36,6 +40,7 @@ A modern, full-stack bookmark management application that helps you save, organi
 ## Tech Stack
 
 ### Frontend
+
 - **[React 18](https://react.dev/)** - Modern React with concurrent features
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
 - **[Vite](https://vitejs.dev/)** - Lightning-fast build tool and dev server
@@ -43,18 +48,22 @@ A modern, full-stack bookmark management application that helps you save, organi
 - **[DaisyUI](https://daisyui.com/)** - Tailwind component library
 
 ### State Management & Data Fetching
+
 - **[React Query](https://tanstack.com/query)** (@tanstack/react-query) - Server state management with caching, mutations, and invalidation
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - Lightweight client state management
 - **Custom API Client** - Fetch-based REST client with authentication
 
 ### Authentication
+
 - **[Auth0](https://auth0.com/)** (@auth0/auth0-react) - OAuth authentication and user management
 
 ### UI Components & Icons
+
 - **[FontAwesome](https://fontawesome.com/)** - Icon library with React components
 - **[React Responsive](https://github.com/yocontra/react-responsive)** - Responsive design utilities
 
 ### Backend (Serverless)
+
 - **[AWS Lambda](https://aws.amazon.com/lambda/)** - Serverless compute
 - **[AWS S3](https://aws.amazon.com/s3/)** - Screenshot and image storage
 - **[AWS CloudFront](https://aws.amazon.com/cloudfront/)** - CDN for assets
@@ -62,21 +71,25 @@ A modern, full-stack bookmark management application that helps you save, organi
 - **[Serverless Framework](https://www.serverless.com/)** - Infrastructure as code
 
 ### Database & ORM
+
 - **[Prisma](https://www.prisma.io/)** - Type-safe database ORM
 
 ### Web Scraping & Metadata
+
 - **[Puppeteer](https://pptr.dev/)** - Headless Chrome automation
 - **[@sparticuz/chrome-aws-lambda](https://github.com/Sparticuz/chromium)** - Chrome for AWS Lambda
 - **[Metascraper](https://metascraper.js.org/)** - Intelligent metadata extraction
 - **[html-get](https://www.npmjs.com/package/html-get)** - HTML fetching with redirects
 
 ### Testing & Development
+
 - **[Vitest](https://vitest.dev/)** - Blazing fast unit test framework
 - **[React Testing Library](https://testing-library.com/react)** - Component testing utilities
 - **[Mock Service Worker (MSW)](https://mswjs.io/)** - API mocking for development and testing
 - **[jsdom](https://github.com/jsdom/jsdom)** - DOM implementation for testing
 
 ### Developer Tools
+
 - **[ESLint](https://eslint.org/)** - JavaScript/TypeScript linting
 - **[Prettier](https://prettier.io/)** - Code formatting
 - **[TypeScript ESLint](https://typescript-eslint.io/)** - TypeScript linting rules
@@ -84,12 +97,14 @@ A modern, full-stack bookmark management application that helps you save, organi
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - Yarn package manager
 
 ### Installation
 
 Install dependencies:
+
 ```bash
 yarn
 ```
@@ -97,11 +112,13 @@ yarn
 ### Development
 
 Start the development server:
+
 ```bash
 yarn start
 ```
 
 Start with mock API (no backend required):
+
 ```bash
 yarn start:mock
 ```
@@ -109,16 +126,19 @@ yarn start:mock
 ### Testing
 
 Run all tests:
+
 ```bash
 yarn test
 ```
 
 Run a specific test file:
+
 ```bash
 yarn test src/components/Tags/Tags.test.tsx
 ```
 
 Run tests in watch mode (default):
+
 ```bash
 yarn test --watch
 ```
@@ -165,6 +185,10 @@ Poucher uses a modern React architecture with clear separation of concerns:
 - **Testing**: Comprehensive test utilities with mocked providers
 
 See [CLAUDE.md](./CLAUDE.md) for detailed architecture documentation.
+
+## AWS SSM Session
+
+aws ssm start-session --target i-0b5b4081a323d808c --region eu-west-1
 
 ## Contributing
 
