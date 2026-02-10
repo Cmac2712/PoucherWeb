@@ -59,11 +59,6 @@ export const BookmarkPreview = ({
           <p className="text-xs text-foreground-muted dark:text-gray-400 truncate">
             {getDomain(url)}
           </p>
-          {metadataStatus === 'pending' && (
-            <span className="text-[10px] uppercase tracking-wide text-amber-600 dark:text-amber-400">
-              Fetching metadata
-            </span>
-          )}
           {metadataStatus === 'failed' && (
             <span className="text-[10px] uppercase tracking-wide text-red-600 dark:text-red-400">
               Metadata failed

@@ -20,7 +20,6 @@ describe('BookmarkPreview', () => {
 
     render(<BookmarkPreview data={bookmark} />)
 
-    expect(screen.getByText('Fetching metadata')).toBeInTheDocument()
     expect(screen.getByTestId('metadata-skeleton')).toBeInTheDocument()
     expect(screen.queryByText('Example title')).not.toBeInTheDocument()
   })
