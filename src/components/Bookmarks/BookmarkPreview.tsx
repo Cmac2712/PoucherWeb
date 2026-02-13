@@ -27,6 +27,7 @@ export const BookmarkPreview = ({
   const [hover, setHover] = useState(false)
   const { user } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
+  const isMetadataPending = metadataStatus === 'pending'
 
   return (
     <article
@@ -58,11 +59,6 @@ export const BookmarkPreview = ({
           <p className="text-xs text-foreground-muted dark:text-gray-400 truncate">
             {getDomain(url)}
           </p>
-          {metadataStatus === 'pending' && (
-            <span className="text-[10px] uppercase tracking-wide text-amber-600 dark:text-amber-400">
-              Fetching metadata
-            </span>
-          )}
           {metadataStatus === 'failed' && (
             <span className="text-[10px] uppercase tracking-wide text-red-600 dark:text-red-400">
               Metadata failed
@@ -70,23 +66,33 @@ export const BookmarkPreview = ({
           )}
         </div>
 
-        {/* Title */}
-        <h3 className="font-semibold text-foreground dark:text-gray-100 mb-2 line-clamp-2 leading-tight">
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-forest-600 dark:hover:text-forest-400 transition-colors"
-          >
-            {title || 'Untitled'}
-          </a>
-        </h3>
+        {isMetadataPending ? (
+          <div data-testid="metadata-skeleton" className="mb-4 space-y-2 animate-pulse">
+            <div className="h-5 w-5/6 rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-4/5 rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+        ) : (
+          <>
+            {/* Title */}
+            <h3 className="font-semibold text-foreground dark:text-gray-100 mb-2 line-clamp-2 leading-tight">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-forest-600 dark:hover:text-forest-400 transition-colors"
+              >
+                {title || 'Untitled'}
+              </a>
+            </h3>
 
-        {/* Description */}
-        {description && (
-          <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-4">
-            {description}
-          </p>
+            {/* Description */}
+            {description && (
+              <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-4">
+                {description}
+              </p>
+            )}
+          </>
         )}
 
         {/* Actions */}
