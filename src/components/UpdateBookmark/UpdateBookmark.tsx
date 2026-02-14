@@ -64,7 +64,7 @@ export const UpdateBookmark = ({
             }
           />
         </p>
-        <AddTag ID={id} />
+        <AddTag bookmarkId={id} />
         <div className="tasks ml-auto">
           <Button
             className="font-bold uppercase mt-2"

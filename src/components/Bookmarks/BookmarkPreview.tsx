@@ -4,9 +4,14 @@ import { DeleteBookmark } from '../DeleteBookmark'
 import { Bookmark } from './Bookmarks'
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { useModalStore } from '../../store/modal-store'
+import { useUser } from '../../contexts/user-context'
+import { useUpdateTag } from '../../api/hooks'
+import { getTagsForBookmark, removeBookmarkFromTag } from '../../utils/tag-utils'
+import { TagChip } from '../TagChip'
 import { Button } from '../ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import { faGlobe, faTag } from '@fortawesome/free-solid-svg-icons'
+import { QuickTagPicker } from '../QuickTagPicker'
 
 type Props = {
   data: Bookmark
@@ -25,8 +30,12 @@ export const BookmarkPreview = ({
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
+  const [quickTagOpen, setQuickTagOpen] = useState(false)
   const { user } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
+  const { data: userData } = useUser()
+  const updateTagMutation = useUpdateTag()
+  const bookmarkTags = getTagsForBookmark(userData?.tags ?? [], id)
   const isMetadataPending = metadataStatus === 'pending'
 
   return (
@@ -88,16 +97,37 @@ export const BookmarkPreview = ({
 
             {/* Description */}
             {description && (
-              <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-4">
+              <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-3">
                 {description}
               </p>
             )}
           </>
         )}
 
+        {/* Tags */}
+        {bookmarkTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3" data-testid="bookmark-tags">
+            {bookmarkTags.map((tag) => (
+              <TagChip
+                key={tag.ID}
+                label={tag.title}
+                size="sm"
+                onRemove={() => {
+                  updateTagMutation.mutate({
+                    id: tag.ID,
+                    updates: {
+                      bookmarkID: removeBookmarkFromTag(tag, id)
+                    }
+                  })
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Actions */}
         <div
-          className={`flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${
+          className={`relative flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${
             hover ? 'opacity-100' : 'opacity-0 sm:opacity-0'
           } opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
         >
@@ -121,7 +151,25 @@ export const BookmarkPreview = ({
             Edit
           </Button>
 
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-xs"
+            onClick={() => setQuickTagOpen((prev) => !prev)}
+            data-testid="quick-tag-button"
+          >
+            <FontAwesomeIcon icon={faTag} className="mr-1" />
+            Tag
+          </Button>
+
           <DeleteBookmark id={id} authorID={user?.sub} />
+
+          {quickTagOpen && (
+            <QuickTagPicker
+              bookmarkId={id}
+              onClose={() => setQuickTagOpen(false)}
+            />
+          )}
         </div>
       </div>
     </article>
