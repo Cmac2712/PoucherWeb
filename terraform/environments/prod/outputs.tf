@@ -38,6 +38,16 @@ output "db_secret_arn" {
   value       = module.rds.db_password_secret_arn
 }
 
+output "ses_sender_email_arn" {
+  description = "ARN of the SES verified email identity"
+  value       = module.ses.sender_email_arn
+}
+
+output "ses_send_policy_arn" {
+  description = "ARN of the IAM policy for sending SES emails"
+  value       = module.ses.ses_send_policy_arn
+}
+
 output "screenshots_bucket" {
   description = "Screenshots S3 bucket name"
   value       = module.s3.bucket_id

@@ -55,6 +55,13 @@ variable "cognito_domain" {
   default     = ""
 }
 
+# SES
+variable "ses_sender_email" {
+  description = "Email address for sending E2E test reports (must be verified in SES)"
+  type        = string
+  default     = "craig@craigmacintyre.co.uk"
+}
+
 # Lambda
 variable "lambda_package_path" {
   description = "Path to Lambda deployment package"

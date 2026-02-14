@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-/// <reference types="vite/client" />import { defineConfig } from 'vite'
+/// <reference types="vite/client" />
 
 import { defineConfig } from 'vite'
 import { VitePluginFonts } from 'vite-plugin-fonts'
@@ -25,6 +25,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
-    css: true
+    css: true,
+    exclude: ['e2e/**', 'node_modules/**']
   }
 })
