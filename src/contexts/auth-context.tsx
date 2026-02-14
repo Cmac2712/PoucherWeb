@@ -52,6 +52,13 @@ interface CognitoAuthProviderProps {
 }
 
 export const CognitoAuthProvider = ({ children }: CognitoAuthProviderProps) => {
+  if (import.meta.env.VITE_E2E_TEST === 'true') {
+    return <E2EAuthProvider>{children}</E2EAuthProvider>
+  }
+  return <RealCognitoAuthProvider>{children}</RealCognitoAuthProvider>
+}
+
+function RealCognitoAuthProvider({ children }: CognitoAuthProviderProps) {
   const [user, setUser] = useState<CognitoAuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -223,4 +230,53 @@ export const CognitoAuthProvider = ({ children }: CognitoAuthProviderProps) => {
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+// E2E-only auth provider — uses the same AuthContext so useCognitoAuth() works everywhere.
+// Gated by VITE_E2E_TEST env var; tree-shaken from production builds.
+const E2E_MOCK_USER: CognitoAuthUser = {
+  sub: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  email: 'tim@testemail.com',
+  name: 'Timothy'
+}
+
+const E2EAuthProvider = ({ children }: { children: ReactNode }) => {
+  const startAuthed =
+    typeof window !== 'undefined'
+      ? !window.localStorage.getItem('e2e_start_unauthed')
+      : true
+
+  const [user, setUser] = useState<CognitoAuthUser | null>(
+    startAuthed ? E2E_MOCK_USER : null
+  )
+
+  const login = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 100))
+    setUser(E2E_MOCK_USER)
+  }, [])
+
+  const logout = useCallback(() => setUser(null), [])
+  const signUp = useCallback(async () => {}, [])
+  const confirmSignUp = useCallback(async () => {}, [])
+  const getAccessToken = useCallback(
+    async () => 'mock-e2e-token' as string | null,
+    []
+  )
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading: false,
+        login,
+        logout,
+        signUp,
+        confirmSignUp,
+        getAccessToken
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
