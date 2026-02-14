@@ -83,6 +83,14 @@ module "s3" {
   cors_allowed_origins = var.cors_allowed_origins
 }
 
+# SES (E2E Test Report Emails)
+module "ses" {
+  source = "../../modules/ses"
+
+  project_name = var.project_name
+  sender_email = var.ses_sender_email
+}
+
 # Lambda
 module "lambda" {
   source = "../../modules/lambda"

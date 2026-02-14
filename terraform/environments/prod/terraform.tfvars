@@ -24,6 +24,9 @@ cognito_logout_urls = [
   # Add production URL: "https://yourdomain.com"
 ]
 
+# SES
+ses_sender_email = "craig@craigmacintyre.co.uk"
+
 # Lambda
 lambda_package_path = "../../../services/lambda.zip"
 
