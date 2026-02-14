@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useUser } from '../../contexts/user-context'
 import { useUpdateTag } from '../../api/hooks'
 import { Button } from '../ui/button'
+import { tagContainsBookmark, addBookmarkToTag } from '../../utils/tag-utils'
 
 interface Props {
   ID: string
@@ -13,11 +14,7 @@ const AddTag = ({ ID }: Props) => {
 
   const currentTags = () =>
     tags.map((tag) => {
-      const hasTag = JSON.parse(tag.bookmarkID)?.list.find(
-        (bookmarkID: string) => bookmarkID === ID
-      )
-
-      if (!hasTag) return
+      if (!tagContainsBookmark(tag, ID)) return
 
       return (
         <p key={tag.ID} className="pr-2">
@@ -36,14 +33,15 @@ const AddTag = ({ ID }: Props) => {
     const found = tags.find((tag) => tag.ID === formData.newTag)
 
     if (found) {
-      const tagList = JSON.parse(found.bookmarkID)
+      const updatedBookmarkID = addBookmarkToTag(found, ID)
 
-      tagList.list.push(ID)
+      // No-op if bookmark is already in this tag (prevents duplicates)
+      if (updatedBookmarkID === found.bookmarkID) return
 
       updateTagMutation.mutate({
         id: found.ID,
         updates: {
-          bookmarkID: JSON.stringify(tagList)
+          bookmarkID: updatedBookmarkID
         }
       })
 

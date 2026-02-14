@@ -6,13 +6,7 @@ import { DeleteTag } from '../DeleteTag'
 import { useModalStore } from '../../store/modal-store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-
-export type Tag = {
-  ID: string
-  authorID: string
-  bookmarkID: string
-  title: string
-}
+import { getBookmarkCount, parseBookmarkIds } from '../../utils/tag-utils'
 
 interface Props {
   callback?: () => void
@@ -67,12 +61,12 @@ const Tags = ({ callback }: Props) => {
         </li>
 
         {/* User categories */}
-        {tags.map(({ title, bookmarkID, ID }) => {
-          const bookmarksCount = JSON.parse(bookmarkID)?.list?.length || 0
-          const isActive = category === title
+        {tags.map((tag) => {
+          const bookmarksCount = getBookmarkCount(tag)
+          const isActive = category === tag.title
 
           return (
-            <li key={ID} className="group relative">
+            <li key={tag.ID} className="group relative">
               <button
                 className={`w-full flex items-center justify-between px-3 py-2 pr-10 rounded-md text-sm transition-colors ${
                   isActive
@@ -80,8 +74,8 @@ const Tags = ({ callback }: Props) => {
                     : 'text-foreground-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-foreground dark:hover:text-gray-100'
                 }`}
                 onClick={() => {
-                  setCategory(title)
-                  setBookmarkIDs(JSON.parse(bookmarkID)?.list)
+                  setCategory(tag.title)
+                  setBookmarkIDs(parseBookmarkIds(tag.bookmarkID).list)
                 }}
               >
                 <span className="flex items-center gap-2">
@@ -90,14 +84,14 @@ const Tags = ({ callback }: Props) => {
                       isActive ? 'bg-forest-500' : 'bg-gray-300 dark:bg-gray-600'
                     }`}
                   />
-                  <span className="truncate">{title}</span>
+                  <span className="truncate">{tag.title}</span>
                 </span>
                 <span className="text-xs text-foreground-muted dark:text-gray-400">{bookmarksCount}</span>
               </button>
               <button
                 className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-foreground-muted dark:text-gray-400 hover:text-red-500 p-1"
                 onClick={() => {
-                  setModalContent(<DeleteTag ID={ID} tagName={title} />)
+                  setModalContent(<DeleteTag ID={tag.ID} tagName={tag.title} />)
                   openModal()
                 }}
               >
