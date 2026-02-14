@@ -4,6 +4,10 @@ import { DeleteBookmark } from '../DeleteBookmark'
 import { Bookmark } from './Bookmarks'
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { useModalStore } from '../../store/modal-store'
+import { useUser } from '../../contexts/user-context'
+import { useUpdateTag } from '../../api/hooks'
+import { getTagsForBookmark, removeBookmarkFromTag } from '../../utils/tag-utils'
+import { TagChip } from '../TagChip'
 import { Button } from '../ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
@@ -27,6 +31,9 @@ export const BookmarkPreview = ({
   const [hover, setHover] = useState(false)
   const { user } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
+  const { data: userData } = useUser()
+  const updateTagMutation = useUpdateTag()
+  const bookmarkTags = getTagsForBookmark(userData?.tags ?? [], id)
 
   return (
     <article
@@ -84,9 +91,30 @@ export const BookmarkPreview = ({
 
         {/* Description */}
         {description && (
-          <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-4">
+          <p className="text-sm text-foreground-muted dark:text-gray-400 line-clamp-2 mb-3">
             {description}
           </p>
+        )}
+
+        {/* Tags */}
+        {bookmarkTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3" data-testid="bookmark-tags">
+            {bookmarkTags.map((tag) => (
+              <TagChip
+                key={tag.ID}
+                label={tag.title}
+                size="sm"
+                onRemove={() => {
+                  updateTagMutation.mutate({
+                    id: tag.ID,
+                    updates: {
+                      bookmarkID: removeBookmarkFromTag(tag, id)
+                    }
+                  })
+                }}
+              />
+            ))}
+          </div>
         )}
 
         {/* Actions */}
