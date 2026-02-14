@@ -78,4 +78,46 @@ describe('BookmarkPreview', () => {
       expect(screen.queryByText('career')).not.toBeInTheDocument()
     })
   })
+
+  test('renders Tag button in actions bar', async () => {
+    render(<BookmarkPreview data={untaggedBookmark} />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quick-tag-button')).toBeInTheDocument()
+    })
+
+    expect(screen.getByText('Tag')).toBeInTheDocument()
+  })
+
+  test('clicking Tag button opens QuickTagPicker', async () => {
+    render(<BookmarkPreview data={untaggedBookmark} />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quick-tag-button')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByTestId('quick-tag-button'))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quick-tag-picker')).toBeInTheDocument()
+    })
+  })
+
+  test('clicking Tag button again closes QuickTagPicker', async () => {
+    render(<BookmarkPreview data={untaggedBookmark} />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quick-tag-button')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByTestId('quick-tag-button'))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quick-tag-picker')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByTestId('quick-tag-button'))
+
+    expect(screen.queryByTestId('quick-tag-picker')).not.toBeInTheDocument()
+  })
 })

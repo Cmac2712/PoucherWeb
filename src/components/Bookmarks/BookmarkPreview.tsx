@@ -10,7 +10,8 @@ import { getTagsForBookmark, removeBookmarkFromTag } from '../../utils/tag-utils
 import { TagChip } from '../TagChip'
 import { Button } from '../ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import { faGlobe, faTag } from '@fortawesome/free-solid-svg-icons'
+import { QuickTagPicker } from '../QuickTagPicker'
 
 type Props = {
   data: Bookmark
@@ -29,6 +30,7 @@ export const BookmarkPreview = ({
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
+  const [quickTagOpen, setQuickTagOpen] = useState(false)
   const { user } = useCognitoAuth()
   const { openModal, setModalContent } = useModalStore()
   const { data: userData } = useUser()
@@ -119,7 +121,7 @@ export const BookmarkPreview = ({
 
         {/* Actions */}
         <div
-          className={`flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${
+          className={`relative flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${
             hover ? 'opacity-100' : 'opacity-0 sm:opacity-0'
           } opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
         >
@@ -143,7 +145,25 @@ export const BookmarkPreview = ({
             Edit
           </Button>
 
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-xs"
+            onClick={() => setQuickTagOpen((prev) => !prev)}
+            data-testid="quick-tag-button"
+          >
+            <FontAwesomeIcon icon={faTag} className="mr-1" />
+            Tag
+          </Button>
+
           <DeleteBookmark id={id} authorID={user?.sub} />
+
+          {quickTagOpen && (
+            <QuickTagPicker
+              bookmarkId={id}
+              onClose={() => setQuickTagOpen(false)}
+            />
+          )}
         </div>
       </div>
     </article>
