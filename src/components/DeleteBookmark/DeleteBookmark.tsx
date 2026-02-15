@@ -36,14 +36,14 @@ export const DeleteBookmark = ({ id }: Props) => {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="p-8">
+          <DialogHeader className="mb-2">
             <DialogTitle>Delete bookmark</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete this bookmark? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
@@ -58,7 +58,7 @@ export const DeleteBookmark = ({ id }: Props) => {
             >
               Delete
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </>
