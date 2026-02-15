@@ -1,8 +1,5 @@
 export const BookmarkSkeleton = () => (
   <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-    {/* Image placeholder */}
-    <div className="aspect-video bg-gray-200 dark:bg-gray-700 animate-pulse" />
-
     {/* Content */}
     <div className="p-4 space-y-3">
       {/* Domain */}
