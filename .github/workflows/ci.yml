@@ -1,4 +1,4 @@
-name: E2E Tests
+name: CI
 
 on:
   push:
@@ -14,14 +14,59 @@ on:
 env:
   AWS_REGION: 'eu-west-1'
   SES_SENDER: 'craig@craigmacintyre.co.uk'
+  VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
+  VITE_COGNITO_CLIENT_ID: ${{ vars.VITE_COGNITO_CLIENT_ID }}
+  VITE_SERVER_ENDPOINT: ${{ vars.VITE_SERVER_ENDPOINT }}
+  VITE_COGNITO_REGION: ${{ vars.VITE_COGNITO_REGION }}
 
 permissions:
   contents: read
 
 jobs:
-  e2e:
-    name: Run E2E Tests
+  test:
+    name: Unit Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run unit tests
+        run: yarn test --run
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [test, build]
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -46,7 +91,7 @@ jobs:
 
       - name: Install SES SDK
         if: always()
-        run: npm install --no-save @aws-sdk/client-ses
+        run: yarn add --dev @aws-sdk/client-ses
 
       - name: Configure AWS Credentials
         if: always()
