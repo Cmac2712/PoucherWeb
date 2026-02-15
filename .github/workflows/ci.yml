@@ -91,7 +91,7 @@ jobs:
 
       - name: Install SES SDK
         if: always()
-        run: npm install --no-save @aws-sdk/client-ses
+        run: yarn add --dev @aws-sdk/client-ses
 
       - name: Configure AWS Credentials
         if: always()
