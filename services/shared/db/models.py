@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Text, ForeignKey, DateTime, UniqueConstraint
+from sqlalchemy import Column, String, Text, ForeignKey, DateTime, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -19,6 +19,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     name = Column(String(255), nullable=False)
     picture_url = Column(Text, nullable=True)
+    preferences = Column(JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb"))
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
@@ -32,6 +33,7 @@ class User(Base):
             "email": self.email,
             "name": self.name,
             "picture": self.picture_url,
+            "preferences": self.preferences or {},
         }
 
 

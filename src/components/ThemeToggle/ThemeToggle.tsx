@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons'
-import { useThemeStore } from '../../store/theme-store'
+import { usePreferencesStore } from '../../store/preferences-store'
 import { Button } from '../ui/button'
 
 export const ThemeToggle = () => {
-  const { theme, toggleTheme } = useThemeStore()
+  const { theme, toggleTheme } = usePreferencesStore()
 
   return (
     <Button

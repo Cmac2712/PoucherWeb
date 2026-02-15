@@ -8,7 +8,7 @@ import { Tags } from '../Tags'
 import { Pagination } from '../Pagination'
 import { Profile } from '../Profile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faGear } from '@fortawesome/free-solid-svg-icons'
 import { Loader } from '../Loader/Loader'
 import { Search } from '../Search'
 import { Modal } from '../Modal'
@@ -16,12 +16,15 @@ import { UserProvider } from '../../contexts/user-context'
 import { Drawer } from '../ui/drawer'
 import { Button } from '../ui/button'
 import { ThemeToggle } from '../ThemeToggle'
+import { Settings } from '../Settings'
+import { useModalStore } from '../../store/modal-store'
 
 export type { CognitoAuthUser }
 
 export const AdminScreen = () => {
   const { user, isAuthenticated, isLoading } = useCognitoAuth()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { openModal, setModalContent } = useModalStore()
 
   if (isLoading) return <Loader />
 
@@ -45,7 +48,18 @@ export const AdminScreen = () => {
                   </>
                 )}
 
-                <div className="p-4 mt-auto border-t border-gray-200 dark:border-gray-700">
+                <div className="p-4 mt-auto border-t border-gray-200 dark:border-gray-700 space-y-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 text-foreground-muted dark:text-gray-400 hover:text-foreground dark:hover:text-gray-100"
+                    onClick={() => {
+                      setModalContent(<Settings />)
+                      openModal()
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faGear} />
+                    Settings
+                  </Button>
                   <LogoutButton />
                 </div>
               </div>
