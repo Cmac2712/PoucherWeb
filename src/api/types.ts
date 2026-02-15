@@ -1,7 +1,13 @@
+export interface UserPreferences {
+  theme?: 'light' | 'dark'
+  displayName?: string
+}
+
 export interface User {
   id: string
   email: string
   name: string
+  preferences?: UserPreferences
 }
 
 export interface Bookmark {

@@ -93,6 +93,12 @@ def update(event, context, user_id: str):
             if "picture" in body:
                 auth_user.picture_url = body["picture"]
 
+            if "preferences" in body and isinstance(body["preferences"], dict):
+                # Merge new preferences into existing ones
+                current_prefs = auth_user.preferences or {}
+                current_prefs.update(body["preferences"])
+                auth_user.preferences = current_prefs
+
             return success({"user": auth_user.to_dict()})
 
     except Exception as e:
