@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { BookmarkPreview } from './BookmarkPreview'
 import { useUser } from '../../contexts/user-context'
 import { usePageStore } from '../../store/page-store'
-import { Loader } from '../Loader/Loader'
+import { BookmarkSkeleton } from './BookmarkSkeleton'
 import { useSearchBookmarks } from '../../api/hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
@@ -55,7 +55,13 @@ export const Bookmarks = () => {
     }
   }, [data, setCount, setBookmarks])
 
-  if (isLoading) return <Loader />
+  if (isLoading) return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <BookmarkSkeleton key={i} />
+      ))}
+    </div>
+  )
 
   if (error) return <p>{JSON.stringify(error)}</p>
 

@@ -1,11 +1,24 @@
 export const BookmarkSkeleton = () => (
-    <div
-        className={`bookmark-skeleton`}
-    >
-        <div className="bookmark-skeleton-image"></div>
-        <div className="bookmark-skeleton-info">
-            <div></div>
-            <div></div>
-        </div>
+  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    {/* Image placeholder */}
+    <div className="aspect-video bg-gray-200 dark:bg-gray-700 animate-pulse" />
+
+    {/* Content */}
+    <div className="p-4 space-y-3">
+      {/* Domain */}
+      <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+
+      {/* Title */}
+      <div className="space-y-2">
+        <div className="h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        <div className="h-4 w-3/5 rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+      </div>
+
+      {/* Description */}
+      <div className="space-y-1.5">
+        <div className="h-3 w-full rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        <div className="h-3 w-4/5 rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+      </div>
     </div>
+  </div>
 )
