@@ -50,3 +50,24 @@ export interface BookmarkSearchParams {
   limit?: number
   ids?: string
 }
+
+export interface Note {
+  id: string
+  authorID?: string
+  title: string
+  content: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface NotesResponse {
+  notes: Note[]
+  count: number
+}
+
+export interface NoteSearchParams {
+  authorID?: string
+  title?: string
+  offset?: number
+  limit?: number
+}

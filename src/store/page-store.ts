@@ -1,5 +1,6 @@
 import create from 'zustand'
 import { Bookmark } from '../components/Bookmarks'
+import type { Note } from '../api/types'
 
 interface PageState {
   perPage: number
@@ -8,6 +9,10 @@ interface PageState {
   setOffset: (perPage: number) => void
   bookmarks: Bookmark[]
   setBookmarks: (bookmarks: Bookmark[]) => void
+  notes: Note[]
+  setNotes: (notes: Note[]) => void
+  notesCount: number
+  setNotesCount: (count: number) => void
   count: number
   setCount: (count: number) => void
   search: string
@@ -27,6 +32,10 @@ const usePageStore = create<PageState>((set) => ({
   setCount: (count) => set({ count }),
   bookmarks: [],
   setBookmarks: (bookmarks) => set({ bookmarks }),
+  notes: [],
+  setNotes: (notes) => set({ notes }),
+  notesCount: 0,
+  setNotesCount: (notesCount) => set({ notesCount }),
   search: '',
   setSearch: (search) => set({ search }),
   bookmarkIDs: undefined,
