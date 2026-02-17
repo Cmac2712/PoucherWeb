@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { BookmarkPreview } from './BookmarkPreview'
 import { useUser } from '../../contexts/user-context'
 import { usePageStore } from '../../store/page-store'
 import { BookmarkSkeleton } from './BookmarkSkeleton'
-import { useSearchBookmarks } from '../../api/hooks'
+import { useSearchBookmarks, useSearchNotes } from '../../api/hooks'
+import { NotePreview } from '../Notes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 
@@ -28,6 +29,10 @@ export interface PaginationProps {
   search: string
 }
 
+type FeedItem =
+  | { type: 'bookmark'; data: Bookmark; createdAt: string }
+  | { type: 'note'; data: import('../../api/types').Note; createdAt: string }
+
 export const Bookmarks = () => {
   const search = usePageStore((state) => state.search)
   const setSearch = usePageStore((state) => state.setSearch)
@@ -37,6 +42,9 @@ export const Bookmarks = () => {
   const bookmarks = usePageStore((state) => state.bookmarks)
   const setCount = usePageStore((state) => state.setCount)
   const setBookmarks = usePageStore((state) => state.setBookmarks)
+  const notes = usePageStore((state) => state.notes)
+  const setNotes = usePageStore((state) => state.setNotes)
+  const setNotesCount = usePageStore((state) => state.setNotesCount)
   const user = useUser()
 
   const { data, isLoading, error } = useSearchBookmarks({
@@ -48,6 +56,13 @@ export const Bookmarks = () => {
     description: search
   })
 
+  const { data: notesData, isLoading: notesLoading } = useSearchNotes({
+    authorID: user.data?.user.id,
+    title: search,
+    offset,
+    limit: perPage,
+  })
+
   useEffect(() => {
     if (data) {
       setCount(data.count)
@@ -55,7 +70,31 @@ export const Bookmarks = () => {
     }
   }, [data, setCount, setBookmarks])
 
-  const showSkeleton = isLoading || !data
+  useEffect(() => {
+    if (notesData) {
+      setNotesCount(notesData.count)
+      setNotes(notesData.notes)
+    }
+  }, [notesData, setNotesCount, setNotes])
+
+  const feed = useMemo<FeedItem[]>(() => {
+    const items: FeedItem[] = [
+      ...bookmarks.map((b) => ({
+        type: 'bookmark' as const,
+        data: b,
+        createdAt: b.createdAt || '',
+      })),
+      ...notes.map((n) => ({
+        type: 'note' as const,
+        data: n,
+        createdAt: n.createdAt || '',
+      })),
+    ]
+    items.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1))
+    return items
+  }, [bookmarks, notes])
+
+  const showSkeleton = (isLoading || !data) && (notesLoading || !notesData)
 
   if (showSkeleton) return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -85,18 +124,22 @@ export const Bookmarks = () => {
         </div>
       )}
 
-      {/* Bookmarks grid */}
-      {bookmarks.length ? (
+      {/* Mixed grid */}
+      {feed.length ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {bookmarks.map((data) => (
-            <BookmarkPreview key={data.id} data={data} />
-          ))}
+          {feed.map((item) =>
+            item.type === 'bookmark' ? (
+              <BookmarkPreview key={`b-${item.data.id}`} data={item.data} />
+            ) : (
+              <NotePreview key={`n-${item.data.id}`} data={item.data} />
+            )
+          )}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <p className="text-foreground-muted dark:text-gray-400 text-lg">No bookmarks yet</p>
+          <p className="text-foreground-muted dark:text-gray-400 text-lg">No bookmarks or notes yet</p>
           <p className="text-foreground-muted dark:text-gray-400 text-sm mt-2">
-            Click "Add Bookmark" to save your first link
+            Click "Add Bookmark" or "Add Note" to get started
           </p>
         </div>
       )}

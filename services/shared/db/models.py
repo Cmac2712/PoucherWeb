@@ -26,6 +26,7 @@ class User(Base):
     # Relationships
     bookmarks = relationship("Bookmark", back_populates="author", cascade="all, delete-orphan")
     tags = relationship("Tag", back_populates="author", cascade="all, delete-orphan")
+    notes = relationship("Note", back_populates="author", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -106,6 +107,30 @@ class Tag(Base):
             "title": self.title,
             "authorID": str(self.author_id),
             "bookmarkID": f'{{"list": {bookmark_ids}}}',  # Legacy format
+        }
+
+
+class Note(Base):
+    __tablename__ = "notes"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    author_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String(500), nullable=False, default="")
+    content = Column(Text, nullable=False, default="")
+    created_at = Column(DateTime(timezone=True), default=utc_now)
+    updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
+
+    # Relationships
+    author = relationship("User", back_populates="notes")
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "authorID": str(self.author_id),
+            "title": self.title,
+            "content": self.content or "",
+            "createdAt": self.created_at.isoformat() if self.created_at else None,
+            "updatedAt": self.updated_at.isoformat() if self.updated_at else None,
         }
 
 
