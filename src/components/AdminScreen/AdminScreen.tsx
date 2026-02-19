@@ -16,6 +16,7 @@ import { UserProvider } from '../../contexts/user-context'
 import { Drawer } from '../ui/drawer'
 import { Button } from '../ui/button'
 import { ThemeToggle } from '../ThemeToggle'
+import { CreateNote } from '../CreateNote'
 import { Settings } from '../Settings'
 import { useModalStore } from '../../store/modal-store'
 
@@ -94,8 +95,9 @@ export const AdminScreen = () => {
                     <ThemeToggle />
                   </div>
 
-                  {/* Create bookmark button */}
-                  <div className="shrink-0">
+                  {/* Create buttons */}
+                  <div className="shrink-0 flex items-center gap-2">
+                    <CreateNote />
                     <CreateBookmark />
                   </div>
                 </div>

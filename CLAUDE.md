@@ -26,6 +26,7 @@ yarn test --watch
 PoucherWeb is a bookmark management application with a React frontend and serverless backend.
 
 ### Frontend Stack
+
 - **React 18** with TypeScript and Vite
 - **React Query** (@tanstack/react-query) for data fetching (configured in `src/main.tsx`)
 - **Auth0** for authentication (wrapped at app root in `src/App.tsx`)
@@ -33,6 +34,7 @@ PoucherWeb is a bookmark management application with a React frontend and server
 - **Tailwind CSS** with DaisyUI components
 
 ### API Layer
+
 - **API client** (`src/api/client.ts`) - fetch wrapper for REST calls
 - **Types** (`src/api/types.ts`) - TypeScript interfaces for User, Bookmark, Tag
 - **Hooks** (`src/api/hooks.ts`) - React Query hooks for all data operations:
@@ -42,6 +44,7 @@ PoucherWeb is a bookmark management application with a React frontend and server
   - `useCreateTag`, `useUpdateTag`, `useDeleteTag`
 
 ### State Management
+
 - **Zustand stores** (`src/store/`):
   - `page-store.ts` - pagination, search, bookmarks list, category filtering
   - `modal-store.ts` - modal open/close state and content
@@ -49,7 +52,9 @@ PoucherWeb is a bookmark management application with a React frontend and server
   - `user-context.tsx` - user data and tags (uses `useUserInit` hook)
 
 ### Component Structure
+
 Components live in `src/components/` with each component in its own directory containing:
+
 - Main component file (e.g., `Tags.tsx`)
 - Index file for exports
 - Test file when applicable (e.g., `Tags.test.tsx`)
@@ -57,13 +62,16 @@ Components live in `src/components/` with each component in its own directory co
 `AdminScreen` is the main authenticated view that renders the drawer layout with Tags sidebar, Bookmarks grid, and navigation.
 
 ### Testing
+
 - **Vitest** with jsdom environment
 - **React Testing Library** for component tests
 - Test utilities in `src/utils/test-utils.tsx` provide wrapped render with mocked providers (Auth0, QueryClientProvider, UserProvider)
 - Mock data defined in `src/test/testData.ts`
 
 ### Environment Variables
+
 App uses Vite's `import.meta.env` for:
+
 - `VITE_AUTH0_DOMAIN` - Auth0 domain
 - `VITE_AUTH0_CLIENT_ID` - Auth0 client ID
 - `VITE_SERVER_ENDPOINT` - REST API base URL

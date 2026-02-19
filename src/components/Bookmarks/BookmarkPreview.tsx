@@ -10,7 +10,7 @@ import { getTagsForBookmark, removeBookmarkFromTag } from '../../utils/tag-utils
 import { TagChip } from '../TagChip'
 import { Button } from '../ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { faBookmark, faGlobe, faTag } from '@fortawesome/free-solid-svg-icons'
 import { QuickTagPicker } from '../QuickTagPicker'
 
 type Props = {
@@ -46,16 +46,23 @@ export const BookmarkPreview = ({
     >
       {/* Content */}
       <div className="p-4">
-        {/* Domain */}
+        {/* Domain + type icon */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <p className="text-xs text-foreground-muted dark:text-gray-400 truncate">
             {getDomain(url)}
           </p>
-          {metadataStatus === 'failed' && (
-            <span className="text-[10px] uppercase tracking-wide text-red-600 dark:text-red-400">
-              Metadata failed
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {metadataStatus === 'failed' && (
+              <span className="text-[10px] uppercase tracking-wide text-red-600 dark:text-red-400">
+                Metadata failed
+              </span>
+            )}
+            <FontAwesomeIcon
+              icon={faBookmark}
+              className="text-forest-500 dark:text-forest-400"
+              title="Bookmark"
+            />
+          </div>
         </div>
 
         {isMetadataPending ? (

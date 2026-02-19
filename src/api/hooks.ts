@@ -4,16 +4,20 @@ import type {
   User,
   Bookmark,
   Tag,
+  Note,
   InitResponse,
   BookmarksResponse,
-  BookmarkSearchParams
+  BookmarkSearchParams,
+  NotesResponse,
+  NoteSearchParams
 } from './types'
 
 // Query Keys
 export const queryKeys = {
   userInit: (id: string) => ['userInit', id] as const,
   bookmarks: (params: BookmarkSearchParams) => ['bookmarks', params] as const,
-  tags: (authorID: string) => ['tags', authorID] as const
+  tags: (authorID: string) => ['tags', authorID] as const,
+  notes: (params: NoteSearchParams) => ['notes', params] as const
 }
 
 // User initialization (replaces CREATE_USER query)
@@ -131,6 +135,60 @@ export function useDeleteTag() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] })
       queryClient.invalidateQueries({ queryKey: ['userInit'] })
+    }
+  })
+}
+
+// Search Notes
+export function useSearchNotes(params: NoteSearchParams) {
+  return useQuery({
+    queryKey: queryKeys.notes(params),
+    queryFn: () =>
+      apiClient.get<NotesResponse>('api/notes', {
+        authorID: params.authorID || '',
+        title: params.title || '',
+        offset: String(params.offset || 0),
+        limit: String(params.limit || 100),
+      }),
+    enabled: !!params.authorID,
+  })
+}
+
+// Create Note Mutation
+export function useCreateNote() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (note: Partial<Note>) =>
+      apiClient.post<{ note: Note }>('api/notes', note),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+    }
+  })
+}
+
+// Update Note Mutation
+export function useUpdateNote() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Note> }) =>
+      apiClient.put<{ note: Note }>(`api/notes/${id}`, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+    }
+  })
+}
+
+// Delete Note Mutation
+export function useDeleteNote() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiClient.delete<{ note: Note }>(`api/notes/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
     }
   })
 }
