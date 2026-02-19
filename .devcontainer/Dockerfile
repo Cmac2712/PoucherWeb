@@ -25,7 +25,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   jq \
   nano \
   vim \
+  openssh-server \
+  openssh-client \
+  autossh \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Configure sshd: enable password auth, disable root login
+RUN mkdir -p /var/run/sshd && \
+    sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
 
 # Ensure default node user has access to /usr/local/share
 RUN mkdir -p /usr/local/share/npm-global && \
@@ -82,10 +90,12 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
 
 
-# Copy and set up firewall script
-COPY init-firewall.sh /usr/local/bin/
+# Copy and set up scripts
+COPY init-firewall.sh init-ssh-tunnel.sh /usr/local/bin/
 USER root
-RUN chmod +x /usr/local/bin/init-firewall.sh && \
+RUN chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/init-ssh-tunnel.sh && \
   echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
-  chmod 0440 /etc/sudoers.d/node-firewall
+  chmod 0440 /etc/sudoers.d/node-firewall && \
+  echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-ssh-tunnel.sh" > /etc/sudoers.d/node-ssh-tunnel && \
+  chmod 0440 /etc/sudoers.d/node-ssh-tunnel
 USER node
