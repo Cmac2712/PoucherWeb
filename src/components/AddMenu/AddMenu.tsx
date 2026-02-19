@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCognitoAuth } from '../../contexts/auth-context'
 import { useCreateBookmark } from '../../api/hooks'
 import { useModalStore } from '../../store/modal-store'
 import { NoteEditor } from '../Notes'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { DialogTitle } from '../ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faClose, faBookmark, faNoteSticky, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faBookmark, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuidv4 } from 'uuid'
-import { Bookmark } from '../Bookmarks'
 
 const isURL = (str: string) => {
   const pattern = new RegExp(
@@ -29,19 +29,58 @@ const isURL = (str: string) => {
   return !!pattern.test(str)
 }
 
-export const AddMenu = () => {
+const BookmarkForm = () => {
   const { user } = useCognitoAuth()
-  const [bookmarkOpen, setBookmarkOpen] = useState(false)
-  const [formData, setFormData] = useState<Pick<Bookmark, 'title' | 'url'>>({ title: '', url: '' })
+  const { closeModal } = useModalStore()
+  const [url, setUrl] = useState('')
   const createBookmarkMutation = useCreateBookmark()
+
+  useEffect(() => {
+    navigator.clipboard.readText().then((clip) => {
+      if (isURL(clip)) setUrl(clip)
+    }).catch(() => {})
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    createBookmarkMutation.mutate({
+      id: uuidv4(),
+      title: url,
+      authorID: user?.sub,
+      url,
+    })
+    closeModal()
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <DialogTitle>Add Bookmark</DialogTitle>
+      <Input
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder="https://..."
+        autoFocus
+        disabled={createBookmarkMutation.isPending}
+      />
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="outline" onClick={closeModal}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={createBookmarkMutation.isPending || !url}>
+          {createBookmarkMutation.isPending ? 'Adding...' : 'Add'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+
+export const AddMenu = () => {
   const { openModal, setModalContent } = useModalStore()
 
   const handleBookmarkSelect = () => {
-    setBookmarkOpen(true)
-    navigator.clipboard.readText().then((clip) => {
-      if (!isURL(clip)) return
-      setFormData((prev) => ({ ...prev, url: clip }))
-    })
+    setModalContent(<BookmarkForm />)
+    openModal()
   }
 
   const handleNoteSelect = () => {
@@ -49,55 +88,17 @@ export const AddMenu = () => {
     openModal()
   }
 
-  const handleBookmarkSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    createBookmarkMutation.mutate({
-      id: uuidv4(),
-      title: formData.url,
-      authorID: user?.sub,
-      url: formData.url,
-    })
-    setFormData({ title: '', url: '' })
-    setBookmarkOpen(false)
-  }
-
-  const handleBookmarkClose = () => {
-    setBookmarkOpen(false)
-    setFormData({ title: '', url: '' })
-  }
-
-  if (bookmarkOpen) {
-    return (
-      <form onSubmit={handleBookmarkSubmit} className="flex items-center gap-2">
-        <Input
-          disabled={createBookmarkMutation.isPending}
-          type="text"
-          value={formData.url}
-          onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-          placeholder="https://..."
-          className="w-48 sm:w-64"
-          autoFocus
-        />
-        <Button type="submit" disabled={createBookmarkMutation.isPending || !formData.url}>
-          {createBookmarkMutation.isPending ? 'Adding...' : 'Add'}
-        </Button>
-        <Button type="button" size="icon" variant="ghost" onClick={handleBookmarkClose}>
-          <FontAwesomeIcon icon={faClose} />
-        </Button>
-      </form>
-    )
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="gap-2">
-          <FontAwesomeIcon icon={faPlus} />
-          <span className="hidden sm:inline">Add</span>
-          <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-70" />
+        <Button
+          size="icon"
+          className="fixed bottom-6 right-6 z-30 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <FontAwesomeIcon icon={faPlus} className="text-lg" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent side="top" align="end" className="mb-2">
         <DropdownMenuItem onSelect={handleBookmarkSelect}>
           <FontAwesomeIcon icon={faBookmark} className="text-forest-500" />
           Bookmark

@@ -93,11 +93,6 @@ export const AdminScreen = () => {
                   <div className="shrink-0">
                     <ThemeToggle />
                   </div>
-
-                  {/* Add menu */}
-                  <div className="shrink-0">
-                    <AddMenu />
-                  </div>
                 </div>
               </header>
 
@@ -114,6 +109,7 @@ export const AdminScreen = () => {
               </footer>
             </div>
           </Drawer>
+          <AddMenu />
           <Modal />
         </UserProvider>
       </>
