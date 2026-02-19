@@ -26,7 +26,7 @@ const getDomain = (url: string) => {
 }
 
 export const BookmarkPreview = ({
-  data: { id, url, title, description, screenshotURL, metadataStatus }
+  data: { id, url, title, description, metadataStatus }
 }: Props) => {
   const [, setUpdateMode] = useState(false)
   const [hover, setHover] = useState(false)
@@ -44,23 +44,6 @@ export const BookmarkPreview = ({
       onMouseLeave={() => setHover(false)}
       className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200 hover:border-forest-300 dark:hover:border-forest-600 hover:shadow-lg hover:-translate-y-1"
     >
-      {/* Image */}
-      <a href={url} target="_blank" rel="noopener noreferrer" className="block">
-        <div className="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
-          {screenshotURL ? (
-            <img
-              src={screenshotURL}
-              alt={title}
-              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
-              <FontAwesomeIcon icon={faGlobe} className="text-4xl" />
-            </div>
-          )}
-        </div>
-      </a>
-
       {/* Content */}
       <div className="p-4">
         {/* Domain + type icon */}
@@ -149,7 +132,6 @@ export const BookmarkPreview = ({
                   title={title}
                   description={description}
                   setMode={setUpdateMode}
-                  screenshotURL={screenshotURL}
                 />
               )
               openModal()
