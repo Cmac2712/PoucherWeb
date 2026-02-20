@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useCognitoAuth, CognitoAuthUser } from '../../contexts/auth-context'
 import { LogoutButton } from '../LogoutButton'
 import { Bookmarks } from '../Bookmarks'
-import { CreateBookmark } from '../CreateBookmark'
 import { Splash } from '../Splash'
 import { Tags } from '../Tags'
 import { Pagination } from '../Pagination'
@@ -16,7 +15,7 @@ import { UserProvider } from '../../contexts/user-context'
 import { Drawer } from '../ui/drawer'
 import { Button } from '../ui/button'
 import { ThemeToggle } from '../ThemeToggle'
-import { CreateNote } from '../CreateNote'
+import { AddMenu } from '../AddMenu'
 import { Settings } from '../Settings'
 import { useModalStore } from '../../store/modal-store'
 
@@ -94,12 +93,6 @@ export const AdminScreen = () => {
                   <div className="shrink-0">
                     <ThemeToggle />
                   </div>
-
-                  {/* Create buttons */}
-                  <div className="shrink-0 flex items-center gap-2">
-                    <CreateNote />
-                    <CreateBookmark />
-                  </div>
                 </div>
               </header>
 
@@ -116,6 +109,7 @@ export const AdminScreen = () => {
               </footer>
             </div>
           </Drawer>
+          <AddMenu />
           <Modal />
         </UserProvider>
       </>
