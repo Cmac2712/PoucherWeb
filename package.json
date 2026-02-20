@@ -2,6 +2,7 @@
   "name": "PoucherWeb",
   "private": true,
   "version": "0.0.0",
+  "workspaces": ["shared", "mobile"],
   "scripts": {
     "start": "vite",
     "build": "vite build",
