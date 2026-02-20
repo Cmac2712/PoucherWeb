@@ -39,7 +39,7 @@ export default function BookmarksScreen() {
     return ids.length > 0 ? ids.join(',') : '___empty___'
   }, [selectedTag, userData?.tags])
 
-  const { data, isLoading, refetch, isFetchingNextPage } = useSearchBookmarks({
+  const { data, isLoading, refetch } = useSearchBookmarks({
     authorID: userData?.user.id,
     offset,
     limit: PAGE_SIZE,
