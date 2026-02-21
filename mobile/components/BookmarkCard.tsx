@@ -10,6 +10,7 @@ interface BookmarkCardProps {
   tags: Tag[]
   onEdit: (bookmark: Bookmark) => void
   onDelete: (id: string) => void
+  onTagPress?: (bookmark: Bookmark) => void
 }
 
 function getDomain(url: string): string {
@@ -20,7 +21,7 @@ function getDomain(url: string): string {
   }
 }
 
-export function BookmarkCard({ bookmark, tags, onEdit, onDelete }: BookmarkCardProps) {
+export function BookmarkCard({ bookmark, tags, onEdit, onDelete, onTagPress }: BookmarkCardProps) {
   const bookmarkTags = getTagsForBookmark(tags, bookmark.id)
 
   const handlePress = async () => {
@@ -92,6 +93,11 @@ export function BookmarkCard({ bookmark, tags, onEdit, onDelete }: BookmarkCardP
       )}
 
       <View style={styles.actions}>
+        {onTagPress && (
+          <Pressable style={styles.actionButton} onPress={() => onTagPress(bookmark)}>
+            <FontAwesome6 name="tags" size={14} color={colors.gray[400]} />
+          </Pressable>
+        )}
         <Pressable style={styles.actionButton} onPress={() => onEdit(bookmark)}>
           <FontAwesome6 name="pen-to-square" size={14} color={colors.gray[400]} />
         </Pressable>

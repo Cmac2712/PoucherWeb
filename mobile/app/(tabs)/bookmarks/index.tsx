@@ -9,24 +9,30 @@ import {
   RefreshControl,
 } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useSearchBookmarks, useDeleteBookmark } from '@poucher/shared/api/hooks'
 import { parseBookmarkIds } from '@poucher/shared/utils/tag-utils'
 import type { Bookmark } from '@poucher/shared/api/types'
-import { useUser } from '../../contexts/user-context'
-import { BookmarkCard } from '../../components/BookmarkCard'
-import { AddBookmarkSheet } from '../../components/AddBookmarkSheet'
-import { EditBookmarkSheet } from '../../components/EditBookmarkSheet'
-import { TagFilterBar } from '../../components/TagFilterBar'
-import { colors } from '../../theme/colors'
+import { useUser } from '../../../contexts/user-context'
+import { useAppTheme } from '../../../theme/ThemeContext'
+import { BookmarkCard } from '../../../components/BookmarkCard'
+import { AddBookmarkSheet } from '../../../components/AddBookmarkSheet'
+import { EditBookmarkSheet } from '../../../components/EditBookmarkSheet'
+import { TagFilterBar } from '../../../components/TagFilterBar'
+import { QuickTagPicker } from '../../../components/QuickTagPicker'
+import { colors } from '../../../theme/colors'
 
 const PAGE_SIZE = 15
 
 export default function BookmarksScreen() {
   const { data: userData, loading: userLoading } = useUser()
+  const { theme } = useAppTheme()
+  const router = useRouter()
   const [offset, setOffset] = useState(0)
   const [selectedTag, setSelectedTag] = useState('All')
   const [addSheetVisible, setAddSheetVisible] = useState(false)
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null)
+  const [taggingBookmark, setTaggingBookmark] = useState<Bookmark | null>(null)
 
   const deleteBookmark = useDeleteBookmark()
 
@@ -73,21 +79,26 @@ export default function BookmarksScreen() {
     [deleteBookmark]
   )
 
+  const handleManageTags = useCallback(() => {
+    router.push('/bookmarks/tags')
+  }, [router])
+
   if (userLoading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.forest[500]} />
+      <View style={[styles.centered, { backgroundColor: theme.surface }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.surface }]}>
       {userData?.tags && userData.tags.length > 0 && (
         <TagFilterBar
           tags={userData.tags}
           selectedTag={selectedTag}
           onSelectTag={handleTagSelect}
+          onManageTags={handleManageTags}
         />
       )}
 
@@ -100,6 +111,7 @@ export default function BookmarksScreen() {
             tags={userData?.tags ?? []}
             onEdit={setEditingBookmark}
             onDelete={handleDelete}
+            onTagPress={setTaggingBookmark}
           />
         )}
         contentContainerStyle={bookmarks.length === 0 ? styles.emptyContainer : styles.list}
@@ -107,7 +119,7 @@ export default function BookmarksScreen() {
           <RefreshControl
             refreshing={isLoading && offset === 0}
             onRefresh={handleRefresh}
-            tintColor={colors.forest[500]}
+            tintColor={theme.primary}
           />
         }
         onEndReached={handleLoadMore}
@@ -116,16 +128,16 @@ export default function BookmarksScreen() {
           hasMore ? (
             <ActivityIndicator
               style={styles.footer}
-              color={colors.forest[500]}
+              color={theme.primary}
             />
           ) : null
         }
         ListEmptyComponent={
           !isLoading ? (
             <View style={styles.empty}>
-              <FontAwesome6 name="bookmark" size={48} color={colors.gray[300]} />
-              <Text style={styles.emptyTitle}>No bookmarks yet</Text>
-              <Text style={styles.emptySubtitle}>
+              <FontAwesome6 name="bookmark" size={48} color={theme.border} />
+              <Text style={[styles.emptyTitle, { color: theme.text }]}>No bookmarks yet</Text>
+              <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
                 Tap the + button to save your first bookmark
               </Text>
             </View>
@@ -135,10 +147,10 @@ export default function BookmarksScreen() {
 
       {/* FAB */}
       <Pressable
-        style={styles.fab}
+        style={[styles.fab, { backgroundColor: theme.primary }]}
         onPress={() => setAddSheetVisible(true)}
       >
-        <FontAwesome6 name="plus" size={22} color={colors.white} />
+        <FontAwesome6 name="plus" size={22} color={theme.primaryText} />
       </Pressable>
 
       <AddBookmarkSheet
@@ -151,6 +163,15 @@ export default function BookmarksScreen() {
         bookmark={editingBookmark}
         onClose={() => setEditingBookmark(null)}
       />
+
+      {taggingBookmark && (
+        <QuickTagPicker
+          visible={!!taggingBookmark}
+          bookmarkId={taggingBookmark.id}
+          tags={userData?.tags ?? []}
+          onClose={() => setTaggingBookmark(null)}
+        />
+      )}
     </View>
   )
 }
@@ -158,7 +179,6 @@ export default function BookmarksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.gray[50],
   },
   centered: {
     flex: 1,
@@ -180,12 +200,10 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.gray[700],
     marginTop: 16,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: colors.gray[500],
     marginTop: 8,
     textAlign: 'center',
   },
@@ -199,7 +217,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.forest[500],
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,

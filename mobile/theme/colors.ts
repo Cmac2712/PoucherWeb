@@ -57,4 +57,6 @@ export const darkTheme = {
   inputBorder: colors.gray[600],
 } as const
 
-export type AppTheme = typeof lightTheme
+export type AppTheme = {
+  [K in keyof typeof lightTheme]: string
+}

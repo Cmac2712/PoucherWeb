@@ -1,4 +1,5 @@
 import { ScrollView, Pressable, Text, StyleSheet } from 'react-native'
+import { FontAwesome6 } from '@expo/vector-icons'
 import type { Tag } from '@poucher/shared/api/types'
 import { getBookmarkCount } from '@poucher/shared/utils/tag-utils'
 import { colors } from '../theme/colors'
@@ -7,9 +8,10 @@ interface TagFilterBarProps {
   tags: Tag[]
   selectedTag: string
   onSelectTag: (tagTitle: string) => void
+  onManageTags?: () => void
 }
 
-export function TagFilterBar({ tags, selectedTag, onSelectTag }: TagFilterBarProps) {
+export function TagFilterBar({ tags, selectedTag, onSelectTag, onManageTags }: TagFilterBarProps) {
   return (
     <ScrollView
       horizontal
@@ -41,6 +43,13 @@ export function TagFilterBar({ tags, selectedTag, onSelectTag }: TagFilterBarPro
           </Pressable>
         )
       })}
+
+      {onManageTags && (
+        <Pressable style={styles.manageChip} onPress={onManageTags}>
+          <FontAwesome6 name="gear" size={12} color={colors.gray[500]} />
+          <Text style={styles.manageText}>Manage</Text>
+        </Pressable>
+      )}
     </ScrollView>
   )
 }
@@ -70,5 +79,22 @@ const styles = StyleSheet.create({
   },
   chipTextActive: {
     color: colors.white,
+  },
+  manageChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: colors.gray[300],
+    backgroundColor: colors.white,
+  },
+  manageText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.gray[500],
   },
 })

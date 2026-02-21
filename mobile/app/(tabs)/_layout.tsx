@@ -1,17 +1,21 @@
 import { Tabs } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { UserProvider } from '../../contexts/user-context'
+import { useAppTheme } from '../../theme/ThemeContext'
 import { colors } from '../../theme/colors'
 
 export default function TabLayout() {
+  const { theme, isDark } = useAppTheme()
+
   return (
     <UserProvider>
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.forest[500],
-        tabBarInactiveTintColor: colors.gray[400],
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
-          borderTopColor: colors.gray[200],
+          borderTopColor: theme.border,
+          backgroundColor: theme.background,
         },
         headerStyle: {
           backgroundColor: colors.forest[500],
@@ -23,9 +27,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="bookmarks"
         options={{
           title: 'Bookmarks',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="bookmark" size={size} color={color} />
           ),

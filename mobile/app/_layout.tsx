@@ -6,7 +6,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 import { initApiClient } from '@poucher/shared/api/client'
 import { AuthProvider, useAuth } from '../contexts/auth-context'
-import { colors } from '../theme/colors'
+import { ThemeProvider, useAppTheme } from '../theme/ThemeContext'
 
 const extra = Constants.expoConfig?.extra ?? {}
 
@@ -33,6 +33,7 @@ const queryClient = new QueryClient({
 
 function AuthGate() {
   const { isAuthenticated, isLoading, getAccessToken } = useAuth()
+  const { theme, isDark } = useAppTheme()
   const segments = useSegments()
   const router = useRouter()
 
@@ -55,21 +56,27 @@ function AuthGate() {
 
   if (isLoading) {
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.forest[500]} />
+      <View style={[styles.loading, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     )
   }
 
-  return <Slot />
+  return (
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <Slot />
+    </>
+  )
 }
 
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar style="auto" />
-        <AuthGate />
+        <ThemeProvider>
+          <AuthGate />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   )
@@ -80,6 +87,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white,
   },
 })

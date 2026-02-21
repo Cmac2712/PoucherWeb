@@ -14,6 +14,7 @@ import { useUpdateUser } from '@poucher/shared/api/hooks'
 import { usePreferencesStore } from '@poucher/shared/store/preferences-store'
 import { useAuth } from '../../contexts/auth-context'
 import { useUser } from '../../contexts/user-context'
+import { useAppTheme } from '../../theme/ThemeContext'
 import { colors } from '../../theme/colors'
 
 type ThemeOption = 'light' | 'dark'
@@ -21,8 +22,9 @@ type ThemeOption = 'light' | 'dark'
 export default function SettingsScreen() {
   const { user, logout } = useAuth()
   const { data: userData } = useUser()
+  const { theme } = useAppTheme()
   const updateUser = useUpdateUser()
-  const theme = usePreferencesStore((s) => s.theme)
+  const currentTheme = usePreferencesStore((s) => s.theme)
   const setTheme = usePreferencesStore((s) => s.setTheme)
   const displayName = usePreferencesStore((s) => s.displayName)
   const setDisplayName = usePreferencesStore((s) => s.setDisplayName)
@@ -36,7 +38,7 @@ export default function SettingsScreen() {
     setDisplayName(nameInput.trim())
     await updateUser.mutateAsync({
       id: userData.user.id,
-      updates: { preferences: { displayName: nameInput.trim(), theme } },
+      updates: { preferences: { displayName: nameInput.trim(), theme: currentTheme } },
     })
     setEditingName(false)
   }
@@ -63,31 +65,34 @@ export default function SettingsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.surface }]}
+      contentContainerStyle={styles.content}
+    >
       {/* Account Section */}
-      <Text style={styles.sectionTitle}>Account</Text>
-      <View style={styles.section}>
+      <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Account</Text>
+      <View style={[styles.section, { backgroundColor: theme.background, borderColor: theme.border }]}>
         <View style={styles.row}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{user?.email}</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Email</Text>
+          <Text style={[styles.value, { color: theme.textSecondary }]}>{user?.email}</Text>
         </View>
-        <View style={styles.separator} />
+        <View style={[styles.separator, { backgroundColor: theme.border }]} />
         <View style={styles.row}>
-          <Text style={styles.label}>Display Name</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Display Name</Text>
           {editingName ? (
             <View style={styles.editRow}>
               <TextInput
-                style={styles.editInput}
+                style={[styles.editInput, { color: theme.text, borderColor: theme.inputBorder, backgroundColor: theme.inputBackground }]}
                 value={nameInput}
                 onChangeText={setNameInput}
                 autoFocus
                 onSubmitEditing={handleSaveName}
               />
               {updateUser.isPending ? (
-                <ActivityIndicator size="small" color={colors.forest[500]} />
+                <ActivityIndicator size="small" color={theme.primary} />
               ) : (
                 <Pressable onPress={handleSaveName}>
-                  <Text style={styles.saveText}>Save</Text>
+                  <Text style={[styles.saveText, { color: theme.primary }]}>Save</Text>
                 </Pressable>
               )}
             </View>
@@ -99,30 +104,30 @@ export default function SettingsScreen() {
                 setEditingName(true)
               }}
             >
-              <Text style={styles.value}>
+              <Text style={[styles.value, { color: theme.textSecondary }]}>
                 {displayName || userData?.user.name || 'Not set'}
               </Text>
-              <FontAwesome6 name="pen" size={12} color={colors.gray[400]} />
+              <FontAwesome6 name="pen" size={12} color={theme.textSecondary} />
             </Pressable>
           )}
         </View>
       </View>
 
       {/* Appearance Section */}
-      <Text style={styles.sectionTitle}>Appearance</Text>
-      <View style={styles.section}>
+      <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Appearance</Text>
+      <View style={[styles.section, { backgroundColor: theme.background, borderColor: theme.border }]}>
         {(['light', 'dark'] as const).map((option, index) => (
           <View key={option}>
-            {index > 0 && <View style={styles.separator} />}
+            {index > 0 && <View style={[styles.separator, { backgroundColor: theme.border }]} />}
             <Pressable
               style={styles.row}
               onPress={() => handleThemeChange(option)}
             >
-              <Text style={styles.label}>
+              <Text style={[styles.label, { color: theme.text }]}>
                 {option.charAt(0).toUpperCase() + option.slice(1)}
               </Text>
-              {theme === option && (
-                <FontAwesome6 name="check" size={16} color={colors.forest[500]} />
+              {currentTheme === option && (
+                <FontAwesome6 name="check" size={16} color={theme.primary} />
               )}
             </Pressable>
           </View>
@@ -130,23 +135,26 @@ export default function SettingsScreen() {
       </View>
 
       {/* About Section */}
-      <Text style={styles.sectionTitle}>About</Text>
-      <View style={styles.section}>
+      <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>About</Text>
+      <View style={[styles.section, { backgroundColor: theme.background, borderColor: theme.border }]}>
         <View style={styles.row}>
-          <Text style={styles.label}>Version</Text>
-          <Text style={styles.value}>1.0.0</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Version</Text>
+          <Text style={[styles.value, { color: theme.textSecondary }]}>1.0.0</Text>
         </View>
-        <View style={styles.separator} />
+        <View style={[styles.separator, { backgroundColor: theme.border }]} />
         <View style={styles.row}>
-          <Text style={styles.label}>Made by</Text>
-          <Text style={styles.value}>Craig</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Made by</Text>
+          <Text style={[styles.value, { color: theme.textSecondary }]}>Craig</Text>
         </View>
       </View>
 
       {/* Logout */}
-      <Pressable style={styles.logoutButton} onPress={handleLogout}>
-        <FontAwesome6 name="right-from-bracket" size={16} color={colors.red[500]} />
-        <Text style={styles.logoutText}>Log Out</Text>
+      <Pressable
+        style={[styles.logoutButton, { backgroundColor: theme.background, borderColor: theme.border }]}
+        onPress={handleLogout}
+      >
+        <FontAwesome6 name="right-from-bracket" size={16} color={theme.error} />
+        <Text style={[styles.logoutText, { color: theme.error }]}>Log Out</Text>
       </Pressable>
     </ScrollView>
   )
@@ -155,7 +163,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.gray[50],
   },
   content: {
     padding: 16,
@@ -164,7 +171,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: colors.gray[500],
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginTop: 24,
@@ -172,10 +178,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   section: {
-    backgroundColor: colors.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.gray[200],
     overflow: 'hidden',
   },
   row: {
@@ -187,16 +191,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: colors.gray[100],
     marginHorizontal: 16,
   },
   label: {
     fontSize: 16,
-    color: colors.gray[900],
   },
   value: {
     fontSize: 16,
-    color: colors.gray[500],
   },
   editRow: {
     flexDirection: 'row',
@@ -205,9 +206,7 @@ const styles = StyleSheet.create({
   },
   editInput: {
     fontSize: 16,
-    color: colors.gray[900],
     borderWidth: 1,
-    borderColor: colors.gray[300],
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -216,23 +215,19 @@ const styles = StyleSheet.create({
   saveText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.forest[500],
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: colors.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.gray[200],
     paddingVertical: 14,
     marginTop: 32,
   },
   logoutText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.red[500],
   },
 })

@@ -22,12 +22,14 @@ import {
 } from '@poucher/shared/api/hooks'
 import type { Note } from '@poucher/shared/api/types'
 import { useUser } from '../../contexts/user-context'
+import { useAppTheme } from '../../theme/ThemeContext'
 import { NoteCard } from '../../components/NoteCard'
 import { MarkdownEditor } from '../../components/MarkdownEditor'
 import { colors } from '../../theme/colors'
 
 export default function NotesScreen() {
   const { data: userData, loading: userLoading } = useUser()
+  const { theme } = useAppTheme()
   const [editorVisible, setEditorVisible] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
   const [noteTitle, setNoteTitle] = useState('')
@@ -91,14 +93,14 @@ export default function NotesScreen() {
 
   if (userLoading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.forest[500]} />
+      <View style={[styles.centered, { backgroundColor: theme.surface }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.surface }]}>
       <FlatList
         data={notes}
         keyExtractor={(item) => item.id}
@@ -110,15 +112,15 @@ export default function NotesScreen() {
           <RefreshControl
             refreshing={isLoading}
             onRefresh={handleRefresh}
-            tintColor={colors.forest[500]}
+            tintColor={theme.primary}
           />
         }
         ListEmptyComponent={
           !isLoading ? (
             <View style={styles.empty}>
-              <FontAwesome6 name="note-sticky" size={48} color={colors.gray[300]} />
-              <Text style={styles.emptyTitle}>No notes yet</Text>
-              <Text style={styles.emptySubtitle}>
+              <FontAwesome6 name="note-sticky" size={48} color={theme.border} />
+              <Text style={[styles.emptyTitle, { color: theme.text }]}>No notes yet</Text>
+              <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
                 Tap the + button to create your first note
               </Text>
             </View>
@@ -127,23 +129,23 @@ export default function NotesScreen() {
       />
 
       {/* FAB */}
-      <Pressable style={styles.fab} onPress={openNewNote}>
-        <FontAwesome6 name="plus" size={22} color={colors.white} />
+      <Pressable style={[styles.fab, { backgroundColor: theme.primary }]} onPress={openNewNote}>
+        <FontAwesome6 name="plus" size={22} color={theme.primaryText} />
       </Pressable>
 
       {/* Note Editor Modal */}
       <Modal visible={editorVisible} animationType="slide" onRequestClose={() => setEditorVisible(false)}>
-        <SafeAreaView style={styles.editorContainer}>
+        <SafeAreaView style={[styles.editorContainer, { backgroundColor: theme.background }]}>
           <KeyboardAvoidingView
             style={styles.editorContent}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           >
             {/* Editor Header */}
-            <View style={styles.editorHeader}>
+            <View style={[styles.editorHeader, { borderBottomColor: theme.border }]}>
               <Pressable onPress={() => setEditorVisible(false)}>
-                <Text style={styles.editorCancel}>Cancel</Text>
+                <Text style={[styles.editorCancel, { color: theme.textSecondary }]}>Cancel</Text>
               </Pressable>
-              <Text style={styles.editorTitle}>
+              <Text style={[styles.editorTitle, { color: theme.text }]}>
                 {editingNote ? 'Edit Note' : 'New Note'}
               </Text>
               <Pressable
@@ -151,11 +153,12 @@ export default function NotesScreen() {
                 disabled={isSaving || !noteTitle.trim()}
               >
                 {isSaving ? (
-                  <ActivityIndicator size="small" color={colors.forest[500]} />
+                  <ActivityIndicator size="small" color={theme.primary} />
                 ) : (
                   <Text
                     style={[
                       styles.editorSave,
+                      { color: theme.primary },
                       !noteTitle.trim() && styles.editorSaveDisabled,
                     ]}
                   >
@@ -167,9 +170,9 @@ export default function NotesScreen() {
 
             {/* Title input */}
             <TextInput
-              style={styles.titleInput}
+              style={[styles.titleInput, { color: theme.text, borderBottomColor: theme.border }]}
               placeholder="Note title"
-              placeholderTextColor={colors.gray[400]}
+              placeholderTextColor={theme.textSecondary}
               value={noteTitle}
               onChangeText={setNoteTitle}
               autoFocus={!editingNote}
@@ -193,7 +196,6 @@ export default function NotesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.gray[50],
   },
   centered: {
     flex: 1,
@@ -215,12 +217,10 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.gray[700],
     marginTop: 16,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: colors.gray[500],
     marginTop: 8,
     textAlign: 'center',
   },
@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.forest[500],
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
@@ -242,7 +241,6 @@ const styles = StyleSheet.create({
   },
   editorContainer: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   editorContent: {
     flex: 1,
@@ -254,21 +252,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray[200],
   },
   editorCancel: {
     fontSize: 16,
-    color: colors.gray[500],
   },
   editorTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.gray[900],
   },
   editorSave: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.forest[500],
   },
   editorSaveDisabled: {
     opacity: 0.4,
@@ -276,11 +270,9 @@ const styles = StyleSheet.create({
   titleInput: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.gray[900],
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray[100],
   },
   editorBody: {
     flex: 1,
