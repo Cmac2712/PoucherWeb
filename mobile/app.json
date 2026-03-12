@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Poucher",
+    "slug": "poucher",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "poucher",
+    "splash": {
+      "backgroundColor": "#2D5A27"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.poucher.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#2D5A27"
+      },
+      "package": "com.poucher.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "serverEndpoint": "",
+      "cognitoUserPoolId": "",
+      "cognitoClientId": ""
+    }
+  }
+}

@@ -14,8 +14,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@poucher/shared/*": ["shared/*"]
+    }
   },
-  "include": ["src", "server", "lambdas/graphql.js"],
+  "include": ["src", "server", "lambdas/graphql.js", "shared"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
